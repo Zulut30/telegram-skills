@@ -1,5 +1,39 @@
 # Changelog
 
+## v1.4 — 2026-04-20 (Professional polish)
+
+Закрыты оставшиеся P2/P3 пробелы из аудита. Репо готов к публичному анонсу.
+
+### Added — Testing & CI
+- `tests/golden/` — eval harness: 3 golden test cases (new bot, review monolith, Mini App auth) с YAML assertions (structural patterns, forbidden/required regex, min code blocks)
+- `tests/run_golden.py` — runner, работает с Anthropic + OpenAI, gracefully skips без API key
+- `.github/workflows/golden.yml` — прогон golden-тестов на PR
+- `.pre-commit-config.yaml` — trailing whitespace, YAML/JSON/markdownlint, gitleaks, plugin.json + frontmatter validation
+
+### Added — Developer experience
+- `assets/logo/logo.svg` — бренд-марк (SVG, масштабируется)
+- `assets/logo/og-image.svg` — OpenGraph 1200×630
+- `.vscode/botforge-snippets.code-snippets` — 5 snippet-ов (`bf-new`, `bf-extend`, `bf-review`, `bf-miniapp`, `bf-pay`)
+- `.vscode/settings.json`, `.zed/settings.json` + `.zed/README.md`
+
+### Added — Documentation
+- `docs/COMPARISON.md` — vs plain prompts, cookiecutter, BotFather/no-code, generic agents
+- `docs/SHOWCASE.md` — community-bot showcase с формой PR
+- `docs/SYNC-CHECKLIST.md` — four-format sync enforcement
+- `docs/ru/README.md` — русская версия README
+
+### Added — Governance
+- `.github/CODEOWNERS`, `.github/FUNDING.yml`
+- `.github/release.yml` — авто-группировка release notes по labels
+
+### Added — Examples
+- `examples/02-ai-assistant/README.md` — stub с планом
+- `examples/03-lead-gen/README.md` — stub с планом
+
+### Changed
+- Root `README.md` — логотип, центрированные навигационные ссылки, ссылка на RU
+- `docs/INSTALL.md` — блок про Claude Code Plugin marketplace, Zed, VS Code snippets
+
 ## v1.3 — 2026-04-20 (Product readiness)
 
 **Полный pivot от skill-как-документ к skill-как-продукт.** Аудит выявил 24 пробела — Фаза 1 + ключевые P1 закрыты в этом релизе.

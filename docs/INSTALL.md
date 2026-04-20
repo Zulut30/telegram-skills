@@ -1,6 +1,23 @@
 # Installation
 
-## Claude Code (recommended)
+## Claude Code Plugin (recommended, one-click)
+
+BotForge ships as a Claude Code plugin. Once plugin marketplaces land in your Claude Code build:
+
+```
+/plugin install github:Zulut30/telegram-skills
+```
+
+Or add to `.claude.json` → `plugins`:
+```json
+{
+  "plugins": [
+    { "source": "github:Zulut30/telegram-skills" }
+  ]
+}
+```
+
+## Claude Code (manual)
 
 BotForge is packaged as a [Claude Code Agent Skill](https://docs.claude.com/claude-code) with YAML frontmatter. Claude will auto-load it when the user describes a Telegram-bot task.
 
@@ -42,6 +59,19 @@ globs: ["**/*.py"]
 alwaysApply: true
 ---
 ```
+
+## Zed
+
+See [`.zed/README.md`](../.zed/README.md) — two paths: via Claude Code integration inside Zed, or as a custom Assistant role.
+
+## VS Code (without Claude Code)
+
+```bash
+mkdir -p <your-project>/.vscode
+cp telegram-skills/.vscode/botforge-snippets.code-snippets <your-project>/.vscode/
+```
+
+Type `bf-new`, `bf-extend`, `bf-review`, `bf-miniapp`, `bf-pay` in any markdown/plaintext buffer for structured BotForge prompts.
 
 ## OpenAI Codex / Codex CLI / Aider / Continue
 

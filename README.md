@@ -1,7 +1,22 @@
-# BotForge
+<p align="center">
+  <img src="assets/logo/logo.svg" width="128" alt="BotForge logo" />
+</p>
 
-> **The Telegram Bot Engineering Skill for AI**
-> Production-ready skill pack for Claude Code, Codex, Cursor and any LLM.
+<h1 align="center">BotForge</h1>
+
+<p align="center">
+  <b>The Telegram Bot Engineering Skill for AI</b><br/>
+  Production-ready skill pack for Claude Code, Codex, Cursor and any LLM.
+</p>
+
+<p align="center">
+  <a href="docs/QUICKSTART.md">Quickstart</a> ·
+  <a href="docs/INSTALL.md">Install</a> ·
+  <a href="docs/USAGE.md">Usage</a> ·
+  <a href="docs/COMPARISON.md">Compare</a> ·
+  <a href="docs/SHOWCASE.md">Showcase</a> ·
+  <a href="docs/ru/README.md">Русская версия</a>
+</p>
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-compatible-8A2BE2)](https://claude.com/claude-code)

@@ -1,0 +1,40 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-json
+      - id: check-added-large-files
+        args: [--maxkb=500]
+      - id: check-merge-conflict
+      - id: mixed-line-ending
+        args: [--fix=lf]
+
+  - repo: https://github.com/DavidAnson/markdownlint-cli2
+    rev: v0.13.0
+    hooks:
+      - id: markdownlint-cli2
+        args: ["--config", ".markdownlint.yaml"]
+
+  - repo: https://github.com/zricethezav/gitleaks
+    rev: v8.18.4
+    hooks:
+      - id: gitleaks
+
+  - repo: local
+    hooks:
+      - id: validate-plugin-manifest
+        name: validate plugin.json
+        entry: python -c "import json, pathlib; m = json.loads(pathlib.Path('.claude-plugin/plugin.json').read_text()); [exit(f'missing: {p}') for p in (e['path'] for e in m['commands']+m['skills']) if not pathlib.Path(p).exists()]; print('plugin.json OK')"
+        language: system
+        pass_filenames: false
+        files: '^\.claude-plugin/plugin\.json$|^\.claude/(commands|skills)/.*\.md$'
+
+      - id: validate-command-frontmatter
+        name: validate command frontmatter
+        entry: python -c "import pathlib, re, sys, yaml; errors=[]; [errors.append(f'{p}: bad frontmatter') for p in pathlib.Path('.claude/commands').glob('*.md') if not re.match(r'^---\n.*?\n---\n', p.read_text(encoding='utf-8'), re.DOTALL)]; sys.exit('\n'.join(errors) if errors else 0)"
+        language: system
+        pass_filenames: false
+        files: '^\.claude/commands/.*\.md$'
