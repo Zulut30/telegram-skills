@@ -1,5 +1,28 @@
 # Changelog
 
+## v1.6.1 — 2026-04-20 (Wiki + Pages fix)
+
+### Fixed
+- `.github/workflows/pages.yml` — added `enablement: true` to `configure-pages@v5`, auto-enables GitHub Pages on first deploy. Previous deploy failed with "Pages site failed. Please verify that the repository has Pages enabled…".
+
+### Added
+- **Full GitHub Wiki** in `wiki/` directory, 14 pages:
+  - Navigation: `Home`, `_Sidebar`, `_Footer`, `Home-ru`, `Home-pl`
+  - Getting started: `Quickstart`, `Installation`, `Modes`, `FAQ`
+  - Using: `Commands-Reference`, `Prompt-Formats`, `Examples`, `Migration`
+  - Architecture: `Architecture`, `Reference-Library`, `Bot-API-Spec`
+  - Community: `Contributing`, `Sync-Checklist`, `Security`, `Roadmap`, `Comparison`
+- `wiki/publish_wiki.sh` — one-command publisher: clones `<repo>.wiki.git`, syncs content, commits, pushes
+- `wiki/README.md` — instructions for maintainers
+
+### How to publish the wiki
+```bash
+# 1. Initialize wiki once via web UI:
+#    https://github.com/Zulut30/telegram-skills/wiki → Create the first page
+# 2. Sync:
+bash wiki/publish_wiki.sh
+```
+
 ## v1.6 — 2026-04-20 (Polish + growth infrastructure)
 
 Third audit closure. Focus: fix lingering v1.5 bugs, set up growth infrastructure, stop hacks in test code.

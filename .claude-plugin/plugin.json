@@ -1,7 +1,7 @@
 {
   "name": "botforge",
   "displayName": "BotForge — Telegram Bot Engineering Skill",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "Production-grade Telegram bot engineering skill. Enforces modular aiogram 3 architecture, Postgres + SQLAlchemy + Alembic, Docker, proper error handling, Mini Apps, unified payments (Stars/ЮKassa/CryptoBot/Stripe/Tribute), i18n, observability. Grounded in official Telegram Bot API 9.6.",
   "author": {
     "name": "BotForge contributors",
