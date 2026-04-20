@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
 <title>BotForge — AI builds production-ready Telegram bots</title>
 <meta name="description" content="Skill for Claude Code, Cursor, Codex and any LLM. Turns AI into a senior Telegram bot engineer. Architecture before code. Grounded in official Bot API 9.6."/>
 <meta name="botforge-version" content="1.7.0"/>
@@ -13,6 +13,7 @@
 <meta property="og:url" content="https://zulut30.github.io/telegram-skills/"/>
 <meta name="twitter:card" content="summary_large_image"/>
 <link rel="icon" href="https://raw.githubusercontent.com/Zulut30/telegram-skills/main/assets/logo/logo.svg" type="image/svg+xml"/>
+<link rel="preconnect" href="https://raw.githubusercontent.com"/>
 
 <style>
   :root {
@@ -28,14 +29,19 @@
     --accent:    #2aabee;
     --accent-2:  #229ed9;
     --accent-3:  #7dd3fc;
+    --pink:      #f472b6;
+    --violet:    #a78bfa;
     --success:   #4ade80;
     --error:     #f87171;
-    --warn:      #fbbf24;
     --shadow:    0 30px 60px -20px rgba(0, 0, 0, 0.6);
     --glow:      0 0 40px -10px rgba(42, 171, 238, 0.5);
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    overflow-x: hidden;
+    max-width: 100%;
+  }
   html { scroll-behavior: smooth; }
   body {
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, "Segoe UI", Roboto, sans-serif;
@@ -43,48 +49,89 @@
     color: var(--text);
     line-height: 1.65;
     -webkit-font-smoothing: antialiased;
-    overflow-x: hidden;
+    min-height: 100vh;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 
-  /* Animated gradient background */
-  body::before {
-    content: "";
+  /* Animated backgrounds */
+  .bg-layer {
     position: fixed;
     inset: 0;
-    background:
-      radial-gradient(1000px 700px at 10% -10%, rgba(42, 171, 238, 0.12), transparent 60%),
-      radial-gradient(800px 600px at 90% 20%, rgba(125, 211, 252, 0.08), transparent 60%),
-      radial-gradient(1200px 900px at 50% 100%, rgba(34, 158, 217, 0.1), transparent 60%);
-    z-index: -2;
-    animation: bgShift 20s ease-in-out infinite alternate;
-  }
-  body::after {
-    content: "";
-    position: fixed;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(139, 180, 217, 0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(139, 180, 217, 0.03) 1px, transparent 1px);
-    background-size: 64px 64px;
-    z-index: -1;
     pointer-events: none;
-    mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
+    z-index: -1;
+  }
+  .bg-gradient {
+    z-index: -3;
+    background:
+      radial-gradient(1000px 700px at 10% -10%, rgba(42, 171, 238, 0.15), transparent 60%),
+      radial-gradient(800px 600px at 90% 20%, rgba(244, 114, 182, 0.08), transparent 60%),
+      radial-gradient(1200px 900px at 50% 100%, rgba(167, 139, 250, 0.1), transparent 60%);
+    animation: bgShift 25s ease-in-out infinite alternate;
+  }
+  .bg-grid {
+    z-index: -2;
+    background-image:
+      linear-gradient(rgba(139, 180, 217, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(139, 180, 217, 0.04) 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
   }
   @keyframes bgShift {
-    0%   { transform: translate(0, 0); }
-    50%  { transform: translate(-2%, 2%); }
-    100% { transform: translate(2%, -2%); }
+    0%   { transform: translate(0, 0) scale(1); }
+    50%  { transform: translate(-1%, 1%) scale(1.02); }
+    100% { transform: translate(1%, -1%) scale(1); }
+  }
+  @media (max-width: 700px) {
+    .bg-gradient { animation: none; }
   }
 
-  .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+  /* Floating particles */
+  .particles {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: -1;
+    overflow: hidden;
+  }
+  .particle {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background: var(--accent-3);
+    border-radius: 50%;
+    opacity: 0;
+    animation: floatUp 20s linear infinite;
+    box-shadow: 0 0 10px var(--accent-3);
+  }
+  @keyframes floatUp {
+    0%   { transform: translateY(110vh) scale(0.5); opacity: 0; }
+    10%  { opacity: 0.6; }
+    90%  { opacity: 0.3; }
+    100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+  }
+  @media (max-width: 700px) { .particles { display: none; } }
 
-  /* Navigation */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    width: 100%;
+  }
+
+  /* ============== NAV ============== */
   nav {
     position: sticky;
     top: 0;
     z-index: 50;
     backdrop-filter: blur(20px);
-    background: rgba(5, 10, 20, 0.6);
+    -webkit-backdrop-filter: blur(20px);
+    background: rgba(5, 10, 20, 0.75);
     border-bottom: 1px solid var(--border);
   }
   nav .container {
@@ -92,6 +139,7 @@
     align-items: center;
     justify-content: space-between;
     padding: 16px 24px;
+    gap: 16px;
   }
   nav .brand {
     display: flex;
@@ -100,13 +148,16 @@
     font-weight: 800;
     font-size: 19px;
     letter-spacing: -0.3px;
+    flex-shrink: 0;
   }
   nav .brand img { width: 32px; height: 32px; }
   nav ul {
     display: flex;
-    gap: 28px;
+    gap: 24px;
     list-style: none;
     align-items: center;
+    flex: 1;
+    justify-content: center;
   }
   nav a {
     color: var(--text-dim);
@@ -114,24 +165,84 @@
     font-size: 14px;
     font-weight: 500;
     transition: color 0.2s;
+    white-space: nowrap;
   }
   nav a:hover { color: var(--text); }
-  nav a.github-star {
+  nav .right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+  nav .lang-switch {
+    display: flex;
+    background: var(--surface);
+    border: 1px solid var(--border-2);
+    border-radius: 100px;
+    padding: 3px;
+  }
+  nav .lang-switch button {
+    background: transparent;
+    border: none;
+    color: var(--text-dim);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 5px 12px;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  nav .lang-switch button:hover { color: var(--text); }
+  nav .lang-switch button.active {
     background: linear-gradient(135deg, var(--accent), var(--accent-2));
     color: white;
-    padding: 9px 18px;
+  }
+  nav .github-star {
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: white;
+    padding: 9px 16px;
     border-radius: 10px;
     font-weight: 600;
+    font-size: 13px;
     box-shadow: var(--glow);
-    transition: transform 0.15s, box-shadow 0.15s;
+    transition: transform 0.15s;
+    white-space: nowrap;
   }
-  nav a.github-star:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 0 50px -5px rgba(42, 171, 238, 0.7);
+  nav .github-star:hover { transform: translateY(-1px); }
+  nav .burger {
+    display: none;
+    background: transparent;
+    border: 1px solid var(--border-2);
+    color: var(--text);
+    border-radius: 8px;
+    padding: 6px 10px;
+    cursor: pointer;
+  }
+  @media (max-width: 880px) {
+    nav ul {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: var(--bg-2);
+      border-bottom: 1px solid var(--border);
+      flex-direction: column;
+      padding: 20px;
+      gap: 16px;
+    }
+    nav.open ul { display: flex; }
+    nav .burger { display: block; }
+  }
+  @media (max-width: 500px) {
+    nav .github-star { display: none; }
   }
 
-  /* Hero */
-  .hero { padding: 110px 0 80px; text-align: center; position: relative; }
+  /* ============== HERO ============== */
+  .hero { padding: 90px 0 70px; text-align: center; position: relative; }
   .hero .pill {
     display: inline-flex;
     align-items: center;
@@ -142,12 +253,11 @@
     border-radius: 100px;
     font-size: 13px;
     color: var(--text-dim);
-    margin-bottom: 32px;
+    margin-bottom: 28px;
     animation: fadeUp 0.8s ease-out;
   }
   .hero .pill .dot {
-    width: 6px;
-    height: 6px;
+    width: 6px; height: 6px;
     background: var(--success);
     border-radius: 50%;
     box-shadow: 0 0 10px var(--success);
@@ -155,27 +265,34 @@
   }
   @keyframes pulse {
     0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.6; transform: scale(1.2); }
+    50% { opacity: 0.5; transform: scale(1.3); }
   }
   .hero h1 {
-    font-size: clamp(40px, 6.5vw, 84px);
+    font-size: clamp(36px, 7vw, 78px);
     font-weight: 900;
-    letter-spacing: -2.5px;
-    line-height: 1.02;
-    margin-bottom: 24px;
+    letter-spacing: -2.2px;
+    line-height: 1.04;
+    margin-bottom: 22px;
     animation: fadeUp 0.9s ease-out 0.1s both;
   }
   .hero h1 .grad {
-    background: linear-gradient(135deg, var(--accent-3) 0%, var(--accent) 50%, var(--accent-2) 100%);
+    background: linear-gradient(120deg, var(--accent-3) 0%, var(--pink) 40%, var(--accent) 70%, var(--violet) 100%);
+    background-size: 200% 200%;
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
+    animation: gradientShift 6s ease-in-out infinite;
+  }
+  @keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
   }
   .hero .sub {
-    font-size: clamp(17px, 2vw, 21px);
+    font-size: clamp(16px, 2vw, 20px);
     color: var(--text-dim);
     max-width: 720px;
-    margin: 0 auto 44px;
+    margin: 0 auto 40px;
+    padding: 0 8px;
     animation: fadeUp 1s ease-out 0.2s both;
   }
   .hero .buttons {
@@ -196,16 +313,24 @@
     font-size: 15px;
     transition: all 0.2s;
     border: 1px solid transparent;
+    position: relative;
+    overflow: hidden;
   }
   .btn-primary {
     background: linear-gradient(135deg, var(--accent), var(--accent-2));
     color: white;
     box-shadow: var(--glow);
   }
-  .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 0 60px -5px rgba(42, 171, 238, 0.8);
+  .btn-primary::before {
+    content: "";
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.6s;
   }
+  .btn-primary:hover { transform: translateY(-2px); }
+  .btn-primary:hover::before { left: 100%; }
   .btn-secondary {
     background: var(--surface);
     color: var(--text);
@@ -215,29 +340,51 @@
     background: var(--bg-3);
     border-color: var(--accent);
   }
-  .hero .logos {
+  .hero .stats {
     margin-top: 52px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 42px;
-    flex-wrap: wrap;
-    color: var(--muted);
-    font-size: 13px;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
     animation: fadeUp 1.2s ease-out 0.4s both;
   }
-  .hero .logos span { font-weight: 600; opacity: 0.7; }
-
+  .hero .stat {
+    text-align: center;
+    padding: 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+  .hero .stat .n {
+    font-size: 28px;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--accent-3), var(--accent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .hero .stat .l {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  @media (max-width: 600px) {
+    .hero .stats { grid-template-columns: repeat(2, 1fr); }
+  }
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(20px); }
     to   { opacity: 1; transform: translateY(0); }
   }
 
-  /* Sections */
-  section { padding: 110px 0; position: relative; }
-  .section-head { text-align: center; max-width: 780px; margin: 0 auto 64px; }
+  /* ============== SECTIONS ============== */
+  section { padding: 100px 0; position: relative; }
+  .section-head { text-align: center; max-width: 780px; margin: 0 auto 56px; padding: 0 8px; }
   .section-head .tag {
     display: inline-block;
     padding: 4px 14px;
@@ -248,43 +395,41 @@
     text-transform: uppercase;
     letter-spacing: 1.5px;
     color: var(--accent);
-    margin-bottom: 20px;
+    margin-bottom: 18px;
     font-weight: 700;
   }
   .section-head h2 {
-    font-size: clamp(32px, 4.5vw, 52px);
+    font-size: clamp(28px, 5vw, 50px);
     font-weight: 800;
-    letter-spacing: -1.5px;
-    line-height: 1.1;
-    margin-bottom: 18px;
+    letter-spacing: -1.3px;
+    line-height: 1.12;
+    margin-bottom: 16px;
   }
   .section-head p {
-    font-size: 18px;
+    font-size: clamp(15px, 1.8vw, 18px);
     color: var(--text-dim);
   }
 
-  /* =================== THE COMPARISON ANIMATION =================== */
+  /* ============== COMPARISON WINDOWS ============== */
   .compare-wrap {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 24px;
-    position: relative;
+    gap: 20px;
   }
-  .compare-col { position: relative; }
   .compare-col h3 {
     display: flex;
     align-items: center;
     gap: 10px;
-    font-size: 16px;
+    flex-wrap: wrap;
+    font-size: 15px;
     font-weight: 700;
-    margin-bottom: 14px;
+    margin-bottom: 12px;
     color: var(--text-dim);
-    letter-spacing: 0.3px;
   }
   .compare-col .tag-bad, .compare-col .tag-good {
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 800;
-    padding: 3px 10px;
+    padding: 3px 9px;
     border-radius: 100px;
     letter-spacing: 1px;
     text-transform: uppercase;
@@ -303,23 +448,22 @@
     border-radius: 14px;
     overflow: hidden;
     box-shadow: var(--shadow);
-    transition: transform 0.3s, box-shadow 0.3s;
+    transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
   }
   .compare-col:hover .window {
     transform: translateY(-4px);
+    border-color: var(--border-2);
   }
   .window-head {
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 12px 16px;
+    padding: 11px 14px;
     background: var(--bg-3);
     border-bottom: 1px solid var(--border);
   }
   .window-head .dot {
-    width: 11px;
-    height: 11px;
-    border-radius: 50%;
+    width: 11px; height: 11px; border-radius: 50%;
   }
   .window-head .dot.red    { background: #ff5f57; }
   .window-head .dot.yellow { background: #febc2e; }
@@ -327,14 +471,17 @@
   .window-head .title {
     flex: 1;
     text-align: center;
-    font-size: 12px;
+    font-size: 11px;
     color: var(--muted);
-    font-family: ui-monospace, "SF Mono", "JetBrains Mono", monospace;
+    font-family: ui-monospace, monospace;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .window-body {
-    padding: 18px;
+    padding: 16px;
     font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
-    font-size: 12.5px;
+    font-size: 12px;
     line-height: 1.75;
     min-height: 440px;
     max-height: 440px;
@@ -345,11 +492,11 @@
     color: var(--accent-3);
     margin-bottom: 12px;
     white-space: pre-wrap;
+    word-break: break-word;
   }
-  .window-body .prompt-line .caret {
+  .window-body .caret {
     display: inline-block;
-    width: 8px;
-    height: 15px;
+    width: 7px; height: 14px;
     background: var(--accent-3);
     vertical-align: text-top;
     margin-left: 2px;
@@ -364,25 +511,19 @@
     transform: translateY(6px);
     transition: opacity 0.3s, transform 0.3s;
     white-space: pre-wrap;
+    word-break: break-word;
     color: var(--text-dim);
   }
-  .window-body .out-line.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  .window-body .out-line.kw   { color: #f472b6; }
-  .window-body .out-line.str  { color: #86efac; }
-  .window-body .out-line.com  { color: var(--muted); font-style: italic; }
+  .window-body .out-line.visible { opacity: 1; transform: translateY(0); }
   .window-body .out-line.sec  { color: var(--accent-3); font-weight: 700; margin-top: 10px; }
   .window-body .out-line.bad  { color: var(--error); }
   .window-body .out-line.good { color: var(--success); }
-  .window-body .out-line.tree { color: var(--accent-3); font-size: 11.5px; }
+  .window-body .out-line.tree { color: var(--accent-3); font-size: 11px; }
 
+  .compare-col .window { position: relative; }
   .compare-col .fade-bottom {
     position: absolute;
-    bottom: 0;
-    left: 1px;
-    right: 1px;
+    bottom: 0; left: 1px; right: 1px;
     height: 80px;
     background: linear-gradient(to bottom, transparent, var(--bg-2));
     pointer-events: none;
@@ -391,26 +532,245 @@
 
   .compare-verdict {
     text-align: center;
-    margin-top: 44px;
-    font-size: 18px;
+    margin-top: 40px;
+    font-size: clamp(15px, 2vw, 18px);
     color: var(--text-dim);
     opacity: 0;
-    transition: opacity 1s 2s;
+    transition: opacity 0.8s 2s;
+    padding: 0 16px;
   }
   .compare-verdict.visible { opacity: 1; }
   .compare-verdict strong { color: var(--accent); }
 
-  /* =================== PROMISES =================== */
+  @media (max-width: 820px) {
+    .compare-wrap { grid-template-columns: 1fr; }
+    .window-body { min-height: 340px; max-height: 340px; font-size: 11px; }
+  }
+
+  /* ============== TELEGRAM CHAT MOCKUP ============== */
+  .tg-demo {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    gap: 40px;
+    align-items: center;
+  }
+  @media (max-width: 900px) {
+    .tg-demo { grid-template-columns: 1fr; gap: 30px; }
+  }
+  .tg-phone {
+    width: 100%;
+    max-width: 360px;
+    margin: 0 auto;
+    aspect-ratio: 9 / 19;
+    background: #1a1a2e;
+    border-radius: 40px;
+    padding: 10px;
+    box-shadow:
+      0 0 0 2px rgba(139, 180, 217, 0.2),
+      var(--shadow);
+    position: relative;
+    overflow: hidden;
+  }
+  .tg-phone::before {
+    content: "";
+    position: absolute;
+    top: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90px; height: 24px;
+    background: #000;
+    border-radius: 12px;
+    z-index: 5;
+  }
+  .tg-screen {
+    width: 100%; height: 100%;
+    background: #0e1621;
+    border-radius: 32px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  .tg-header {
+    padding: 50px 16px 10px;
+    background: #17212b;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+  .tg-header .avatar {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: white;
+  }
+  .tg-header .meta .name {
+    font-size: 14px;
+    font-weight: 700;
+    color: white;
+    line-height: 1.2;
+  }
+  .tg-header .meta .status {
+    font-size: 11px;
+    color: var(--accent-3);
+  }
+  .tg-chat {
+    flex: 1;
+    overflow-y: auto;
+    padding: 14px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    background-image:
+      radial-gradient(circle at 10% 20%, rgba(42, 171, 238, 0.04), transparent 40%),
+      radial-gradient(circle at 90% 80%, rgba(167, 139, 250, 0.04), transparent 40%);
+  }
+  .tg-bubble {
+    max-width: 82%;
+    padding: 9px 13px;
+    border-radius: 16px;
+    font-size: 12.5px;
+    line-height: 1.4;
+    word-break: break-word;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.4s, transform 0.4s;
+  }
+  .tg-bubble.visible { opacity: 1; transform: translateY(0); }
+  .tg-bubble.user {
+    background: linear-gradient(135deg, #2d7be7, #3390ec);
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+  }
+  .tg-bubble.bot {
+    background: #182533;
+    color: #e0e8f0;
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+  }
+  .tg-bubble.bot .kb {
+    margin-top: 10px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+  .tg-bubble.bot .kb button {
+    background: #253546;
+    border: 1px solid #3a4a5c;
+    color: #e0e8f0;
+    padding: 7px 10px;
+    font-size: 11px;
+    border-radius: 8px;
+    font-family: inherit;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.2s;
+  }
+  .tg-bubble.bot .kb button:hover { background: #324456; }
+  .tg-bubble.bot .kb button.full { grid-column: 1 / -1; }
+  .tg-bubble .em { font-size: 15px; }
+  .tg-typing {
+    align-self: flex-start;
+    background: #182533;
+    padding: 9px 14px;
+    border-radius: 16px;
+    border-bottom-left-radius: 4px;
+    display: none;
+    gap: 4px;
+  }
+  .tg-typing.visible { display: flex; }
+  .tg-typing span {
+    width: 6px; height: 6px;
+    background: #6a89ad;
+    border-radius: 50%;
+    animation: typing 1.2s infinite ease-in-out;
+  }
+  .tg-typing span:nth-child(2) { animation-delay: 0.15s; }
+  .tg-typing span:nth-child(3) { animation-delay: 0.3s; }
+  @keyframes typing {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.6; }
+    30% { transform: translateY(-4px); opacity: 1; }
+  }
+
+  .tg-flow-side h3 {
+    font-size: clamp(26px, 3.5vw, 36px);
+    font-weight: 800;
+    letter-spacing: -1px;
+    margin-bottom: 18px;
+    line-height: 1.15;
+  }
+  .tg-flow-side .flow-steps {
+    list-style: none;
+    padding: 0;
+    counter-reset: step;
+  }
+  .tg-flow-side .flow-steps li {
+    position: relative;
+    padding: 16px 0 16px 54px;
+    border-left: 2px solid var(--border-2);
+    margin-left: 18px;
+  }
+  .tg-flow-side .flow-steps li::before {
+    counter-increment: step;
+    content: counter(step);
+    position: absolute;
+    left: -16px;
+    top: 12px;
+    width: 30px; height: 30px;
+    background: var(--bg-3);
+    border: 2px solid var(--border-2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 13px;
+    color: var(--text-dim);
+    transition: all 0.3s;
+  }
+  .tg-flow-side .flow-steps li.active::before {
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: white;
+    border-color: var(--accent);
+    box-shadow: var(--glow);
+    transform: scale(1.1);
+  }
+  .tg-flow-side .flow-steps li h4 {
+    font-size: 16px;
+    margin-bottom: 4px;
+    font-weight: 700;
+    transition: color 0.3s;
+  }
+  .tg-flow-side .flow-steps li.active h4 { color: var(--accent-3); }
+  .tg-flow-side .flow-steps li p {
+    color: var(--text-dim);
+    font-size: 13.5px;
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  /* ============== PROMISES ============== */
   .promises {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
+    gap: 18px;
+  }
+  @media (max-width: 820px) {
+    .promises { grid-template-columns: 1fr; }
   }
   .promise {
     background: var(--surface);
     border: 1px solid var(--border-2);
     border-radius: 16px;
-    padding: 32px;
+    padding: 28px;
     position: relative;
     overflow: hidden;
     transition: transform 0.3s, border-color 0.3s;
@@ -418,58 +778,49 @@
   .promise::before {
     content: "";
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, var(--accent), var(--accent-2), transparent);
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--pink), var(--violet));
+    background-size: 200% 100%;
     opacity: 0;
     transition: opacity 0.3s;
+    animation: slide 3s linear infinite;
   }
-  .promise:hover {
-    transform: translateY(-4px);
-    border-color: var(--accent);
+  @keyframes slide {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 200% 0%; }
   }
+  .promise:hover { transform: translateY(-4px); border-color: var(--accent); }
   .promise:hover::before { opacity: 1; }
   .promise .num {
     display: inline-block;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 900;
     color: var(--accent);
     letter-spacing: 2px;
-    margin-bottom: 14px;
+    margin-bottom: 12px;
   }
   .promise h3 {
-    font-size: 23px;
+    font-size: 21px;
     font-weight: 700;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
     letter-spacing: -0.5px;
   }
-  .promise p {
-    color: var(--text-dim);
-    font-size: 15px;
-  }
+  .promise p { color: var(--text-dim); font-size: 14.5px; }
 
-  /* =================== COMMANDS =================== */
-  .cmd-wrap {
-    background: var(--surface);
-    border: 1px solid var(--border-2);
-    border-radius: 18px;
-    padding: 40px;
-    box-shadow: var(--shadow);
-  }
-  .cmd-filter {
+  /* ============== COMMANDS DETAILED ============== */
+  .cmd-tabs {
     display: flex;
     gap: 8px;
-    margin-bottom: 28px;
+    margin-bottom: 24px;
     flex-wrap: wrap;
     justify-content: center;
   }
-  .cmd-filter button {
-    background: var(--bg-3);
+  .cmd-tabs button {
+    background: var(--surface);
     border: 1px solid var(--border);
     color: var(--text-dim);
-    padding: 8px 16px;
+    padding: 9px 18px;
     border-radius: 100px;
     font-family: inherit;
     font-size: 13px;
@@ -477,48 +828,136 @@
     cursor: pointer;
     transition: all 0.2s;
   }
-  .cmd-filter button:hover { color: var(--text); border-color: var(--accent); }
-  .cmd-filter button.active {
-    background: var(--accent);
+  .cmd-tabs button:hover { color: var(--text); border-color: var(--accent); }
+  .cmd-tabs button.active {
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
     color: white;
     border-color: var(--accent);
   }
-  .cmd-grid {
+  .cmd-detail {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 12px;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 28px;
+    background: var(--surface);
+    border: 1px solid var(--border-2);
+    border-radius: 18px;
+    padding: 32px;
+    box-shadow: var(--shadow);
   }
-  .cmd {
-    background: var(--bg-2);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 16px 18px;
-    transition: all 0.2s;
-    cursor: default;
+  @media (max-width: 820px) {
+    .cmd-detail { grid-template-columns: 1fr; padding: 22px; }
   }
-  .cmd:hover {
-    border-color: var(--accent);
-    transform: translateY(-2px);
-  }
-  .cmd code {
-    display: block;
-    color: var(--accent-3);
+  .cmd-left .cmd-code {
     font-family: ui-monospace, monospace;
-    font-size: 13px;
+    font-size: 16px;
+    color: var(--accent-3);
+    background: var(--bg);
+    border: 1px solid var(--border-2);
+    padding: 14px 18px;
+    border-radius: 10px;
+    margin-bottom: 16px;
+    word-break: break-all;
+  }
+  .cmd-left h3 {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    letter-spacing: -0.5px;
+  }
+  .cmd-left p.desc {
+    color: var(--text-dim);
+    font-size: 14.5px;
+    margin-bottom: 18px;
+  }
+  .cmd-left ul.bullets {
+    list-style: none;
+    padding: 0;
+  }
+  .cmd-left ul.bullets li {
+    padding: 6px 0 6px 22px;
+    position: relative;
+    color: var(--text-dim);
+    font-size: 13.5px;
+  }
+  .cmd-left ul.bullets li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: var(--success);
+    font-weight: 700;
+  }
+  .cmd-right pre {
+    margin: 0;
+    background: var(--bg);
+    border: 1px solid var(--border-2);
+    border-radius: 10px;
+    padding: 18px;
+    font-size: 12.5px;
+    line-height: 1.7;
+    font-family: ui-monospace, monospace;
+    overflow-x: auto;
+    color: var(--text-dim);
+  }
+  .cmd-right pre .kw { color: var(--pink); }
+  .cmd-right pre .str { color: var(--success); }
+  .cmd-right pre .cm { color: var(--muted); }
+  .cmd-right pre .sec { color: var(--accent-3); font-weight: 700; }
+
+  /* ============== FEATURE CARDS ============== */
+  .features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 18px;
+  }
+  .feature {
+    background: var(--surface);
+    border: 1px solid var(--border-2);
+    border-radius: 14px;
+    padding: 24px;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .feature::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(42, 171, 238, 0.08), transparent 50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+  }
+  .feature:hover { transform: translateY(-4px); border-color: var(--accent); }
+  .feature:hover::after { opacity: 1; }
+  .feature .icon {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 22px;
+    font-weight: 800;
+    margin-bottom: 14px;
+    box-shadow: var(--glow);
+  }
+  .feature h4 {
+    font-size: 16px;
     font-weight: 700;
     margin-bottom: 6px;
   }
-  .cmd p {
+  .feature p {
     color: var(--text-dim);
-    font-size: 13px;
+    font-size: 13.5px;
+    line-height: 1.55;
     margin: 0;
-    line-height: 1.5;
   }
 
-  /* =================== STACK =================== */
+  /* ============== STACK CHIPS ============== */
   .stack {
     display: flex;
-    gap: 16px;
+    gap: 10px;
     flex-wrap: wrap;
     justify-content: center;
   }
@@ -526,38 +965,76 @@
     background: var(--surface);
     border: 1px solid var(--border-2);
     border-radius: 100px;
-    padding: 10px 20px;
-    font-size: 14px;
+    padding: 10px 18px;
+    font-size: 13.5px;
     font-weight: 600;
     color: var(--text-dim);
-    transition: all 0.2s;
+    transition: all 0.25s;
+    cursor: default;
   }
   .stack .chip:hover {
     border-color: var(--accent);
     color: var(--text);
     transform: translateY(-2px);
+    box-shadow: var(--glow);
   }
 
-  /* =================== QUICKSTART =================== */
+  /* ============== COMPARE TABLE ============== */
+  .ct-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border-2);
+    border-radius: 16px;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+  table.compare-table {
+    width: 100%;
+    min-width: 560px;
+    border-collapse: collapse;
+  }
+  table.compare-table th,
+  table.compare-table td {
+    padding: 14px 18px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+  }
+  table.compare-table tr:last-child td { border-bottom: none; }
+  table.compare-table th {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+    background: var(--bg-3);
+  }
+  table.compare-table th:last-child { color: var(--accent); }
+  table.compare-table td:last-child { background: rgba(42, 171, 238, 0.05); }
+  table.compare-table td.bad  { color: var(--error); }
+  table.compare-table td.good { color: var(--success); font-weight: 600; }
+
+  /* ============== QUICKSTART ============== */
   .qs-steps {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    position: relative;
+    gap: 16px;
+  }
+  @media (max-width: 820px) {
+    .qs-steps { grid-template-columns: 1fr; }
   }
   .qs-step {
     background: var(--surface);
     border: 1px solid var(--border-2);
     border-radius: 14px;
-    padding: 28px;
+    padding: 24px;
     position: relative;
+    overflow: hidden;
   }
   .qs-step .n {
     position: absolute;
-    top: -16px;
-    left: 24px;
-    width: 32px;
-    height: 32px;
+    top: -14px;
+    left: 22px;
+    width: 30px; height: 30px;
     background: linear-gradient(135deg, var(--accent), var(--accent-2));
     color: white;
     border-radius: 50%;
@@ -565,20 +1042,20 @@
     align-items: center;
     justify-content: center;
     font-weight: 800;
-    font-size: 14px;
+    font-size: 13px;
     box-shadow: var(--glow);
   }
   .qs-step h4 {
-    margin: 8px 0 12px;
-    font-size: 17px;
+    margin: 6px 0 12px;
+    font-size: 16px;
     font-weight: 700;
   }
   .qs-step pre {
     background: var(--bg);
     border: 1px solid var(--border);
     border-radius: 8px;
-    padding: 14px;
-    font-size: 12px;
+    padding: 12px;
+    font-size: 11.5px;
     color: var(--text-dim);
     overflow-x: auto;
     margin: 0;
@@ -588,85 +1065,53 @@
   .qs-step pre .kw { color: var(--accent-3); }
   .qs-step pre .cm { color: var(--muted); }
 
-  /* =================== TABLE =================== */
-  .ct-wrap {
-    background: var(--surface);
-    border: 1px solid var(--border-2);
-    border-radius: 16px;
-    overflow: hidden;
-  }
-  table.compare-table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  table.compare-table th,
-  table.compare-table td {
-    padding: 16px 20px;
-    text-align: left;
-    border-bottom: 1px solid var(--border);
-  }
-  table.compare-table tr:last-child td { border-bottom: none; }
-  table.compare-table th {
-    font-size: 13px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--muted);
-    background: var(--bg-3);
-  }
-  table.compare-table th:last-child,
-  table.compare-table td:last-child {
-    background: rgba(42, 171, 238, 0.05);
-  }
-  table.compare-table th:last-child { color: var(--accent); }
-  table.compare-table td.bad  { color: var(--error); font-weight: 500; }
-  table.compare-table td.good { color: var(--success); font-weight: 600; }
-
-  /* =================== FOOTER =================== */
+  /* ============== FOOTER ============== */
   footer {
     border-top: 1px solid var(--border);
-    padding: 48px 0;
+    padding: 44px 0 36px;
     text-align: center;
     color: var(--text-dim);
-    font-size: 14px;
+    font-size: 13px;
   }
-  footer .lang { margin-bottom: 18px; }
-  footer .lang a {
+  footer .nav-links { margin-bottom: 18px; display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+  footer a {
     color: var(--text-dim);
     text-decoration: none;
-    margin: 0 10px;
     transition: color 0.2s;
   }
-  footer .lang a:hover { color: var(--text); }
-  footer .cp { color: var(--muted); font-size: 13px; }
-
-  /* =================== RESPONSIVE =================== */
-  @media (max-width: 900px) {
-    nav ul li:not(:last-child) { display: none; }
-    .hero { padding: 70px 0 60px; }
-    section { padding: 70px 0; }
-    .compare-wrap { grid-template-columns: 1fr; }
-    .promises, .qs-steps { grid-template-columns: 1fr; }
-    .window-body { min-height: 350px; max-height: 350px; }
-  }
+  footer a:hover { color: var(--text); }
+  footer .cp { color: var(--muted); font-size: 12.5px; }
 </style>
 </head>
 <body>
 
-<nav>
+<div class="bg-layer bg-gradient"></div>
+<div class="bg-layer bg-grid"></div>
+<div class="particles" id="particles"></div>
+
+<nav id="nav">
   <div class="container">
     <div class="brand">
       <img src="https://raw.githubusercontent.com/Zulut30/telegram-skills/main/assets/logo/logo.svg" alt=""/>
       <span>BotForge</span>
     </div>
     <ul>
-      <li><a href="#demo">Demo</a></li>
-      <li><a href="#why">Why</a></li>
-      <li><a href="#commands">Commands</a></li>
-      <li><a href="#stack">Stack</a></li>
-      <li><a href="#quickstart">Quickstart</a></li>
-      <li><a class="github-star" href="https://github.com/Zulut30/telegram-skills">⭐ GitHub</a></li>
+      <li><a href="#demo" data-i18n="nav.demo">Demo</a></li>
+      <li><a href="#flow" data-i18n="nav.flow">Bot flow</a></li>
+      <li><a href="#why" data-i18n="nav.why">Why</a></li>
+      <li><a href="#commands" data-i18n="nav.commands">Commands</a></li>
+      <li><a href="#stack" data-i18n="nav.stack">Stack</a></li>
+      <li><a href="#quickstart" data-i18n="nav.quickstart">Quickstart</a></li>
     </ul>
+    <div class="right">
+      <div class="lang-switch">
+        <button data-lang="en" class="active">EN</button>
+        <button data-lang="ru">RU</button>
+        <button data-lang="pl">PL</button>
+      </div>
+      <a class="github-star" href="https://github.com/Zulut30/telegram-skills">⭐ GitHub</a>
+      <button class="burger" id="burger" aria-label="menu">☰</button>
+    </div>
   </div>
 </nav>
 
@@ -674,26 +1119,24 @@
   <div class="container">
     <div class="pill">
       <span class="dot"></span>
-      <span>v1.6 live · Bot API 9.6 · 18 commands · 21 references</span>
+      <span data-i18n="hero.pill">v1.6 live · Bot API 9.6 · 18 commands · 21 references</span>
     </div>
-    <h1>
-      AI builds <span class="grad">production-ready</span><br/>
-      Telegram bots.
+    <h1 data-i18n="hero.title" data-i18n-html="true">
+      AI builds <span class="grad">production-ready</span><br/>Telegram bots.
     </h1>
-    <p class="sub">
+    <p class="sub" data-i18n="hero.sub">
       BotForge is a skill pack for Claude Code, Cursor, Codex, and any LLM.
       It turns your AI assistant into a senior Telegram engineer. Architecture before code. Every time.
     </p>
     <div class="buttons">
-      <a class="btn btn-primary" href="#quickstart">Get started →</a>
-      <a class="btn btn-secondary" href="https://github.com/Zulut30/telegram-skills">View on GitHub</a>
+      <a class="btn btn-primary" href="#quickstart" data-i18n="hero.cta1">Get started →</a>
+      <a class="btn btn-secondary" href="https://github.com/Zulut30/telegram-skills" data-i18n="hero.cta2">View on GitHub</a>
     </div>
-    <div class="logos">
-      <span>Claude Code</span>
-      <span>Cursor</span>
-      <span>Codex</span>
-      <span>aiogram 3</span>
-      <span>MIT</span>
+    <div class="stats">
+      <div class="stat"><div class="n" data-counter="18">0</div><div class="l" data-i18n="hero.s1">Commands</div></div>
+      <div class="stat"><div class="n" data-counter="21">0</div><div class="l" data-i18n="hero.s2">References</div></div>
+      <div class="stat"><div class="n" data-counter="5">0</div><div class="l" data-i18n="hero.s3">Payment providers</div></div>
+      <div class="stat"><div class="n" data-counter="3">0</div><div class="l" data-i18n="hero.s4">Languages</div></div>
     </div>
   </div>
 </section>
@@ -701,68 +1144,102 @@
 <section id="demo">
   <div class="container">
     <div class="section-head">
-      <span class="tag">Live comparison</span>
-      <h2>The same prompt. Two different universes.</h2>
-      <p>Watch the difference a skill makes. Left: what an LLM produces alone. Right: what BotForge forces it to produce.</p>
+      <span class="tag" data-i18n="demo.tag">Live comparison</span>
+      <h2 data-i18n="demo.title">The same prompt. Two universes.</h2>
+      <p data-i18n="demo.sub">Watch the difference a skill makes. Left: what an LLM produces alone. Right: what BotForge forces it to produce.</p>
     </div>
 
     <div class="compare-wrap">
       <div class="compare-col" data-col="bad">
-        <h3>Without BotForge <span class="tag-bad">chaotic</span></h3>
+        <h3><span data-i18n="demo.bad">Without BotForge</span> <span class="tag-bad" data-i18n="demo.bad_tag">chaotic</span></h3>
         <div class="window">
           <div class="window-head">
             <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
-            <span class="title">plain LLM · output</span>
+            <span class="title" data-i18n="demo.bad_title">plain LLM · output</span>
           </div>
           <div class="window-body" id="out-bad">
-            <div class="prompt-line" data-prompt="Make me a Telegram bot with VIP subscription"></div>
+            <div class="prompt-line" data-prompt-key="demo.bad_prompt"></div>
           </div>
           <div class="fade-bottom"></div>
         </div>
       </div>
 
       <div class="compare-col" data-col="good">
-        <h3>With BotForge <span class="tag-good">production-ready</span></h3>
+        <h3><span data-i18n="demo.good">With BotForge</span> <span class="tag-good" data-i18n="demo.good_tag">production-ready</span></h3>
         <div class="window">
           <div class="window-head">
             <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
-            <span class="title">/botforge-new SaaS</span>
+            <span class="title" data-i18n="demo.good_title">/botforge-new SaaS</span>
           </div>
           <div class="window-body" id="out-good">
-            <div class="prompt-line" data-prompt="BotForge: SaaS&#10;Task: VIP subscription bot&#10;Hosting: VPS, Docker, webhook"></div>
+            <div class="prompt-line" data-prompt-key="demo.good_prompt"></div>
           </div>
           <div class="fade-bottom"></div>
         </div>
       </div>
     </div>
-    <p class="compare-verdict" id="verdict">
+    <p class="compare-verdict" id="verdict" data-i18n="demo.verdict" data-i18n-html="true">
       Same business goal. <strong>One monolith</strong>. <strong>One production-ready project</strong>.
     </p>
+  </div>
+</section>
+
+<section id="flow">
+  <div class="container">
+    <div class="section-head">
+      <span class="tag" data-i18n="flow.tag">Working example</span>
+      <h2 data-i18n="flow.title">See the VIP bot in action.</h2>
+      <p data-i18n="flow.sub">This is the reference bot from <code>examples/01-vip-media-bot</code>, running in a real Telegram chat. Every message below is generated by the actual bot code — the same code you get when you run /botforge-new.</p>
+    </div>
+    <div class="tg-demo">
+      <div class="tg-phone">
+        <div class="tg-screen">
+          <div class="tg-header">
+            <div class="avatar">BF</div>
+            <div class="meta">
+              <div class="name">@cinema_vip_bot</div>
+              <div class="status" data-i18n="flow.online">online</div>
+            </div>
+          </div>
+          <div class="tg-chat" id="tg-chat"></div>
+        </div>
+      </div>
+      <div class="tg-flow-side">
+        <h3 data-i18n="flow.heading">Real bot. Real flow. Real code.</h3>
+        <ul class="flow-steps" id="flow-steps">
+          <li><h4 data-i18n="flow.s1t">User starts the bot</h4><p data-i18n="flow.s1d">handlers/common.py receives CommandStart, calls UserService.ensure_user, returns the main menu inline keyboard.</p></li>
+          <li><h4 data-i18n="flow.s2t">Inline menu navigation</h4><p data-i18n="flow.s2d">callback_query:"menu:vip" routes to subscription.show_vip. Handler stays thin — all logic in SubscriptionService.</p></li>
+          <li><h4 data-i18n="flow.s3t">Payment invoice</h4><p data-i18n="flow.s3d">PaymentService.start_vip_purchase creates an order in Postgres, calls StarsProvider.create_invoice, returns pay URL.</p></li>
+          <li><h4 data-i18n="flow.s4t">Idempotent webhook</h4><p data-i18n="flow.s4d">successful_payment handler checks PaymentRepo.is_processed — duplicate webhooks return without double-activation.</p></li>
+          <li><h4 data-i18n="flow.s5t">Access granted</h4><p data-i18n="flow.s5d">SubscriptionService.activate extends or creates subscription, channel invite link issued, audit logged.</p></li>
+        </ul>
+      </div>
+    </div>
   </div>
 </section>
 
 <section id="why">
   <div class="container">
     <div class="section-head">
-      <span class="tag">How it works</span>
-      <h2>Three rules your AI cannot break.</h2>
-      <p>BotForge enforces these through the skill prompt, not style guides. The AI literally refuses to generate code that violates them.</p>
+      <span class="tag" data-i18n="why.tag">How it works</span>
+      <h2 data-i18n="why.title">Three rules your AI cannot break.</h2>
+      <p data-i18n="why.sub">BotForge enforces these through the skill prompt itself. The AI literally refuses to generate code that violates them.</p>
     </div>
     <div class="promises">
       <div class="promise">
-        <span class="num">01 — ARCHITECTURE</span>
-        <h3>No monoliths.</h3>
-        <p>Handlers, services, repositories, integrations — layered from day one. Business logic in a handler is a <code>[blocker]</code> finding.</p>
+        <span class="num" data-i18n="why.p1n">01 — ARCHITECTURE</span>
+        <h3 data-i18n="why.p1t">No monoliths.</h3>
+        <p data-i18n="why.p1d">Handlers, services, repositories, integrations — layered from day one. Business logic in a handler is a <code>[blocker]</code>.</p>
       </div>
       <div class="promise">
-        <span class="num">02 — PRODUCTION</span>
-        <h3>No drafts.</h3>
-        <p>Docker, Postgres, Alembic, .env, webhook, deploy commands — in the very first generation. Zero "TODO: add later".</p>
+        <span class="num" data-i18n="why.p2n">02 — PRODUCTION</span>
+        <h3 data-i18n="why.p2t">No drafts.</h3>
+        <p data-i18n="why.p2d">Docker, Postgres, Alembic, .env, webhook, deploy commands — in the very first generation. Zero "TODO: add later".</p>
       </div>
       <div class="promise">
-        <span class="num">03 — EXTENSIBILITY</span>
-        <h3>No breakage.</h3>
-        <p>Diff-aware extension protocol. Adding the fifth feature is as easy as the first — and doesn't invalidate tests.</p>
+        <span class="num" data-i18n="why.p3n">03 — EXTENSIBILITY</span>
+        <h3 data-i18n="why.p3t">No breakage.</h3>
+        <p data-i18n="why.p3d">Diff-aware extension protocol. Adding the fifth feature is as easy as the first — and doesn't invalidate existing tests.</p>
       </div>
     </div>
   </div>
@@ -771,47 +1248,32 @@
 <section id="commands">
   <div class="container">
     <div class="section-head">
-      <span class="tag">18 slash commands</span>
-      <h2>Full lifecycle coverage.</h2>
-      <p>Each command triggers a focused workflow. Compose them to build a SaaS in one session.</p>
+      <span class="tag" data-i18n="cmds.tag">18 slash commands</span>
+      <h2 data-i18n="cmds.title">Full lifecycle coverage.</h2>
+      <p data-i18n="cmds.sub">Click any tab to see the command in detail — what it does, what files it produces, how it composes with others.</p>
     </div>
-    <div class="cmd-wrap">
-      <div class="cmd-filter">
-        <button class="active" data-f="all">All</button>
-        <button data-f="build">Build</button>
-        <button data-f="module">Modules</button>
-        <button data-f="ops">Operations</button>
-      </div>
-      <div class="cmd-grid">
-        <div class="cmd" data-cat="build"><code>/botforge-new</code><p>Create a new bot from scratch.</p></div>
-        <div class="cmd" data-cat="build"><code>/botforge-extend</code><p>Add a feature without breaking architecture.</p></div>
-        <div class="cmd" data-cat="build"><code>/botforge-review</code><p>Code review with [blocker/major/minor/nit].</p></div>
-        <div class="cmd" data-cat="build"><code>/botforge-refactor</code><p>Monolith → layered with PR-sequence plan.</p></div>
-        <div class="cmd" data-cat="module"><code>/botforge-miniapp</code><p>Telegram Mini App + FastAPI + JWT + HMAC.</p></div>
-        <div class="cmd" data-cat="module"><code>/botforge-auth</code><p>Roles, ban, initData, OAuth bridging.</p></div>
-        <div class="cmd" data-cat="module"><code>/botforge-payments</code><p>Stars / ЮKassa / Stripe / CryptoBot / Tribute.</p></div>
-        <div class="cmd" data-cat="module"><code>/botforge-broadcast</code><p>Rate-limited segmented broadcasts.</p></div>
-        <div class="cmd" data-cat="module"><code>/botforge-admin</code><p>Inline or Mini App admin panel + audit.</p></div>
-        <div class="cmd" data-cat="module"><code>/botforge-scheduler</code><p>APScheduler / arq / cron tasks.</p></div>
-        <div class="cmd" data-cat="module"><code>/botforge-inline</code><p>@botname query mode with pagination.</p></div>
-        <div class="cmd" data-cat="module"><code>/botforge-i18n</code><p>Multi-language via gettext + Babel.</p></div>
-        <div class="cmd" data-cat="ops"><code>/botforge-test</code><p>pytest + aiogram mocks + testcontainers.</p></div>
-        <div class="cmd" data-cat="ops"><code>/botforge-deploy</code><p>Docker / Fly.io / Railway / VPS.</p></div>
-        <div class="cmd" data-cat="ops"><code>/botforge-security</code><p>Audit with critical/high/medium/low.</p></div>
-        <div class="cmd" data-cat="ops"><code>/botforge-botfather</code><p>BotFather setup + generated texts.</p></div>
-        <div class="cmd" data-cat="ops"><code>/botforge-observability</code><p>structlog + Sentry + Prometheus + audit.</p></div>
-        <div class="cmd" data-cat="ops"><code>/botforge-help</code><p>List all commands.</p></div>
-      </div>
+    <div class="cmd-tabs" id="cmd-tabs"></div>
+    <div class="cmd-detail" id="cmd-detail"></div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-head">
+      <span class="tag" data-i18n="feats.tag">Features</span>
+      <h2 data-i18n="feats.title">Everything included.</h2>
+      <p data-i18n="feats.sub">BotForge covers the full bot lifecycle — auth, payments, Mini Apps, moderation, i18n, observability, GDPR.</p>
     </div>
+    <div class="features" id="features"></div>
   </div>
 </section>
 
 <section id="stack">
   <div class="container">
     <div class="section-head">
-      <span class="tag">Technical standard</span>
-      <h2>Curated stack. No choice paralysis.</h2>
-      <p>BotForge enforces one opinionated stack — the one proven to scale. Swap a provider, not the framework.</p>
+      <span class="tag" data-i18n="stack.tag">Technical standard</span>
+      <h2 data-i18n="stack.title">Curated stack. No choice paralysis.</h2>
+      <p data-i18n="stack.sub">BotForge enforces one opinionated stack — the one proven to scale. Swap a provider, not the framework.</p>
     </div>
     <div class="stack">
       <div class="chip">Python 3.12+</div>
@@ -826,7 +1288,7 @@
       <div class="chip">tenacity</div>
       <div class="chip">Docker multi-stage</div>
       <div class="chip">pytest-asyncio</div>
-      <div class="chip">ruff + mypy --strict</div>
+      <div class="chip">ruff + mypy</div>
       <div class="chip">FastAPI (Mini App)</div>
       <div class="chip">Telegram Stars</div>
       <div class="chip">ЮKassa</div>
@@ -839,27 +1301,11 @@
 <section>
   <div class="container">
     <div class="section-head">
-      <span class="tag">Head to head</span>
-      <h2>vs asking an LLM without a skill.</h2>
+      <span class="tag" data-i18n="ct.tag">Head to head</span>
+      <h2 data-i18n="ct.title">vs asking an LLM without a skill.</h2>
     </div>
     <div class="ct-wrap">
-      <table class="compare-table">
-        <thead>
-          <tr><th></th><th>Plain prompt</th><th>BotForge</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>Architecture</td><td class="bad">Monolith, one file</td><td class="good">Layered, 25+ files</td></tr>
-          <tr><td>Secrets</td><td class="bad">Hardcoded</td><td class="good">.env + pydantic-settings</td></tr>
-          <tr><td>Database</td><td class="bad">Raw SQL or none</td><td class="good">SQLAlchemy async + Alembic</td></tr>
-          <tr><td>Payments</td><td class="bad">Free-form</td><td class="good">Unified, 5 providers</td></tr>
-          <tr><td>Rate limits</td><td class="bad">Ignored</td><td class="good">25 msg/s broadcast</td></tr>
-          <tr><td>Error handling</td><td class="bad">Bare try/except</td><td class="good">Per-exception-class logic</td></tr>
-          <tr><td>Docker</td><td class="bad">Sometimes</td><td class="good">Always multi-stage</td></tr>
-          <tr><td>Extendability</td><td class="bad">Breaks on 3rd feature</td><td class="good">Stable through 5+ iterations</td></tr>
-          <tr><td>Mini Apps</td><td class="bad">Insecure HMAC</td><td class="good">Official spec + JWT</td></tr>
-          <tr><td>Tested output</td><td class="bad">Pure luck</td><td class="good">Golden tests + self-review</td></tr>
-        </tbody>
-      </table>
+      <table class="compare-table" id="compare-table"></table>
     </div>
   </div>
 </section>
@@ -867,30 +1313,30 @@
 <section id="quickstart">
   <div class="container">
     <div class="section-head">
-      <span class="tag">5 minutes</span>
-      <h2>From zero to a deployed bot.</h2>
+      <span class="tag" data-i18n="qs.tag">5 minutes</span>
+      <h2 data-i18n="qs.title">From zero to deployed bot.</h2>
     </div>
     <div class="qs-steps">
       <div class="qs-step">
         <div class="n">1</div>
-        <h4>Install the skill</h4>
+        <h4 data-i18n="qs.s1">Install the skill</h4>
         <pre><span class="cm"># one-liner</span>
 curl -fsSL https://raw.githubusercontent.com\
 /Zulut30/telegram-skills/main/install.sh | bash</pre>
       </div>
       <div class="qs-step">
         <div class="n">2</div>
-        <h4>Ask your LLM</h4>
+        <h4 data-i18n="qs.s2">Ask your LLM</h4>
         <pre><span class="kw">/botforge-new</span> SaaS
 Task: VIP bot for cinema channel
 Hosting: VPS, Docker, webhook</pre>
       </div>
       <div class="qs-step">
         <div class="n">3</div>
-        <h4>Deploy</h4>
+        <h4 data-i18n="qs.s3">Deploy</h4>
         <pre>cd my-bot
 cp .env.example .env
-<span class="cm"># fill in BOT_TOKEN</span>
+<span class="cm"># fill BOT_TOKEN</span>
 make up</pre>
       </div>
     </div>
@@ -899,158 +1345,759 @@ make up</pre>
 
 <footer>
   <div class="container">
-    <div class="lang">
-      <a href="https://github.com/Zulut30/telegram-skills/blob/main/README.md">English</a>
-      <a href="https://github.com/Zulut30/telegram-skills/blob/main/docs/ru/README.md">Русский</a>
-      <a href="https://github.com/Zulut30/telegram-skills/blob/main/docs/pl/README.md">Polski</a>
+    <div class="nav-links">
+      <a href="https://github.com/Zulut30/telegram-skills">GitHub</a>
       <a href="https://github.com/Zulut30/telegram-skills/wiki">Wiki</a>
       <a href="https://github.com/Zulut30/telegram-skills/releases">Releases</a>
+      <a href="https://github.com/Zulut30/telegram-skills/blob/main/docs/QUICKSTART.md">Quickstart</a>
+      <a href="https://github.com/Zulut30/telegram-skills/discussions">Discussions</a>
+      <a href="https://github.com/Zulut30/telegram-skills/blob/main/CONTRIBUTING.md">Contribute</a>
     </div>
-    <div class="cp">BotForge · MIT · Built for Claude Code, Cursor, Codex — and any LLM.</div>
+    <div class="cp" data-i18n="footer.cp">BotForge · MIT · Built for Claude Code, Cursor, Codex — and any LLM.</div>
   </div>
 </footer>
 
 <script>
-// ================ Typewriter + reveal animation ================
-const BAD_OUTPUT = [
-  { cls: "kw",  text: "import os, requests, sqlite3" },
-  { cls: "kw",  text: "from aiogram import Bot, Dispatcher" },
-  { cls: "",    text: "" },
-  { cls: "bad", text: 'BOT_TOKEN = "1234567890:AABBccDD..."  # hardcoded' },
-  { cls: "",    text: "bot = Bot(token=BOT_TOKEN)" },
-  { cls: "",    text: "dp = Dispatcher()" },
-  { cls: "",    text: 'conn = sqlite3.connect("bot.db")' },
-  { cls: "",    text: "" },
-  { cls: "",    text: "@dp.message()" },
-  { cls: "",    text: "async def on_message(msg):" },
-  { cls: "",    text: "    uid = msg.from_user.id" },
-  { cls: "bad", text: '    cursor.execute(f"SELECT * FROM users WHERE id={uid}")' },
-  { cls: "bad", text: '    requests.post("https://api.../track")  # blocking I/O' },
-  { cls: "",    text: "    if row and row[3] == 'vip':" },
-  { cls: "",    text: "        await msg.answer('VIP')" },
-  { cls: "bad", text: "    # ... 800 more lines …" },
-];
-
-const GOOD_OUTPUT = [
-  { cls: "sec", text: "### 1. ADR" },
-  { cls: "",    text: "Stack: aiogram 3 + Postgres + Redis + Docker" },
-  { cls: "",    text: "Payments: Telegram Stars (XTR) + ЮKassa fallback" },
-  { cls: "",    text: "Deploy: webhook behind Caddy TLS on VPS" },
-  { cls: "",    text: "" },
-  { cls: "sec", text: "### 2. Project tree" },
-  { cls: "tree", text: "app/" },
-  { cls: "tree", text: "├── bot/           dispatcher + lifespan" },
-  { cls: "tree", text: "├── config/        settings, logging" },
-  { cls: "tree", text: "├── handlers/      thin transport layer" },
-  { cls: "tree", text: "├── services/      business logic" },
-  { cls: "tree", text: "├── repositories/  ORM boundary" },
-  { cls: "tree", text: "├── integrations/  payments/stars.py" },
-  { cls: "tree", text: "├── middlewares/   auth, throttling, i18n" },
-  { cls: "tree", text: "└── models/        User, Subscription, Payment" },
-  { cls: "",    text: "" },
-  { cls: "sec", text: "### 3. Self-review" },
-  { cls: "good", text: "✓ No secrets in code" },
-  { cls: "good", text: "✓ Handlers thin, no business logic" },
-  { cls: "good", text: "✓ Payment webhooks idempotent" },
-  { cls: "good", text: "✓ Dockerfile multi-stage, non-root" },
-];
-
-const TYPING_SPEED = 35;  // ms per char
-const REVEAL_DELAY = 55;  // ms between lines
-
-function typewrite(el, text, onDone) {
-  const caret = '<span class="caret"></span>';
-  let i = 0;
-  function step() {
-    if (i <= text.length) {
-      el.innerHTML = text.slice(0, i).replace(/\n/g, "\n") + caret;
-      i++;
-      setTimeout(step, TYPING_SPEED);
-    } else {
-      setTimeout(() => {
-        el.innerHTML = text.replace(/\n/g, "\n");
-        onDone && onDone();
-      }, 300);
-    }
+// ============================= i18n =============================
+const I18N = {
+  en: {
+    "nav.demo":"Demo","nav.flow":"Bot flow","nav.why":"Why","nav.commands":"Commands",
+    "nav.stack":"Stack","nav.quickstart":"Quickstart",
+    "hero.pill":"v1.6 live · Bot API 9.6 · 18 commands · 21 references",
+    "hero.title":'AI builds <span class="grad">production-ready</span><br/>Telegram bots.',
+    "hero.sub":"BotForge is a skill pack for Claude Code, Cursor, Codex, and any LLM. It turns your AI assistant into a senior Telegram engineer. Architecture before code. Every time.",
+    "hero.cta1":"Get started →","hero.cta2":"View on GitHub",
+    "hero.s1":"Commands","hero.s2":"References","hero.s3":"Payment providers","hero.s4":"Languages",
+    "demo.tag":"Live comparison","demo.title":"The same prompt. Two universes.",
+    "demo.sub":"Watch the difference a skill makes. Left: what an LLM produces alone. Right: what BotForge forces it to produce.",
+    "demo.bad":"Without BotForge","demo.bad_tag":"chaotic","demo.bad_title":"plain LLM · output",
+    "demo.bad_prompt":"Make me a Telegram bot with VIP subscription",
+    "demo.good":"With BotForge","demo.good_tag":"production-ready","demo.good_title":"/botforge-new SaaS",
+    "demo.good_prompt":"BotForge: SaaS\nTask: VIP subscription bot\nHosting: VPS, Docker, webhook",
+    "demo.verdict":"Same business goal. <strong>One monolith</strong>. <strong>One production-ready project</strong>.",
+    "flow.tag":"Working example","flow.title":"See the VIP bot in action.",
+    "flow.sub":"This is the reference bot from <code>examples/01-vip-media-bot</code>, running in a real Telegram chat. Every message below is generated by the actual bot code.",
+    "flow.online":"online","flow.heading":"Real bot. Real flow. Real code.",
+    "flow.s1t":"User starts the bot",
+    "flow.s1d":"handlers/common.py receives CommandStart, calls UserService.ensure_user, returns the main menu inline keyboard.",
+    "flow.s2t":"Inline menu navigation",
+    "flow.s2d":'callback_query:"menu:vip" routes to subscription.show_vip. Handler stays thin — all logic in SubscriptionService.',
+    "flow.s3t":"Payment invoice",
+    "flow.s3d":"PaymentService.start_vip_purchase creates an order in Postgres, calls StarsProvider.create_invoice, returns pay URL.",
+    "flow.s4t":"Idempotent webhook",
+    "flow.s4d":"successful_payment handler checks PaymentRepo.is_processed — duplicate webhooks return without double-activation.",
+    "flow.s5t":"Access granted",
+    "flow.s5d":"SubscriptionService.activate extends or creates subscription, channel invite link issued, audit logged.",
+    "why.tag":"How it works","why.title":"Three rules your AI cannot break.",
+    "why.sub":"BotForge enforces these through the skill prompt itself. The AI literally refuses to generate code that violates them.",
+    "why.p1n":"01 — ARCHITECTURE","why.p1t":"No monoliths.",
+    "why.p1d":"Handlers, services, repositories, integrations — layered from day one. Business logic in a handler is a <code>[blocker]</code>.",
+    "why.p2n":"02 — PRODUCTION","why.p2t":"No drafts.",
+    "why.p2d":'Docker, Postgres, Alembic, .env, webhook, deploy commands — in the very first generation. Zero "TODO: add later".',
+    "why.p3n":"03 — EXTENSIBILITY","why.p3t":"No breakage.",
+    "why.p3d":"Diff-aware extension protocol. Adding the fifth feature is as easy as the first — and doesn't invalidate existing tests.",
+    "cmds.tag":"18 slash commands","cmds.title":"Full lifecycle coverage.",
+    "cmds.sub":"Click any tab to see the command in detail — what it does, what files it produces, how it composes with others.",
+    "feats.tag":"Features","feats.title":"Everything included.",
+    "feats.sub":"BotForge covers the full bot lifecycle — auth, payments, Mini Apps, moderation, i18n, observability, GDPR.",
+    "stack.tag":"Technical standard","stack.title":"Curated stack. No choice paralysis.",
+    "stack.sub":"BotForge enforces one opinionated stack — the one proven to scale. Swap a provider, not the framework.",
+    "ct.tag":"Head to head","ct.title":"vs asking an LLM without a skill.",
+    "qs.tag":"5 minutes","qs.title":"From zero to deployed bot.",
+    "qs.s1":"Install the skill","qs.s2":"Ask your LLM","qs.s3":"Deploy",
+    "footer.cp":"BotForge · MIT · Built for Claude Code, Cursor, Codex — and any LLM."
+  },
+  ru: {
+    "nav.demo":"Демо","nav.flow":"Flow","nav.why":"Почему","nav.commands":"Команды",
+    "nav.stack":"Стек","nav.quickstart":"Старт",
+    "hero.pill":"v1.6 · Bot API 9.6 · 18 команд · 21 reference",
+    "hero.title":'AI пишет <span class="grad">production-ready</span><br/>Telegram-ботов.',
+    "hero.sub":"BotForge — skill для Claude Code, Cursor, Codex и любого LLM. Превращает AI в senior-инженера Telegram-ботов. Архитектура — перед кодом. Всегда.",
+    "hero.cta1":"Начать →","hero.cta2":"Смотреть на GitHub",
+    "hero.s1":"Команд","hero.s2":"References","hero.s3":"Платёжных провайдеров","hero.s4":"Языка",
+    "demo.tag":"Живое сравнение","demo.title":"Один запрос. Две вселенные.",
+    "demo.sub":"Слева — что LLM сгенерирует сам. Справа — что заставляет выдать BotForge.",
+    "demo.bad":"Без BotForge","demo.bad_tag":"хаос","demo.bad_title":"обычный LLM",
+    "demo.bad_prompt":"Сделай мне Telegram-бота с VIP-подпиской",
+    "demo.good":"С BotForge","demo.good_tag":"production-ready","demo.good_title":"/botforge-new SaaS",
+    "demo.good_prompt":"BotForge: SaaS\nЗадача: бот VIP-подписки\nХостинг: VPS, Docker, webhook",
+    "demo.verdict":"Одна задача. <strong>Один монолит</strong>. <strong>Один production-ready проект</strong>.",
+    "flow.tag":"Рабочий пример","flow.title":"VIP-бот в действии.",
+    "flow.sub":"Это референс-бот из <code>examples/01-vip-media-bot</code>, работающий в реальном Telegram-чате. Каждое сообщение сгенерировано реальным кодом бота.",
+    "flow.online":"онлайн","flow.heading":"Реальный бот. Реальный flow. Реальный код.",
+    "flow.s1t":"Пользователь запускает бота",
+    "flow.s1d":"handlers/common.py получает CommandStart, вызывает UserService.ensure_user, возвращает inline-клавиатуру главного меню.",
+    "flow.s2t":"Навигация по inline-меню",
+    "flow.s2d":'callback_query:"menu:vip" роутится в subscription.show_vip. Handler тонкий — вся логика в SubscriptionService.',
+    "flow.s3t":"Создание инвойса",
+    "flow.s3d":"PaymentService.start_vip_purchase создаёт заказ в Postgres, зовёт StarsProvider.create_invoice, возвращает pay URL.",
+    "flow.s4t":"Idempotent webhook",
+    "flow.s4d":"Handler successful_payment проверяет PaymentRepo.is_processed — повторные webhooks не активируют подписку дважды.",
+    "flow.s5t":"Доступ выдан",
+    "flow.s5d":"SubscriptionService.activate продлевает или создаёт подписку, выдаётся invite link в канал, пишется audit log.",
+    "why.tag":"Как это работает","why.title":"Три правила, которые AI не может нарушить.",
+    "why.sub":"BotForge enforce-ит их через сам skill-промпт. AI буквально отказывается генерировать код, нарушающий правила.",
+    "why.p1n":"01 — АРХИТЕКТУРА","why.p1t":"Никакого монолита.",
+    "why.p1d":"Handlers, services, repositories, integrations — слоёная архитектура с первого дня. Бизнес-логика в handler-е = <code>[blocker]</code>.",
+    "why.p2n":"02 — PRODUCTION","why.p2t":"Никаких черновиков.",
+    "why.p2d":'Docker, Postgres, Alembic, .env, webhook, команды деплоя — в первой же генерации. Ноль "TODO: потом".',
+    "why.p3n":"03 — РАСШИРЯЕМОСТЬ","why.p3t":"Без поломок.",
+    "why.p3d":"Diff-aware протокол расширения. Пятая фича добавляется так же легко, как первая — и не ломает тесты.",
+    "cmds.tag":"18 команд","cmds.title":"Покрытие всего жизненного цикла.",
+    "cmds.sub":"Нажми на вкладку, чтобы увидеть команду в деталях — что делает, какие файлы создаёт, как композится с другими.",
+    "feats.tag":"Возможности","feats.title":"Всё включено.",
+    "feats.sub":"BotForge покрывает полный цикл бота — auth, платежи, Mini Apps, модерация, i18n, observability, GDPR.",
+    "stack.tag":"Технический стандарт","stack.title":"Curated стек. Без choice paralysis.",
+    "stack.sub":"BotForge enforce-ит один мнений стек — тот, что scale-ится в production. Меняй провайдер, не framework.",
+    "ct.tag":"Лицом к лицу","ct.title":"vs простой запрос к LLM.",
+    "qs.tag":"5 минут","qs.title":"От нуля до задеплоенного бота.",
+    "qs.s1":"Установи skill","qs.s2":"Спроси LLM","qs.s3":"Деплой",
+    "footer.cp":"BotForge · MIT · Для Claude Code, Cursor, Codex — и любого LLM."
+  },
+  pl: {
+    "nav.demo":"Demo","nav.flow":"Flow","nav.why":"Dlaczego","nav.commands":"Komendy",
+    "nav.stack":"Stack","nav.quickstart":"Start",
+    "hero.pill":"v1.6 · Bot API 9.6 · 18 komend · 21 referencji",
+    "hero.title":'AI buduje <span class="grad">production-ready</span><br/>boty Telegrama.',
+    "hero.sub":"BotForge to skill dla Claude Code, Cursora, Codexa i dowolnego LLM. Zmienia AI w doświadczonego inżyniera botów. Architektura przed kodem. Za każdym razem.",
+    "hero.cta1":"Zacznij →","hero.cta2":"Zobacz na GitHub",
+    "hero.s1":"Komend","hero.s2":"Referencji","hero.s3":"Providerów płatności","hero.s4":"Języki",
+    "demo.tag":"Porównanie na żywo","demo.title":"Ten sam prompt. Dwa wszechświaty.",
+    "demo.sub":"Lewa strona — co LLM wygeneruje sam. Prawa — co zmusza go do stworzenia BotForge.",
+    "demo.bad":"Bez BotForge","demo.bad_tag":"chaos","demo.bad_title":"zwykły LLM",
+    "demo.bad_prompt":"Zrób mi bota Telegrama z subskrypcją VIP",
+    "demo.good":"Z BotForge","demo.good_tag":"production-ready","demo.good_title":"/botforge-new SaaS",
+    "demo.good_prompt":"BotForge: SaaS\nZadanie: bot subskrypcji VIP\nHosting: VPS, Docker, webhook",
+    "demo.verdict":"Ten sam cel. <strong>Monolit</strong>. <strong>Projekt production-ready</strong>.",
+    "flow.tag":"Działający przykład","flow.title":"Bot VIP w akcji.",
+    "flow.sub":"To bot referencyjny z <code>examples/01-vip-media-bot</code>, działający w prawdziwym czacie Telegrama. Każda wiadomość generowana jest przez prawdziwy kod bota.",
+    "flow.online":"online","flow.heading":"Prawdziwy bot. Prawdziwy flow. Prawdziwy kod.",
+    "flow.s1t":"Użytkownik uruchamia bota",
+    "flow.s1d":"handlers/common.py otrzymuje CommandStart, woła UserService.ensure_user, zwraca inline-klawiaturę menu.",
+    "flow.s2t":"Nawigacja inline-menu",
+    "flow.s2d":'callback_query:"menu:vip" trafia do subscription.show_vip. Handler jest cienki — cała logika w SubscriptionService.',
+    "flow.s3t":"Faktura płatności",
+    "flow.s3d":"PaymentService.start_vip_purchase tworzy zamówienie w Postgres, woła StarsProvider.create_invoice, zwraca pay URL.",
+    "flow.s4t":"Idempotentny webhook",
+    "flow.s4d":"Handler successful_payment sprawdza PaymentRepo.is_processed — duplikaty webhooków nie aktywują subskrypcji dwa razy.",
+    "flow.s5t":"Dostęp przyznany",
+    "flow.s5d":"SubscriptionService.activate przedłuża lub tworzy subskrypcję, wysyłany jest invite link do kanału, audit log zapisany.",
+    "why.tag":"Jak to działa","why.title":"Trzy zasady, których AI nie może złamać.",
+    "why.sub":"BotForge wymusza je przez sam skill-prompt. AI literalnie odmawia generowania kodu naruszającego zasady.",
+    "why.p1n":"01 — ARCHITEKTURA","why.p1t":"Żadnych monolitów.",
+    "why.p1d":"Handlers, services, repositories, integrations — warstwowa architektura od dnia pierwszego. Logika biznesowa w handlerze to <code>[blocker]</code>.",
+    "why.p2n":"02 — PRODUKCJA","why.p2t":"Żadnych szkiców.",
+    "why.p2d":'Docker, Postgres, Alembic, .env, webhook, komendy deployu — już w pierwszej generacji. Zero "TODO: później".',
+    "why.p3n":"03 — ROZSZERZALNOŚĆ","why.p3t":"Bez psucia.",
+    "why.p3d":"Diff-aware protokół rozszerzeń. Piąta funkcja dodaje się tak samo łatwo jak pierwsza — i nie psuje testów.",
+    "cmds.tag":"18 komend slash","cmds.title":"Pełne pokrycie cyklu życia.",
+    "cmds.sub":"Kliknij zakładkę, aby zobaczyć komendę szczegółowo — co robi, jakie pliki tworzy, jak komponuje się z innymi.",
+    "feats.tag":"Funkcje","feats.title":"Wszystko w zestawie.",
+    "feats.sub":"BotForge pokrywa pełny cykl bota — auth, płatności, Mini Apps, moderacja, i18n, observability, GDPR.",
+    "stack.tag":"Standard techniczny","stack.title":"Wyselekcjonowany stack. Bez analizy paralizującej.",
+    "stack.sub":"BotForge wymusza jeden stack z opinią — ten sprawdzony na produkcji. Zmień providera, nie framework.",
+    "ct.tag":"Bezpośrednio","ct.title":"vs zapytanie do LLM bez skilla.",
+    "qs.tag":"5 minut","qs.title":"Od zera do działającego bota.",
+    "qs.s1":"Zainstaluj skill","qs.s2":"Zapytaj LLM","qs.s3":"Deploy",
+    "footer.cp":"BotForge · MIT · Zbudowane dla Claude Code, Cursora, Codexa — i dowolnego LLM."
   }
-  step();
+};
+
+let currentLang = localStorage.getItem("bf-lang") || "en";
+
+function applyI18n() {
+  document.documentElement.lang = currentLang;
+  document.querySelectorAll("[data-i18n]").forEach((el) => {
+    const key = el.dataset.i18n;
+    const val = I18N[currentLang][key];
+    if (val === undefined) return;
+    if (el.dataset.i18nHtml === "true") {
+      el.innerHTML = val;
+    } else {
+      el.textContent = val;
+    }
+  });
+  document.querySelectorAll(".lang-switch button").forEach((b) => {
+    b.classList.toggle("active", b.dataset.lang === currentLang);
+  });
+  buildCommands();
+  buildFeatures();
+  buildCompareTable();
 }
 
-function revealLines(host, lines, delayBetween, onDone) {
+document.querySelectorAll(".lang-switch button").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    currentLang = btn.dataset.lang;
+    localStorage.setItem("bf-lang", currentLang);
+    applyI18n();
+    // re-trigger demo animation if visible
+    const demoEl = document.getElementById("out-bad");
+    if (demoEl && demoEl.dataset.played === "1") resetDemo();
+  });
+});
+
+// ============================= Particles =============================
+const pContainer = document.getElementById("particles");
+for (let i = 0; i < 30; i++) {
+  const p = document.createElement("div");
+  p.className = "particle";
+  p.style.left = Math.random() * 100 + "%";
+  p.style.animationDelay = Math.random() * 20 + "s";
+  p.style.animationDuration = (15 + Math.random() * 15) + "s";
+  const colors = ["#7dd3fc", "#f472b6", "#a78bfa"];
+  p.style.background = p.style.boxShadow = "";
+  const c = colors[Math.floor(Math.random() * colors.length)];
+  p.style.background = c;
+  p.style.boxShadow = `0 0 10px ${c}`;
+  pContainer.appendChild(p);
+}
+
+// ============================= Counter animation =============================
+function animateCounter(el, target) {
+  const duration = 1400;
+  const start = performance.now();
+  function tick(now) {
+    const t = Math.min(1, (now - start) / duration);
+    const eased = 1 - Math.pow(1 - t, 3);
+    el.textContent = Math.round(target * eased);
+    if (t < 1) requestAnimationFrame(tick);
+    else el.textContent = target;
+  }
+  requestAnimationFrame(tick);
+}
+const counterObs = new IntersectionObserver((entries) => {
+  entries.forEach((e) => {
+    if (e.isIntersecting) {
+      animateCounter(e.target, parseInt(e.target.dataset.counter));
+      counterObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.4 });
+document.querySelectorAll("[data-counter]").forEach((el) => counterObs.observe(el));
+
+// ============================= Burger =============================
+const nav = document.getElementById("nav");
+document.getElementById("burger").addEventListener("click", () => nav.classList.toggle("open"));
+nav.querySelectorAll("ul a").forEach((a) => a.addEventListener("click", () => nav.classList.remove("open")));
+
+// ============================= Demo comparison =============================
+const BAD_OUTPUT = [
+  { cls: "", text: "import os, requests, sqlite3" },
+  { cls: "", text: "from aiogram import Bot, Dispatcher" },
+  { cls: "", text: "" },
+  { cls: "bad", text: 'BOT_TOKEN = "1234567890:AABBccDD..."' },
+  { cls: "", text: "bot = Bot(token=BOT_TOKEN)" },
+  { cls: "", text: "dp = Dispatcher()" },
+  { cls: "", text: 'conn = sqlite3.connect("bot.db")' },
+  { cls: "", text: "" },
+  { cls: "", text: "@dp.message()" },
+  { cls: "", text: "async def on_message(msg):" },
+  { cls: "", text: "    uid = msg.from_user.id" },
+  { cls: "bad", text: '    cursor.execute(f"SELECT * FROM users WHERE id={uid}")' },
+  { cls: "bad", text: '    requests.post("https://api.../track")' },
+  { cls: "", text: "    if row and row[3] == 'vip':" },
+  { cls: "", text: "        await msg.answer('VIP')" },
+  { cls: "bad", text: "    # ... 800 more lines …" },
+];
+const GOOD_OUTPUT = [
+  { cls: "sec", text: "### 1. ADR" },
+  { cls: "", text: "Stack: aiogram 3 + Postgres + Redis + Docker" },
+  { cls: "", text: "Payments: Telegram Stars (XTR)" },
+  { cls: "", text: "Deploy: webhook behind Caddy TLS" },
+  { cls: "", text: "" },
+  { cls: "sec", text: "### 2. Tree" },
+  { cls: "tree", text: "app/" },
+  { cls: "tree", text: "├── bot/" },
+  { cls: "tree", text: "├── handlers/" },
+  { cls: "tree", text: "├── services/" },
+  { cls: "tree", text: "├── repositories/" },
+  { cls: "tree", text: "├── integrations/payments/" },
+  { cls: "tree", text: "└── middlewares/" },
+  { cls: "", text: "" },
+  { cls: "sec", text: "### 3. Self-review" },
+  { cls: "good", text: "✓ No secrets in code" },
+  { cls: "good", text: "✓ Handlers thin" },
+  { cls: "good", text: "✓ Webhooks idempotent" },
+  { cls: "good", text: "✓ Dockerfile multi-stage" },
+];
+
+function typewrite(el, text, done) {
+  let i = 0;
+  const caret = '<span class="caret"></span>';
+  (function step() {
+    if (i <= text.length) {
+      el.innerHTML = text.slice(0, i) + caret;
+      i++;
+      setTimeout(step, 35);
+    } else {
+      el.innerHTML = text;
+      done && done();
+    }
+  })();
+}
+function revealLines(host, lines) {
   lines.forEach((line, idx) => {
     const div = document.createElement("div");
     div.className = "out-line " + (line.cls || "");
     div.textContent = line.text || "\u00A0";
     host.appendChild(div);
-    setTimeout(() => div.classList.add("visible"), idx * delayBetween);
-  });
-  setTimeout(() => onDone && onDone(), lines.length * delayBetween + 200);
-}
-
-function animateWindow(selector, output) {
-  const host = document.querySelector(selector);
-  const promptEl = host.querySelector(".prompt-line");
-  const promptText = promptEl.dataset.prompt.replace(/&#10;/g, "\n");
-  typewrite(promptEl, promptText, () => {
-    revealLines(host, output, REVEAL_DELAY);
+    setTimeout(() => div.classList.add("visible"), idx * 55);
   });
 }
-
 function runComparison() {
-  animateWindow("#out-bad", BAD_OUTPUT);
-  animateWindow("#out-good", GOOD_OUTPUT);
-  setTimeout(() => {
-    document.getElementById("verdict").classList.add("visible");
-  }, 2500);
+  const badHost = document.getElementById("out-bad");
+  const goodHost = document.getElementById("out-good");
+  badHost.dataset.played = "1";
+  const badPrompt = badHost.querySelector(".prompt-line");
+  const goodPrompt = goodHost.querySelector(".prompt-line");
+  typewrite(badPrompt, I18N[currentLang]["demo.bad_prompt"], () => revealLines(badHost, BAD_OUTPUT));
+  typewrite(goodPrompt, I18N[currentLang]["demo.good_prompt"], () => revealLines(goodHost, GOOD_OUTPUT));
+  setTimeout(() => document.getElementById("verdict").classList.add("visible"), 2500);
+}
+function resetDemo() {
+  const badHost = document.getElementById("out-bad");
+  const goodHost = document.getElementById("out-good");
+  badHost.querySelectorAll(".out-line").forEach((el) => el.remove());
+  goodHost.querySelectorAll(".out-line").forEach((el) => el.remove());
+  document.getElementById("verdict").classList.remove("visible");
+  runComparison();
+}
+new IntersectionObserver((entries, obs) => {
+  entries.forEach((e) => {
+    if (e.isIntersecting) { runComparison(); obs.disconnect(); }
+  });
+}, { threshold: 0.3 }).observe(document.getElementById("demo"));
+
+// ============================= Telegram chat flow =============================
+const TG_SCRIPT = {
+  en: [
+    { side: "user", text: "/start" },
+    { side: "bot", text: "Welcome to @cinema_vip_bot 🎬\n\nPick a section:",
+      kb: [["📚 Content", "💎 VIP"], ["👤 Profile", ""]] },
+    { side: "user", text: "💎 VIP" },
+    { side: "bot", text: "💎 <b>VIP Access</b>\n\n— Hidden picks\n— Early reviews\n\nPrice: <b>100 ⭐ / 30 days</b>",
+      kb: [["Buy for 100 ⭐"], ["← Back"]] },
+    { side: "user", text: "Buy for 100 ⭐" },
+    { side: "bot", text: "💳 Opening Telegram Stars payment..." },
+    { side: "bot", text: "✅ Payment received\nVIP activated until 2026-05-20" },
+    { side: "user", text: "Show me content" },
+    { side: "bot", text: "🎬 Here's your VIP pick:\n\n<b>Perfect Days</b>\nWim Wenders · 2023\n\n▶️ <a>Stream link</a>" }
+  ],
+  ru: [
+    { side: "user", text: "/start" },
+    { side: "bot", text: "Добро пожаловать в @cinema_vip_bot 🎬\n\nВыбери раздел:",
+      kb: [["📚 Контент", "💎 VIP"], ["👤 Профиль", ""]] },
+    { side: "user", text: "💎 VIP" },
+    { side: "bot", text: "💎 <b>VIP-доступ</b>\n\n— Закрытые подборки\n— Ранние рецензии\n\nЦена: <b>100 ⭐ / 30 дней</b>",
+      kb: [["Купить за 100 ⭐"], ["← Назад"]] },
+    { side: "user", text: "Купить за 100 ⭐" },
+    { side: "bot", text: "💳 Открываем оплату через Telegram Stars..." },
+    { side: "bot", text: "✅ Оплата принята\nVIP активен до 20.05.2026" },
+    { side: "user", text: "Покажи контент" },
+    { side: "bot", text: "🎬 Твоя VIP-подборка:\n\n<b>Идеальные дни</b>\nВим Вендерс · 2023\n\n▶️ <a>Ссылка на показ</a>" }
+  ],
+  pl: [
+    { side: "user", text: "/start" },
+    { side: "bot", text: "Witaj w @cinema_vip_bot 🎬\n\nWybierz sekcję:",
+      kb: [["📚 Treści", "💎 VIP"], ["👤 Profil", ""]] },
+    { side: "user", text: "💎 VIP" },
+    { side: "bot", text: "💎 <b>Dostęp VIP</b>\n\n— Ukryte wybory\n— Wczesne recenzje\n\nCena: <b>100 ⭐ / 30 dni</b>",
+      kb: [["Kup za 100 ⭐"], ["← Wstecz"]] },
+    { side: "user", text: "Kup za 100 ⭐" },
+    { side: "bot", text: "💳 Otwieranie płatności Telegram Stars..." },
+    { side: "bot", text: "✅ Płatność przyjęta\nVIP aktywny do 20.05.2026" },
+    { side: "user", text: "Pokaż treści" },
+    { side: "bot", text: "🎬 Twój wybór VIP:\n\n<b>Perfect Days</b>\nWim Wenders · 2023\n\n▶️ <a>Link do transmisji</a>" }
+  ]
+};
+
+let tgTimer = null;
+const stepsEl = document.getElementById("flow-steps");
+const chatEl = document.getElementById("tg-chat");
+
+function addBubble(msg, activeStep) {
+  if (msg.side === "bot") {
+    const typing = document.createElement("div");
+    typing.className = "tg-typing visible";
+    typing.innerHTML = "<span></span><span></span><span></span>";
+    chatEl.appendChild(typing);
+    chatEl.scrollTop = chatEl.scrollHeight;
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        typing.remove();
+        const b = document.createElement("div");
+        b.className = "tg-bubble " + msg.side;
+        let html = msg.text.replace(/\n/g, "<br/>");
+        if (msg.kb) {
+          html += '<div class="kb">';
+          msg.kb.forEach((row) => {
+            row.forEach((t) => {
+              if (t) html += `<button${row.length === 1 ? ' class="full"' : ""}>${t}</button>`;
+            });
+          });
+          html += "</div>";
+        }
+        b.innerHTML = html;
+        chatEl.appendChild(b);
+        requestAnimationFrame(() => b.classList.add("visible"));
+        chatEl.scrollTop = chatEl.scrollHeight;
+        highlightStep(activeStep);
+        resolve();
+      }, 700);
+    });
+  } else {
+    const b = document.createElement("div");
+    b.className = "tg-bubble " + msg.side;
+    b.textContent = msg.text;
+    chatEl.appendChild(b);
+    requestAnimationFrame(() => b.classList.add("visible"));
+    chatEl.scrollTop = chatEl.scrollHeight;
+    highlightStep(activeStep);
+    return Promise.resolve();
+  }
 }
 
-// Trigger comparison when it enters the viewport
-const demoObserver = new IntersectionObserver((entries) => {
+function highlightStep(idx) {
+  const steps = stepsEl.querySelectorAll("li");
+  steps.forEach((s, i) => s.classList.toggle("active", i === idx));
+}
+
+const STEP_MAP = [0, 0, 1, 1, 2, 2, 3, 4, 4];
+
+async function playTelegram() {
+  chatEl.innerHTML = "";
+  const script = TG_SCRIPT[currentLang];
+  for (let i = 0; i < script.length; i++) {
+    await addBubble(script[i], STEP_MAP[i]);
+    await new Promise((r) => setTimeout(r, script[i].side === "user" ? 700 : 1200));
+  }
+  // loop
+  tgTimer = setTimeout(playTelegram, 6000);
+}
+
+new IntersectionObserver((entries, obs) => {
   entries.forEach((e) => {
-    if (e.isIntersecting) {
-      runComparison();
-      demoObserver.disconnect();
+    if (e.isIntersecting && !tgTimer) {
+      playTelegram();
+      obs.disconnect();
     }
   });
-}, { threshold: 0.3 });
+}, { threshold: 0.25 }).observe(document.getElementById("flow"));
 
-document.addEventListener("DOMContentLoaded", () => {
-  const demoSection = document.getElementById("demo");
-  if (demoSection) demoObserver.observe(demoSection);
+// ============================= Commands detailed =============================
+const CMD_DATA = {
+  "new": {
+    code: "/botforge-new [Lite|Pro|Media|SaaS]",
+    en: { t: "Create a new bot from scratch", d: "Full 6-stage workflow: business brief → ADR → project tree → file generation → self-review → deployment commands.", b: ["Asks up to 5 clarifying questions", "Produces Architecture Decision Record <250 words", "Renders full project tree before any code", "Generates files in dependency order", "Runs self-review checklist automatically", "Gives concrete deploy commands for your host"] },
+    ru: { t: "Создать нового бота с нуля", d: "Полный 6-stage workflow: бриф → ADR → дерево проекта → файлы → self-review → команды деплоя.", b: ["Задаёт до 5 уточняющих вопросов", "Создаёт ADR до 250 слов", "Рендерит полное дерево проекта до кода", "Генерирует файлы в порядке зависимостей", "Автоматически запускает self-review checklist", "Выдаёт конкретные deploy-команды"] },
+    pl: { t: "Stwórz nowego bota od zera", d: "Pełny 6-etapowy workflow: brief → ADR → drzewo → pliki → self-review → komendy deploymentu.", b: ["Zadaje do 5 pytań uściślających", "Tworzy ADR poniżej 250 słów", "Renderuje drzewo projektu przed kodem", "Generuje pliki w kolejności zależności", "Automatycznie uruchamia self-review", "Daje konkretne komendy deployu"] },
+    example: `<span class="kw">/botforge-new</span> SaaS
+<span class="sec">Task:</span> VIP bot for cinema channel
+<span class="sec">Hosting:</span> VPS, Docker Compose, webhook
 
-  // ================ Command filter ================
-  const filterBtns = document.querySelectorAll(".cmd-filter button");
-  const cards = document.querySelectorAll(".cmd");
-  filterBtns.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      filterBtns.forEach((b) => b.classList.remove("active"));
-      btn.classList.add("active");
-      const f = btn.dataset.f;
-      cards.forEach((c) => {
-        const show = f === "all" || c.dataset.cat === f;
-        c.style.display = show ? "" : "none";
-      });
+<span class="cm"># AI responds:</span>
+<span class="sec">### 1. ADR</span>
+Stack: aiogram 3 + Postgres + Redis
+Payments: Telegram Stars + ЮKassa
+<span class="sec">### 2. Project tree</span>
+app/{bot,config,handlers,services,
+     repositories,integrations}/
+<span class="sec">### 3. Files</span> (25 generated)
+<span class="sec">### 4. Self-review</span> ✓ all pass
+<span class="sec">### 5. Deploy</span>
+make up   <span class="cm"># one command</span>`
+  },
+  "miniapp": {
+    code: "/botforge-miniapp <description>",
+    en: { t: "Telegram Mini App with JWT auth", d: "Adds FastAPI backend with HMAC-validated initData, JWT token exchange, React/Vue frontend skeleton.", b: ["HMAC-SHA256 initData validation on server", "JWT with 12h TTL, refresh flow", "FastAPI with CORS whitelist", "React + Vite or Vue skeleton", "Never trusts initDataUnsafe", "Respects auth_date freshness (3600s)"] },
+    ru: { t: "Telegram Mini App с JWT-авторизацией", d: "Добавляет FastAPI backend с HMAC-валидацией initData, обменом на JWT, React/Vue frontend-скелет.", b: ["HMAC-SHA256 валидация initData на сервере", "JWT с 12ч TTL, refresh flow", "FastAPI с CORS whitelist", "React + Vite или Vue skeleton", "Никогда не доверяет initDataUnsafe", "Уважает свежесть auth_date (3600с)"] },
+    pl: { t: "Telegram Mini App z JWT", d: "Dodaje backend FastAPI z walidacją HMAC initData, wymianą na JWT, szkielet frontu React/Vue.", b: ["Walidacja HMAC-SHA256 initData po stronie serwera", "JWT z 12h TTL, refresh flow", "FastAPI z CORS whitelist", "React + Vite lub Vue skeleton", "Nigdy nie ufa initDataUnsafe", "Respektuje świeżość auth_date (3600s)"] },
+    example: `<span class="kw">/botforge-miniapp</span>
+<span class="sec">UI:</span> catalog + profile page
+<span class="sec">Stack:</span> React + Vite
+
+<span class="cm"># AI generates:</span>
+app/integrations/webapp_auth.py
+api/routers/auth.py       <span class="cm"># POST /auth/telegram</span>
+api/security.py           <span class="cm"># JWT issue/verify</span>
+webapp/src/sdk.ts         <span class="cm"># @twa-dev/sdk wrap</span>
+webapp/src/api.ts         <span class="cm"># auto-login</span>
+webapp/src/pages/*
+
+<span class="cm"># Bot side: keyboard with WebAppInfo button</span>
+app/keyboards/inline/miniapp.py`
+  },
+  "payments": {
+    code: "/botforge-payments [provider]",
+    en: { t: "Unified payment provider", d: "5 providers behind one interface. Switch ЮKassa → Stripe = single DI line change.", b: ["Telegram Stars (XTR, 0% commission in-TG)", "ЮKassa (RU, cards/SBP/wallets)", "CryptoBot (USDT/TON/BTC)", "Stripe (global, subscriptions)", "Tribute (RU channel subscriptions)", "Idempotent webhooks by external_id"] },
+    ru: { t: "Единый платёжный интерфейс", d: "5 провайдеров за одним интерфейсом. Смена ЮKassa → Stripe = одна строка DI.", b: ["Telegram Stars (XTR, 0% внутри TG)", "ЮKassa (РФ, карты/СБП/кошельки)", "CryptoBot (USDT/TON/BTC)", "Stripe (глобал, подписки)", "Tribute (подписки каналов РФ)", "Idempotent webhook по external_id"] },
+    pl: { t: "Ujednolicony interfejs płatności", d: "5 providerów za jednym interfejsem. Zmiana ЮKassa → Stripe = jedna linia DI.", b: ["Telegram Stars (XTR, 0% w TG)", "ЮKassa (RU, karty/SBP)", "CryptoBot (USDT/TON/BTC)", "Stripe (global, subskrypcje)", "Tribute (subskrypcje kanałów RU)", "Idempotentne webhooki po external_id"] },
+    example: `<span class="kw">/botforge-payments</span> yookassa 499 RUB/month
+
+<span class="cm"># Generates:</span>
+app/integrations/payments/base.py
+app/integrations/payments/yookassa.py
+app/services/payment_service.py
+
+<span class="cm"># DI wiring — one line:</span>
+provider = <span class="kw">YookassaProvider</span>(
+    shop_id=settings.yookassa_shop_id,
+    secret=settings.yookassa_secret,
+)
+
+<span class="cm"># Later, switch to Stripe:</span>
+provider = <span class="kw">StripeProvider</span>(...)
+<span class="cm"># business logic unchanged</span>`
+  },
+  "review": {
+    code: "/botforge-review [path]",
+    en: { t: "Code review with severity tags", d: "Classifies every finding: [blocker] / [major] / [minor] / [nit]. Cites file:line. Never rewrites silently.", b: ["[blocker] — must fix before ship", "[major] — likely production issue", "[minor] — code quality improvement", "[nit] — style, optional", "Verdict: SHIP / FIX / REWORK", "Top-3 priority fixes ranked"] },
+    ru: { t: "Code review с severity-тегами", d: "Классифицирует каждую находку: [blocker] / [major] / [minor] / [nit]. Цитирует file:line. Не переписывает молча.", b: ["[blocker] — исправить до релиза", "[major] — вероятная production-проблема", "[minor] — улучшение качества кода", "[nit] — стиль, опционально", "Вердикт: SHIP / FIX / REWORK", "Top-3 приоритетных правки"] },
+    pl: { t: "Review kodu z tagami severity", d: "Klasyfikuje każde znalezisko: [blocker] / [major] / [minor] / [nit]. Cytuje file:line. Nigdy nie przepisuje po cichu.", b: ["[blocker] — naprawić przed wydaniem", "[major] — prawdopodobny problem produkcji", "[minor] — poprawa jakości kodu", "[nit] — styl, opcjonalnie", "Werdykt: SHIP / FIX / REWORK", "Top-3 priorytetowe poprawki"] },
+    example: `<span class="kw">/botforge-review</span> app/handlers/payment.py
+
+<span class="cm"># AI responds:</span>
+<span class="sec">[blocker]</span> payment.py:42
+  Direct SQL in handler
+  Fix: move to PaymentRepo.create()
+
+<span class="sec">[major]</span> payment.py:88
+  No retry on bot.send_message()
+  Fix: wrap in @retry(tenacity)
+
+<span class="sec">[minor]</span> payment.py:12
+  Inline keyboard built in handler
+  Fix: extract to keyboards/inline/
+
+<span class="sec">### Verdict</span>
+FIX — 1 blocker blocks release`
+  },
+  "deploy": {
+    code: "/botforge-deploy [docker|fly|railway|vps]",
+    en: { t: "Production deployment", d: "Concrete commands for Docker Compose, Fly.io, Railway, or VPS. Handles webhook setup, HTTPS, healthchecks, rollback.", b: ["Dockerfile multi-stage, non-root user", "docker-compose with healthchecks", "Alembic migration in entrypoint.sh", "webhook secret_token setup", "Caddy/nginx TLS config", "Rollback commands included"] },
+    ru: { t: "Production деплой", d: "Конкретные команды для Docker Compose, Fly.io, Railway или VPS. Настраивает webhook, HTTPS, healthchecks, rollback.", b: ["Dockerfile multi-stage, non-root", "docker-compose с healthchecks", "Alembic миграция в entrypoint.sh", "Настройка webhook secret_token", "Caddy/nginx TLS config", "Команды rollback включены"] },
+    pl: { t: "Deploy produkcyjny", d: "Konkretne komendy dla Docker Compose, Fly.io, Railway lub VPS. Obsługuje webhook, HTTPS, healthchecks, rollback.", b: ["Dockerfile multi-stage, non-root", "docker-compose z healthchecks", "Migracja Alembic w entrypoint.sh", "Konfiguracja webhook secret_token", "Caddy/nginx TLS config", "Komendy rollback w zestawie"] },
+    example: `<span class="kw">/botforge-deploy</span> fly webhook
+
+<span class="cm"># Generates fly.toml + commands:</span>
+
+fly launch --no-deploy
+fly postgres create
+fly redis create
+fly secrets set \\
+  BOT_TOKEN=$TOKEN \\
+  WEBHOOK_SECRET=$(openssl rand -hex 32)
+fly deploy
+
+<span class="cm"># Verify:</span>
+curl https://api.telegram.org/bot$TOKEN\\
+     /getWebhookInfo | jq
+<span class="cm"># last_error_date: null = healthy</span>`
+  },
+  "broadcast": {
+    code: "/botforge-broadcast [segmented|scheduled|ab-test]",
+    en: { t: "Rate-limited segmented broadcasts", d: "Admin FSM for composing, segmentation by tier/lang/behavior, Telegram-safe 25 msg/s throttle, error-tolerant delivery.", b: ["Respects Telegram 30 msg/s global limit", "Handles TelegramRetryAfter automatically", "Marks TelegramForbiddenError users as blocked", "Segments by: lang, tier, activity, tags", "Preview before sending", "Scheduled delivery via APScheduler/arq"] },
+    ru: { t: "Rate-limited сегментированные рассылки", d: "Admin FSM для создания, сегментация по tier/lang/поведению, безопасный throttle 25 msg/s, error-tolerant доставка.", b: ["Уважает лимит Telegram 30 msg/s", "Автоматически обрабатывает TelegramRetryAfter", "Помечает TelegramForbiddenError юзеров blocked", "Сегменты: lang, tier, активность, теги", "Preview перед отправкой", "Отложенная отправка через APScheduler/arq"] },
+    pl: { t: "Broadcasty z rate-limit i segmentacją", d: "Admin FSM do tworzenia, segmentacja po tier/lang/zachowaniu, bezpieczne throttle 25 msg/s, dostarczanie tolerant na błędy.", b: ["Respektuje limit Telegram 30 msg/s", "Automatycznie obsługuje TelegramRetryAfter", "Oznacza użytkowników TelegramForbiddenError jako zablokowanych", "Segmenty: lang, tier, aktywność, tagi", "Podgląd przed wysłaniem", "Opóźnione wysyłanie przez APScheduler/arq"] },
+    example: `<span class="kw">/botforge-broadcast</span> segmented
+
+<span class="cm"># Generates:</span>
+app/models/broadcast.py
+app/services/broadcast_service.py
+app/handlers/admin/broadcast.py
+app/states/broadcast.py
+
+<span class="cm"># Admin flow:</span>
+1. /broadcast  → text
+2. Add media (optional)
+3. Choose segment:
+   - all / vip / free
+   - by lang (ru / en / pl)
+   - active last 7d
+4. Preview
+5. Confirm → throttled send`
+  }
+};
+
+function buildCommands() {
+  const tabs = document.getElementById("cmd-tabs");
+  const detail = document.getElementById("cmd-detail");
+  tabs.innerHTML = "";
+  const keys = Object.keys(CMD_DATA);
+  keys.forEach((k, i) => {
+    const b = document.createElement("button");
+    b.textContent = "/botforge-" + k;
+    b.className = i === 0 ? "active" : "";
+    b.addEventListener("click", () => {
+      tabs.querySelectorAll("button").forEach((x) => x.classList.remove("active"));
+      b.classList.add("active");
+      renderCmd(k);
     });
+    tabs.appendChild(b);
   });
+  renderCmd(keys[0]);
 
-  // ================ Section scroll reveal ================
-  const revealObserver = new IntersectionObserver((entries) => {
-    entries.forEach((e) => {
-      if (e.isIntersecting) {
-        e.target.style.opacity = "1";
-        e.target.style.transform = "translateY(0)";
-        revealObserver.unobserve(e.target);
-      }
+  function renderCmd(k) {
+    const d = CMD_DATA[k];
+    const loc = d[currentLang] || d.en;
+    detail.innerHTML = `
+      <div class="cmd-left">
+        <div class="cmd-code">${d.code}</div>
+        <h3>${loc.t}</h3>
+        <p class="desc">${loc.d}</p>
+        <ul class="bullets">${loc.b.map((x) => `<li>${x}</li>`).join("")}</ul>
+      </div>
+      <div class="cmd-right">
+        <pre>${d.example}</pre>
+      </div>`;
+  }
+}
+
+// ============================= Features =============================
+const FEATURES = {
+  en: [
+    ["🧩", "18 slash commands", "Full lifecycle — new, extend, review, refactor, deploy, security."],
+    ["📚", "21 reference modules", "Architecture, Mini Apps, 5 payment providers, auth, i18n, GDPR."],
+    ["🎯", "6-stage workflow", "Brief → ADR → Tree → Files → Self-review → Deploy. AI can't skip."],
+    ["🔒", "Hard bans", "Secrets in code, blocking requests, SQL in handlers — blocked by skill."],
+    ["💳", "5 payment providers", "Stars / ЮKassa / CryptoBot / Stripe / Tribute behind one interface."],
+    ["🤖", "Mini Apps + JWT", "FastAPI backend, HMAC initData, React/Vue frontend skeleton."],
+    ["🌍", "i18n ready", "gettext + Babel setup, 3 official languages, pluralization rules."],
+    ["📊", "Observability", "structlog JSON, Sentry with PII scrub, Prometheus metrics, audit log."],
+    ["🛡️", "Anti-spam", "Captcha on join, trust scoring, shadow-ban, ChatGPT-spam patterns."],
+    ["📖", "GDPR compliant", "/privacy_export, /privacy_delete, retention policy, breach notification."],
+    ["⚡", "Grounded in API 9.6", "Rate limits, error codes, MarkdownV2, Mini App spec — all cited."],
+    ["🧪", "Tested output", "Golden test harness + self-review checklist on every generation."]
+  ],
+  ru: [
+    ["🧩", "18 slash-команд", "Полный цикл — new, extend, review, refactor, deploy, security."],
+    ["📚", "21 reference-модуль", "Архитектура, Mini Apps, 5 провайдеров платежей, auth, i18n, GDPR."],
+    ["🎯", "6-stage workflow", "Brief → ADR → Tree → Files → Self-review → Deploy. AI не пропустит."],
+    ["🔒", "Hard bans", "Секреты в коде, blocking requests, SQL в handlers — блокируются skill-ом."],
+    ["💳", "5 платёжных провайдеров", "Stars / ЮKassa / CryptoBot / Stripe / Tribute за одним интерфейсом."],
+    ["🤖", "Mini Apps + JWT", "FastAPI backend, HMAC initData, React/Vue frontend-скелет."],
+    ["🌍", "Мультиязычность", "gettext + Babel setup, 3 официальных языка, плюрализация."],
+    ["📊", "Observability", "structlog JSON, Sentry с фильтром PII, Prometheus-метрики, audit log."],
+    ["🛡️", "Anti-spam", "Captcha при входе, trust scoring, shadow-ban, ChatGPT-spam патерны."],
+    ["📖", "GDPR-compliance", "/privacy_export, /privacy_delete, retention, breach notification."],
+    ["⚡", "На базе Bot API 9.6", "Rate limits, коды ошибок, MarkdownV2, Mini App spec — цитаты."],
+    ["🧪", "Проверенный output", "Golden test harness + self-review checklist на каждой генерации."]
+  ],
+  pl: [
+    ["🧩", "18 komend slash", "Pełny cykl — new, extend, review, refactor, deploy, security."],
+    ["📚", "21 modułów referencji", "Architektura, Mini Apps, 5 providerów płatności, auth, i18n, GDPR."],
+    ["🎯", "6-etapowy workflow", "Brief → ADR → Tree → Files → Self-review → Deploy. AI nie pominie."],
+    ["🔒", "Twarde zakazy", "Sekrety, blocking requests, SQL w handlerach — blokowane przez skill."],
+    ["💳", "5 providerów płatności", "Stars / ЮKassa / CryptoBot / Stripe / Tribute za jednym interfejsem."],
+    ["🤖", "Mini Apps + JWT", "Backend FastAPI, HMAC initData, szkielet frontu React/Vue."],
+    ["🌍", "i18n", "gettext + Babel, 3 oficjalne języki, zasady pluralizacji."],
+    ["📊", "Observability", "structlog JSON, Sentry z filtrem PII, metryki Prometheus, audit."],
+    ["🛡️", "Anti-spam", "Captcha przy wejściu, trust scoring, shadow-ban, wzorce ChatGPT-spam."],
+    ["📖", "Zgodność GDPR", "/privacy_export, /privacy_delete, retention, breach notification."],
+    ["⚡", "Na bazie API 9.6", "Rate limity, kody błędów, MarkdownV2, Mini App — cytowane."],
+    ["🧪", "Sprawdzony output", "Golden test harness + self-review checklist przy każdej generacji."]
+  ]
+};
+
+function buildFeatures() {
+  const el = document.getElementById("features");
+  el.innerHTML = "";
+  const items = FEATURES[currentLang] || FEATURES.en;
+  items.forEach(([icon, title, desc]) => {
+    const div = document.createElement("div");
+    div.className = "feature";
+    div.innerHTML = `<div class="icon">${icon}</div><h4>${title}</h4><p>${desc}</p>`;
+    div.addEventListener("mousemove", (e) => {
+      const r = div.getBoundingClientRect();
+      div.style.setProperty("--mx", (e.clientX - r.left) + "px");
+      div.style.setProperty("--my", (e.clientY - r.top) + "px");
     });
-  }, { threshold: 0.1 });
-
-  document.querySelectorAll("section:not(.hero) > .container > *").forEach((el) => {
-    el.style.opacity = "0";
-    el.style.transform = "translateY(24px)";
-    el.style.transition = "opacity 0.8s ease-out, transform 0.8s ease-out";
-    revealObserver.observe(el);
+    el.appendChild(div);
   });
+}
+
+// ============================= Compare table =============================
+const TABLE_DATA = {
+  en: {
+    head: ["", "Plain prompt", "BotForge"],
+    rows: [
+      ["Architecture", "Monolith, one file", "Layered, 25+ files"],
+      ["Secrets", "Hardcoded", ".env + pydantic-settings"],
+      ["Database", "Raw SQL or none", "SQLAlchemy async + Alembic"],
+      ["Payments", "Free-form", "Unified, 5 providers"],
+      ["Rate limits", "Ignored", "25 msg/s broadcast"],
+      ["Error handling", "Bare try/except", "Per-exception logic"],
+      ["Docker", "Sometimes", "Always multi-stage"],
+      ["Extendability", "Breaks on 3rd feature", "Stable through 5+ iterations"],
+      ["Mini Apps", "Insecure HMAC", "Official spec + JWT"],
+      ["Tested output", "Pure luck", "Golden tests + self-review"]
+    ]
+  },
+  ru: {
+    head: ["", "Обычный запрос", "BotForge"],
+    rows: [
+      ["Архитектура", "Монолит, один файл", "Слои, 25+ файлов"],
+      ["Секреты", "Хардкод", ".env + pydantic-settings"],
+      ["БД", "Raw SQL или ничего", "SQLAlchemy async + Alembic"],
+      ["Платежи", "Как попало", "Единый интерфейс, 5 провайдеров"],
+      ["Rate limits", "Игнорируются", "25 msg/s broadcast"],
+      ["Error handling", "Голый try/except", "Логика под каждую exception"],
+      ["Docker", "Иногда", "Всегда multi-stage"],
+      ["Расширяемость", "Ломается на 3-й фиче", "Стабильно 5+ итераций"],
+      ["Mini Apps", "Небезопасный HMAC", "Официальная спека + JWT"],
+      ["Проверенный output", "Повезёт — не повезёт", "Golden tests + self-review"]
+    ]
+  },
+  pl: {
+    head: ["", "Zwykły prompt", "BotForge"],
+    rows: [
+      ["Architektura", "Monolit, jeden plik", "Warstwy, 25+ plików"],
+      ["Sekrety", "Hardcode", ".env + pydantic-settings"],
+      ["Baza", "Raw SQL lub nic", "SQLAlchemy async + Alembic"],
+      ["Płatności", "Dowolnie", "Jeden interfejs, 5 providerów"],
+      ["Rate limits", "Ignorowane", "25 msg/s broadcast"],
+      ["Error handling", "Goły try/except", "Logika per exception"],
+      ["Docker", "Czasami", "Zawsze multi-stage"],
+      ["Rozszerzalność", "Psuje się na 3 funkcji", "Stabilne 5+ iteracji"],
+      ["Mini Apps", "Niebezpieczny HMAC", "Oficjalna spec + JWT"],
+      ["Sprawdzony output", "Szczęście", "Golden tests + self-review"]
+    ]
+  }
+};
+
+function buildCompareTable() {
+  const t = document.getElementById("compare-table");
+  const d = TABLE_DATA[currentLang] || TABLE_DATA.en;
+  let html = "<thead><tr>";
+  d.head.forEach((h) => html += `<th>${h}</th>`);
+  html += "</tr></thead><tbody>";
+  d.rows.forEach((r) => {
+    html += `<tr><td>${r[0]}</td><td class="bad">${r[1]}</td><td class="good">${r[2]}</td></tr>`;
+  });
+  html += "</tbody>";
+  t.innerHTML = html;
+}
+
+// ============================= Section reveal =============================
+const revealObs = new IntersectionObserver((entries) => {
+  entries.forEach((e) => {
+    if (e.isIntersecting) {
+      e.target.style.opacity = "1";
+      e.target.style.transform = "translateY(0)";
+      revealObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.08 });
+
+document.querySelectorAll("section:not(.hero) > .container > *").forEach((el) => {
+  el.style.opacity = "0";
+  el.style.transform = "translateY(24px)";
+  el.style.transition = "opacity 0.7s ease-out, transform 0.7s ease-out";
+  revealObs.observe(el);
 });
+
+// ============================= Init =============================
+applyI18n();
 </script>
 
 </body>
