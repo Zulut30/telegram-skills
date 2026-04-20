@@ -132,3 +132,24 @@ For detailed architecture templates, reusable patterns, full examples and checkl
 - `references/patterns.md` — 12 reusable code patterns (settings, DB, middleware, FSM, broadcast, etc.)
 - `references/examples.md` — 3 full bot generation examples (VIP media, AI assistant, lead-gen)
 - `references/checklists.md` — self-review, deploy, security checklists
+- `references/miniapp.md` — Telegram Mini App (initData HMAC, JWT, FastAPI + frontend)
+- `references/auth.md` — auth & authorization (roles, Mini App auth, OAuth bridge, API keys)
+- `references/payments.md` — unified payments (Stars / ЮKassa / CryptoBot / Stripe / Tribute)
+
+## Slash commands (Claude Code)
+
+Available in `.claude/commands/`:
+
+- `/botforge-new` — create a new bot (full workflow)
+- `/botforge-extend` — add a feature without breaking architecture
+- `/botforge-review` — code review with [blocker/major/minor/nit] tags
+- `/botforge-refactor` — turn a monolith into layered architecture
+- `/botforge-miniapp` — add a Telegram Mini App
+- `/botforge-auth` — add auth layer (roles / initData / OAuth / API keys)
+- `/botforge-payments` — wire up a payment provider
+- `/botforge-broadcast` — segmented broadcast system
+- `/botforge-admin` — admin panel (inline or Mini App)
+- `/botforge-test` — test suite generation
+- `/botforge-deploy` — deployment preparation
+- `/botforge-security` — security audit
+- `/botforge-help` — list all commands

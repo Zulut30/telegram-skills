@@ -1,5 +1,22 @@
 # Changelog
 
+## v1.1 — 2026-04-20 (Mini Apps, Auth, Payments, Slash Commands)
+
+**Major expansion.** Core skill дополнен тремя reference-модулями и 13 slash-командами Claude Code.
+
+### Added
+- `references/miniapp.md` — Telegram Mini App: initData HMAC validation, JWT auth, FastAPI backend, frontend SDK wrapper
+- `references/auth.md` — роли/RBAC, ban/shadow-ban, Mini App initData, OAuth bridging, API keys
+- `references/payments.md` — единый интерфейс `PaymentProvider` + реализации для Stars, ЮKassa, CryptoBot, Stripe, Tribute
+- `.claude/commands/` — 13 slash-команд:
+  - `/botforge-new`, `/botforge-extend`, `/botforge-review`, `/botforge-refactor`
+  - `/botforge-miniapp`, `/botforge-auth`, `/botforge-payments`
+  - `/botforge-broadcast`, `/botforge-admin`, `/botforge-test`
+  - `/botforge-deploy`, `/botforge-security`, `/botforge-help`
+
+### Philosophy
+Payments-слой теперь провайдер-агностик: смена ЮKassa → Stripe = замена одной строки DI. Auth и Mini App объединены через единый JWT. Slash-команды делают skill операционным — каждая фаза жизненного цикла бота (создание / расширение / review / деплой / аудит) имеет явную точку входа.
+
 ## v1.0 Pro — 2026-04-20
 
 **Initial public release.**
@@ -16,7 +33,7 @@
 
 | Version | Status | Planned content |
 |---|---|---|
-| v1.1 Payments Pack | planned | Unified Stars / ЮKassa / CryptoBot / Stripe, plans/trials/proration, billing engine |
+| v1.1 Payments + Auth + Mini App | **released 2026-04-20** | Unified Stars/ЮKassa/CryptoBot/Stripe/Tribute, roles, initData, JWT, 13 slash-commands |
 | v1.2 Media Pack | planned | WordPress/Notion/Sanity sync, media pipelines (HLS/albums), UTM, segmented broadcast v2 |
 | v1.3 AI Pack | planned | OpenAI/Anthropic unified, dialog memory, pgvector RAG, streaming responses |
 | v1.4 Ops Pack | planned | Sentry/Prometheus/Grafana, horizontal scale, feature flags, blue-green deploy |
