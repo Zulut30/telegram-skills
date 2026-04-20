@@ -356,6 +356,153 @@
   }
   .section-head p { font-size: clamp(15px, 1.8vw, 18px); color: var(--text-dim); }
 
+  /* ========================= CENTRAL PROMPT ========================= */
+  .prompt-center {
+    max-width: 720px;
+    margin: 0 auto 20px;
+    text-align: center;
+  }
+  .prompt-center .label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--surface);
+    border: 1px solid var(--border-2);
+    padding: 6px 14px;
+    border-radius: 100px;
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-bottom: 16px;
+  }
+  .prompt-center .label .ico { font-size: 15px; }
+  .prompt-terminal {
+    background: var(--bg-2);
+    border: 1px solid var(--border-2);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    margin: 0 auto;
+    max-width: 640px;
+    position: relative;
+  }
+  .prompt-terminal::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: 14px;
+    padding: 1px;
+    background: linear-gradient(90deg, var(--accent), var(--pink), var(--violet), var(--accent));
+    background-size: 300% 100%;
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: promptBorder 4s linear infinite;
+    opacity: 0.6;
+    pointer-events: none;
+  }
+  @keyframes promptBorder {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 300% 50%; }
+  }
+  .prompt-terminal .term-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: var(--bg-3);
+    border-bottom: 1px solid var(--border);
+  }
+  .prompt-terminal .term-head .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .prompt-terminal .term-head .dot.red { background: #ff5f57; }
+  .prompt-terminal .term-head .dot.yellow { background: #febc2e; }
+  .prompt-terminal .term-head .dot.green { background: #28c840; }
+  .prompt-terminal .term-head .title {
+    flex: 1; text-align: center;
+    font-size: 11px; color: var(--muted);
+    font-family: ui-monospace, monospace;
+  }
+  .prompt-terminal .term-body {
+    padding: 20px 22px;
+    font-family: ui-monospace, "SF Mono", monospace;
+    font-size: 14px;
+    line-height: 1.7;
+    text-align: left;
+    min-height: 84px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    color: var(--text);
+  }
+  .prompt-terminal .term-body .prefix {
+    color: var(--accent);
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .prompt-terminal .term-body .typed {
+    color: var(--text);
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .prompt-terminal .term-body .caret {
+    display: inline-block;
+    width: 8px;
+    height: 17px;
+    background: var(--accent-3);
+    vertical-align: text-top;
+    margin-left: 2px;
+    animation: blink 1s infinite;
+  }
+  @keyframes blink {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+  }
+
+  .split-arrows {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin: 28px 0 12px;
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+  }
+  .split-arrow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  .split-arrow svg {
+    width: 36px;
+    height: 54px;
+    opacity: 0;
+    transition: opacity 0.5s;
+  }
+  .split-arrow.visible svg { opacity: 1; animation: arrowPulse 2.2s ease-in-out infinite; }
+  .split-arrow.bad svg { color: var(--error); filter: drop-shadow(0 0 8px rgba(248, 113, 113, 0.5)); }
+  .split-arrow.good svg { color: var(--success); filter: drop-shadow(0 0 8px rgba(74, 222, 128, 0.5)); }
+  @keyframes arrowPulse {
+    0%, 100% { transform: translateY(0); opacity: 1; }
+    50% { transform: translateY(5px); opacity: 0.6; }
+  }
+  .split-arrow .route-label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    opacity: 0;
+    transition: opacity 0.5s 0.2s;
+  }
+  .split-arrow.visible .route-label { opacity: 1; }
+  .split-arrow.bad .route-label { color: var(--error); }
+  .split-arrow.good .route-label { color: var(--success); }
+  @media (max-width: 860px) {
+    .split-arrows { grid-template-columns: 1fr; gap: 8px; }
+    .split-arrow:last-child { display: none; }
+  }
+
   /* ========================= VISUAL COMPARISON (SIMPLE) ========================= */
   .compare-simple {
     display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
@@ -904,6 +1051,43 @@
       <p data-i18n="demo.sub">The same business goal, asked to the same LLM. One side fails. The other ships.</p>
     </div>
 
+    <div class="prompt-center">
+      <div class="label">
+        <span class="ico">💬</span>
+        <span data-i18n="demo.prompt_label">Same prompt. Same LLM. Two very different outcomes.</span>
+      </div>
+      <div class="prompt-terminal">
+        <div class="term-head">
+          <span class="dot red"></span>
+          <span class="dot yellow"></span>
+          <span class="dot green"></span>
+          <span class="title" data-i18n="demo.prompt_title">user prompt</span>
+        </div>
+        <div class="term-body">
+          <span class="prefix">&gt;</span>
+          <span class="typed" id="demo-typed"></span>
+          <span class="caret"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="split-arrows" id="split-arrows">
+      <div class="split-arrow bad">
+        <span class="route-label" data-i18n="demo.route_bad">plain LLM</span>
+        <svg viewBox="0 0 32 48" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="16" y1="4" x2="16" y2="40"/>
+          <polyline points="8,32 16,40 24,32"/>
+        </svg>
+      </div>
+      <div class="split-arrow good">
+        <span class="route-label" data-i18n="demo.route_good">with BotForge</span>
+        <svg viewBox="0 0 32 48" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="16" y1="4" x2="16" y2="40"/>
+          <polyline points="8,32 16,40 24,32"/>
+        </svg>
+      </div>
+    </div>
+
     <div class="compare-simple">
       <div class="cs-card bad">
         <div class="cs-head">
@@ -914,7 +1098,7 @@
           </div>
         </div>
         <div class="cs-visual bad-visual">
-          <div class="cs-blob bad-blob" data-i18n="demo.bad_blob">800-line<br/>main.py</div>
+          <div class="cs-blob bad-blob" data-i18n="demo.bad_blob" data-i18n-html="true">800-line<br/>main.py</div>
         </div>
         <ul class="cs-list" id="cs-bad"></ul>
       </div>
@@ -1121,6 +1305,11 @@ const I18N={en:{
 "hero.scroll":"scroll",
 "demo.tag":"Side by side","demo.title":"Why BotForge exists.",
 "demo.sub":"The same business goal, asked to the same LLM. One side fails. The other ships.",
+"demo.prompt_label":"Same prompt. Same LLM. Two very different outcomes.",
+"demo.prompt_title":"user prompt",
+"demo.prompt_text":"Create a Telegram bot for customer support with a ticket system, auto-routing to staff, and priority levels.",
+"demo.route_bad":"plain LLM",
+"demo.route_good":"with BotForge",
 "demo.bad_t":"Without BotForge","demo.bad_s":"what the LLM gives you alone",
 "demo.good_t":"With BotForge","demo.good_s":"production-ready in one shot",
 "demo.bad_blob":"800-line<br/>main.py",
@@ -1159,6 +1348,11 @@ const I18N={en:{
 "hero.scroll":"листай",
 "demo.tag":"Лицом к лицу","demo.title":"Зачем нужен BotForge.",
 "demo.sub":"Одна бизнес-задача, тот же LLM. Слева — провал. Справа — готовый продукт.",
+"demo.prompt_label":"Один промпт. Один LLM. Два совершенно разных результата.",
+"demo.prompt_title":"промпт пользователя",
+"demo.prompt_text":"Сделай Telegram-бота для поддержки клиентов с системой тикетов, автомаршрутизацией на операторов и приоритетами.",
+"demo.route_bad":"обычный LLM",
+"demo.route_good":"с BotForge",
 "demo.bad_t":"Без BotForge","demo.bad_s":"что LLM выдаст без скилла",
 "demo.good_t":"С BotForge","demo.good_s":"production-ready с первой попытки",
 "demo.bad_blob":"800 строк<br/>в main.py",
@@ -1197,6 +1391,11 @@ const I18N={en:{
 "hero.scroll":"scroll",
 "demo.tag":"Strona w stronę","demo.title":"Dlaczego BotForge istnieje.",
 "demo.sub":"Ten sam cel, ten sam LLM. Lewa strona zawodzi. Prawa ląduje na produkcji.",
+"demo.prompt_label":"Ten sam prompt. Ten sam LLM. Dwa zupełnie różne wyniki.",
+"demo.prompt_title":"prompt użytkownika",
+"demo.prompt_text":"Stwórz bota Telegrama do obsługi klienta z systemem zgłoszeń, auto-routingiem do pracowników i poziomami priorytetu.",
+"demo.route_bad":"zwykły LLM",
+"demo.route_good":"z BotForge",
 "demo.bad_t":"Bez BotForge","demo.bad_s":"co LLM daje sam",
 "demo.good_t":"Z BotForge","demo.good_s":"production-ready za pierwszym razem",
 "demo.bad_blob":"800 linii<br/>main.py",
@@ -1438,20 +1637,62 @@ function buildCompareLists(){
 }
 function resetDemo(){
   document.querySelectorAll(".cs-list li").forEach(li=>li.classList.remove("visible"));
-  document.getElementById("cs-verdict").classList.remove("visible");
+  const v = document.getElementById("cs-verdict");
+  if (v) v.classList.remove("visible");
+  resetDemoArrows();
   demoStarted = false;
   if (demoObs && document.getElementById("demo")) demoObs.observe(document.getElementById("demo"));
 }
 let demoStarted = false;
 let demoObs;
+
+function typewriteDemo(text, done){
+  const el = document.getElementById("demo-typed");
+  if (!el) { done && done(); return; }
+  el.textContent = "";
+  let i = 0;
+  const step = () => {
+    if (i <= text.length) {
+      el.textContent = text.slice(0, i);
+      i++;
+      setTimeout(step, 22);
+    } else {
+      done && done();
+    }
+  };
+  step();
+}
+
 function animateDemo(){
   if (demoStarted) return;
   demoStarted = true;
-  const items = document.querySelectorAll(".cs-list li");
-  items.forEach((el, idx)=>{
-    setTimeout(()=>el.classList.add("visible"), idx * 100);
+
+  // 1. Type out the central prompt
+  typewriteDemo(t("demo.prompt_text"), () => {
+    // 2. Show arrows, then lists cascade, then verdict
+    setTimeout(()=>{
+      document.querySelectorAll(".split-arrow").forEach((a, idx)=>{
+        setTimeout(()=>a.classList.add("visible"), idx * 200);
+      });
+    }, 250);
+
+    setTimeout(()=>{
+      const items = document.querySelectorAll(".cs-list li");
+      items.forEach((el, idx)=>{
+        setTimeout(()=>el.classList.add("visible"), idx * 100);
+      });
+      setTimeout(()=>{
+        const v = document.getElementById("cs-verdict");
+        if (v) v.classList.add("visible");
+      }, items.length * 100 + 400);
+    }, 800);
   });
-  setTimeout(()=>document.getElementById("cs-verdict").classList.add("visible"), items.length * 100 + 300);
+}
+
+function resetDemoArrows(){
+  document.querySelectorAll(".split-arrow").forEach(a=>a.classList.remove("visible"));
+  const el = document.getElementById("demo-typed");
+  if (el) el.textContent = "";
 }
 demoObs = new IntersectionObserver((entries, obs)=>{
   entries.forEach(e=>{
