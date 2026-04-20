@@ -35,6 +35,8 @@ description: Справка по командам BotForge
 | `/botforge-botfather <описание бота>` | BotFather setup + тексты description/about/commands |
 | `/botforge-i18n <ru,en,...>` | Мультиязычность через gettext + Babel |
 | `/botforge-observability [minimal\|standard\|full]` | Logging, Sentry, Prometheus, audit, alerts |
+| `/botforge-scheduler [apscheduler\|arq\|cron] [task]` | Scheduled tasks: рассылки, expire, напоминания |
+| `/botforge-inline <описание>` | Inline-режим (@botname query) |
 
 ## Типичные сценарии
 

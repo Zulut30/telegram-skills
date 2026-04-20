@@ -1,5 +1,41 @@
 # Changelog
 
+## v1.3 — 2026-04-20 (Product readiness)
+
+**Полный pivot от skill-как-документ к skill-как-продукт.** Аудит выявил 24 пробела — Фаза 1 + ключевые P1 закрыты в этом релизе.
+
+### Added — Governance & distribution
+- `.claude-plugin/plugin.json` — Claude Code plugin manifest (name, version, 18 commands, 17 references, engines)
+- `CLAUDE.md` at repo root — meta-context for maintainers
+- `SECURITY.md` — vulnerability disclosure policy
+- `CONTRIBUTING.md` — four-format sync rule, PR checklist
+- `CODE_OF_CONDUCT.md` — Contributor Covenant 2.1
+- `.github/ISSUE_TEMPLATE/` — bug_report + feature_request
+- `.github/PULL_REQUEST_TEMPLATE.md`
+- `.github/workflows/validate.yml` — markdownlint + frontmatter + plugin.json + broken-link check
+- `.markdownlint.yaml`
+- `cursor/.cursor/rules/botforge.mdc` — modern Cursor MDC format (supersedes `.cursorrules`)
+
+### Added — Working example
+- `examples/01-vip-media-bot/` — **полностью рабочий** VIP-бот с Telegram Stars, ~25 Python файлов, Alembic-миграция, Dockerfile multi-stage, docker-compose с healthchecks, Makefile, DEPLOY.md (Fly.io / Railway / VPS). Ранее `examples/` был пустышкой.
+
+### Added — New reference modules
+- `references/scheduler.md` — APScheduler / arq / cron; expire-subs, reminders, scheduled broadcasts, idempotency, observability
+- `references/subscriptions.md` — Telegram Stars Subscriptions (`subscription_period`), Stripe, ЮKassa auto-payments, proration, dunning, state machine
+- `references/inline-mode.md` — @botname query handler, pagination, `chosen_inline_result` analytics, throttling
+- `references/groups-and-channels.md` — privacy mode, admin rights matrix, forum topics, chat join requests, moderation patterns
+- `references/media.md` — photos/videos/albums/voice/stickers, `file_id` reuse strategy, Local Bot API for >20MB files
+- `references/faq.md` — troubleshooting по 20+ типовым проблемам
+
+### Added — New slash commands
+- `/botforge-scheduler` — scheduled tasks
+- `/botforge-inline` — inline-mode
+
+### Changed
+- `plugin.json` now lists 18 commands and 17 references, validated by CI
+- SKILL.md references section expanded to 17 entries
+- README: commands count 16 → 18; note about Grounded-in-Bot-API 9.6
+
 ## v1.2 — 2026-04-20 (Official Bot API 9.6 grounding)
 
 **Grounded in official Telegram Bot API documentation.** Skill теперь явно цитирует ограничения из `core.telegram.org` и автоматически применяет их в генерируемом коде.

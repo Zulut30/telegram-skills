@@ -1,0 +1,88 @@
+name: validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  markdown:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DavidAnson/markdownlint-cli2-action@v15
+        with:
+          globs: "**/*.md"
+          config: .markdownlint.yaml
+        continue-on-error: true
+
+  frontmatter:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pyyaml
+      - name: Validate command frontmatter
+        run: |
+          python - <<'PY'
+          import pathlib, re, sys, yaml
+          errors = []
+          for p in pathlib.Path(".claude/commands").glob("*.md"):
+              text = p.read_text(encoding="utf-8")
+              m = re.match(r"^---\n(.*?)\n---\n", text, re.DOTALL)
+              if not m:
+                  errors.append(f"{p}: no frontmatter")
+                  continue
+              try:
+                  fm = yaml.safe_load(m.group(1))
+              except yaml.YAMLError as e:
+                  errors.append(f"{p}: invalid YAML — {e}")
+                  continue
+              if not isinstance(fm, dict) or "description" not in fm:
+                  errors.append(f"{p}: missing 'description' field")
+          if errors:
+              print("\n".join(errors))
+              sys.exit(1)
+          print("All command frontmatter valid.")
+          PY
+
+  plugin-manifest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate plugin.json
+        run: |
+          python - <<'PY'
+          import json, pathlib, sys
+          manifest = json.loads(pathlib.Path(".claude-plugin/plugin.json").read_text(encoding="utf-8"))
+          required = {"name", "version", "description", "skills", "commands"}
+          missing = required - manifest.keys()
+          if missing:
+              print(f"Missing fields: {missing}"); sys.exit(1)
+
+          errors = []
+          for entry in manifest["commands"]:
+              if not pathlib.Path(entry["path"]).exists():
+                  errors.append(f"command not found: {entry['path']}")
+          for entry in manifest["skills"]:
+              if not pathlib.Path(entry["path"]).exists():
+                  errors.append(f"skill not found: {entry['path']}")
+          if errors:
+              print("\n".join(errors)); sys.exit(1)
+          print(f"plugin.json OK ({len(manifest['commands'])} commands, {len(manifest['skills'])} skills)")
+          PY
+
+  links:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: lycheeverse/lychee-action@v2
+        with:
+          args: --no-progress --accept 200,429 --exclude-path examples/ '**/*.md'
+        continue-on-error: true

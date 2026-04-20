@@ -139,6 +139,12 @@ For detailed architecture templates, reusable patterns, full examples and checkl
 - `references/botfather-setup.md` — operational BotFather checklist: descriptions, commands scopes, privacy mode, Mini App registration, token rotation, three-env setup
 - `references/i18n.md` — gettext + Babel multi-language setup, language detection priority, pluralization rules
 - `references/observability.md` — structlog JSON, Sentry PII scrubbing, Prometheus metrics, health/ready probes, audit log, alert rules
+- `references/scheduler.md` — APScheduler / arq / cron patterns; expire-subs, reminders, scheduled broadcasts
+- `references/subscriptions.md` — recurring billing: Telegram Stars Subscriptions, Stripe, ЮKassa auto-payments, proration, dunning
+- `references/inline-mode.md` — @botname query handler, pagination, chosen result analytics
+- `references/groups-and-channels.md` — privacy mode, admin rights, forum topics, chat join requests, moderation
+- `references/media.md` — photos/videos/albums/voice/stickers, file_id reuse, Local Bot API for >20MB files
+- `references/faq.md` — troubleshooting (webhook, payments, rate limits, i18n, deploy)
 
 ## Slash commands (Claude Code)
 
@@ -159,6 +165,8 @@ Available in `.claude/commands/`:
 - `/botforge-botfather` — generate BotFather setup instructions and texts
 - `/botforge-i18n` — add multi-language support (gettext + Babel)
 - `/botforge-observability` — wire up logging, Sentry, Prometheus, audit log
+- `/botforge-scheduler` — APScheduler/arq/cron for broadcasts, expire, reminders
+- `/botforge-inline` — inline-mode (@botname query)
 - `/botforge-help` — list all commands
 
 ## Telegram Bot API 9.6 — hard constraints enforced by BotForge
