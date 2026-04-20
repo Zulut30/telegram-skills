@@ -6,7 +6,11 @@
 
 <p align="center">
   <b>The Telegram Bot Engineering Skill for AI</b><br/>
-  Production-ready skill pack for Claude Code, Codex, Cursor and any LLM.
+  Production-ready skill pack for Claude Code, Codex, Cursor, and any LLM.
+</p>
+
+<p align="center">
+  <b>English</b> · <a href="docs/ru/README.md">Русский</a> · <a href="docs/pl/README.md">Polski</a>
 </p>
 
 <p align="center">
@@ -14,227 +18,117 @@
   <a href="docs/INSTALL.md">Install</a> ·
   <a href="docs/USAGE.md">Usage</a> ·
   <a href="docs/COMPARISON.md">Compare</a> ·
-  <a href="docs/SHOWCASE.md">Showcase</a> ·
-  <a href="docs/ru/README.md">Русская версия</a>
+  <a href="docs/SHOWCASE.md">Showcase</a>
 </p>
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Claude Code](https://img.shields.io/badge/Claude%20Code-compatible-8A2BE2)](https://claude.com/claude-code)
-[![Cursor](https://img.shields.io/badge/Cursor-rules-000000)](https://cursor.com)
-[![Codex](https://img.shields.io/badge/Codex-AGENTS.md-10A37F)](https://openai.com)
-[![aiogram](https://img.shields.io/badge/aiogram-3.x-2CA5E0)](https://docs.aiogram.dev/)
-[![Python](https://img.shields.io/badge/Python-3.12%2B-3776AB)](https://www.python.org/)
-[![Bot API](https://img.shields.io/badge/Bot%20API-9.6-0088CC)](https://core.telegram.org/bots/api)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
-
-BotForge превращает AI-ассистента в senior Telegram-инженера. Вместо одноразового `main.py` на 800 строк AI проектирует и собирает **модульного, масштабируемого, production-ready Telegram-бота** — с архитектурой, БД, миграциями, админкой, платежами, рассылками, Docker и деплоем.
-
----
-
-## Три обещания
-
-1. **Не монолит.** Слоёная архитектура (handlers / services / repositories / integrations) из коробки.
-2. **Не черновик.** Docker + Postgres + Alembic + `.env` + деплой-инструкции в первой же генерации.
-3. **Не разваливается.** Пятую фичу добавляете так же легко, как первую.
+<p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="MIT License"/></a>
+  <a href="https://claude.com/claude-code"><img src="https://img.shields.io/badge/Claude%20Code-compatible-8A2BE2" alt="Claude Code"/></a>
+  <a href="https://cursor.com"><img src="https://img.shields.io/badge/Cursor-rules-000000" alt="Cursor"/></a>
+  <a href="https://openai.com"><img src="https://img.shields.io/badge/Codex-AGENTS.md-10A37F" alt="Codex"/></a>
+  <a href="https://docs.aiogram.dev/"><img src="https://img.shields.io/badge/aiogram-3.x-2CA5E0" alt="aiogram"/></a>
+  <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3.12%2B-3776AB" alt="Python"/></a>
+  <a href="https://core.telegram.org/bots/api"><img src="https://img.shields.io/badge/Bot%20API-9.6-0088CC" alt="Bot API"/></a>
+  <a href="CONTRIBUTING.md"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome"/></a>
+</p>
 
 ---
 
-## Что внутри
+BotForge turns an AI assistant into a senior Telegram bot engineer. Instead of a one-shot `main.py` with 800 lines of tangled code, the AI designs and builds a **modular, scalable, production-ready Telegram bot** — with architecture, database, migrations, admin panel, payments, broadcasts, Docker, and deployment.
 
-| Файл | Назначение |
-|---|---|
-| [`SKILL.md`](SKILL.md) | Полный skill-документ (манифест, system prompt, правила, паттерны, примеры) |
-| [`system_prompt.txt`](system_prompt.txt) | Голый system prompt для вставки в любой LLM |
-| [`.claude/skills/botforge/`](.claude/skills/botforge/) | Skill для **Claude Code** (формат Agent Skills) + references |
-| [`.claude/commands/`](.claude/commands/) | 18 slash-команд Claude Code: `/botforge-new`, `/botforge-miniapp`, `/botforge-payments` и др. |
-| [`.claude-plugin/plugin.json`](.claude-plugin/plugin.json) | Plugin manifest для Claude Code marketplace |
-| [`cursor/.cursor/rules/botforge.mdc`](cursor/.cursor/rules/botforge.mdc) | Правила для **Cursor** (MDC format) |
-| [`cursor/.cursorrules`](cursor/.cursorrules) | Legacy Cursor правила |
-| [`codex/AGENTS.md`](codex/AGENTS.md) | Инструкция для **OpenAI Codex / Codex CLI / Aider** |
-| [`docs/QUICKSTART.md`](docs/QUICKSTART.md) | **Start here** — 5 минут от нуля до бота |
-| [`docs/INSTALL.md`](docs/INSTALL.md) | Детальная установка в каждый инструмент |
-| [`docs/USAGE.md`](docs/USAGE.md) | Режимы, промпт-форматы, сессии |
-| [`docs/CHANGELOG.md`](docs/CHANGELOG.md) | История версий и roadmap |
-| [`examples/01-vip-media-bot/`](examples/01-vip-media-bot/) | **Рабочий** VIP-бот на Telegram Stars |
+## Three promises
 
----
+1. **No monoliths.** Layered architecture (handlers / services / repositories / integrations) by default.
+2. **No drafts.** Docker + Postgres + Alembic + `.env` + deployment instructions in the very first generation.
+3. **No breakage.** The fifth feature is as easy to add as the first.
 
-## Технический стек, который skill навязывает
+## Why it works
 
-- **Python 3.12+**
-- **aiogram 3.x** (async, routers, FSM, middleware)
-- **SQLAlchemy 2.x async** + **Alembic** миграции
-- **PostgreSQL** primary (SQLite только в Lite-режиме)
-- **Redis** для FSM, throttling, кэшей
-- **pydantic-settings**, **structlog**, **httpx**, **tenacity**
-- **Docker** multi-stage + **docker-compose**
-- **pytest**, **ruff**, **mypy --strict**
+- **Grounded in the official Telegram Bot API 9.6.** Rate limits (1/sec, 20/min, 30/sec broadcast), MarkdownV2 escape rules, Mini App initData HMAC validation, 64-byte `CallbackData` limit — every constraint cites `core.telegram.org`.
+- **Mandatory 6-stage workflow.** Brief → ADR → Tree → Files → Self-review → Deploy. The AI cannot skip straight to code.
+- **Hard bans enforced by skill rules.** Secrets in code, `requests`, SQL in handlers, monoliths — blocked at the skill level, not by style.
+- **Provider-agnostic payments.** Switching ЮKassa → Stripe is a one-line DI change.
 
----
+## Quick start
 
-## Четыре режима
-
-| Режим | Когда | Отличия |
-|---|---|---|
-| **Lite** | MVP за вечер, проверка гипотезы | SQLite, polling, без Docker |
-| **Pro** (default) | Коммерческий бот | Полный production-стандарт |
-| **Media** | Контент, каналы, gated-доступ | + CMS-sync, сегментированные рассылки, UTM |
-| **SaaS** | Подписки, VIP, billing | + plans/trials/proration, multi-provider payments |
-
-Переключение — первой строкой запроса: `BotForge: SaaS`.
-
----
-
-## Быстрый старт
-
-### Claude Code
 ```bash
 git clone https://github.com/Zulut30/telegram-skills.git
 cp -r telegram-skills/.claude/skills/botforge ~/.claude/skills/
-# или в корень проекта: <project>/.claude/skills/botforge/
-```
-В сессии: `/skill botforge` или попросите Claude: «используй skill botforge и собери бота…».
-
-### Cursor
-```bash
-cp telegram-skills/cursor/.cursorrules <your-project>/.cursorrules
+cp -r telegram-skills/.claude/commands ~/.claude/
 ```
 
-### Codex / Codex CLI
-```bash
-cp telegram-skills/codex/AGENTS.md <your-project>/AGENTS.md
+In Claude Code:
+```
+/botforge-new SaaS
+Task: course marketplace bot with VIP access for 499 RUB/month
+Hosting: VPS, Docker Compose, webhook
 ```
 
-### Любой LLM (Claude.ai, ChatGPT, API)
-Скопируйте содержимое [`system_prompt.txt`](system_prompt.txt) в **System Instructions** / Project Instructions / Custom GPT Instructions.
+The AI will ask up to 5 clarifying questions, produce an ADR, render the project tree, generate every file, run a self-review checklist, and give you deployment commands.
 
----
-
-## Формат запроса
+## 18 slash commands
 
 ```
-BotForge: Pro
-Задача: бот-витрина онлайн-курсов с оплатой ЮKassa и закрытым каналом
-Ограничения: VPS, до 50k пользователей, запуск через 2 недели
+Build & evolve:      /botforge-new /botforge-extend /botforge-review /botforge-refactor
+Modules:             /botforge-miniapp /botforge-auth /botforge-payments
+                     /botforge-broadcast /botforge-admin /botforge-scheduler
+                     /botforge-inline /botforge-i18n
+Operations:          /botforge-test /botforge-deploy /botforge-security
+                     /botforge-botfather /botforge-observability /botforge-help
 ```
 
-AI ответит:
-1. Бизнес-брифинг (≤5 вопросов)
-2. ADR (Architecture Decision Record)
-3. Дерево проекта
-4. Файлы в порядке зависимости
-5. Self-review checklist
-6. Инструкция по деплою
+## Working example
 
----
-
-## Что покрывает skill
-
-- ✅ Контент-боты и медиа-проекты
-- ✅ Gated-контент с проверкой подписки на канал(ы)
-- ✅ Платный доступ / VIP / подписки (Telegram Stars, ЮKassa, CryptoBot, Stripe, Tribute) — единый интерфейс
-- ✅ **Telegram Mini Apps**: FastAPI backend + React/Vue + initData HMAC + JWT
-- ✅ **Auth**: роли, ban, Mini App initData, OAuth bridging, API keys
-- ✅ Рассылки (сегментированные, отложенные, A/B, rate-limited 25 msg/s)
-- ✅ Сбор заявок / лидогенерация / CRM-sync
-- ✅ Админ-панели (inline или Mini App) + audit log
-- ✅ Интеграции: OpenAI, Anthropic, Google Sheets, WordPress, Notion, Airtable
-- ✅ Мультиязычные боты (i18n middleware)
-- ✅ Webhook-деплой (VPS, Fly.io, Railway)
-- ✅ FSM-сценарии, inline-меню, CallbackData-фабрики
-- ✅ Test suite: pytest + aiogram mocks + testcontainers
-- ✅ Логирование, Sentry, retry, throttling, idempotency
-
-## Grounded in official Telegram Bot API
-
-Skill опирается на **Bot API 9.6 (apr 2026)** и официальную документацию:
-- `core.telegram.org/bots/api` — методы, ошибки, webhook
-- `core.telegram.org/bots/faq` — rate limits (1/sec per user, 20/min per group, 30/sec broadcast)
-- `core.telegram.org/bots/webapps` — Mini Apps initData, events, CloudStorage
-- `core.telegram.org/bots/payments-stars` — Telegram Stars (XTR)
-- `core.telegram.org/bots` — deep links, BotCommandScope, MarkdownV2
-
-Полная спецификация и лимиты — в [`references/telegram-api-spec.md`](.claude/skills/botforge/references/telegram-api-spec.md). Skill автоматически применяет эти ограничения: throttling до 25 msg/s, экранирование MarkdownV2, валидация initData HMAC, обработка `TelegramRetryAfter`/`Forbidden` и др.
-
-## Slash-команды Claude Code
-
-18 готовых команд в [`.claude/commands/`](.claude/commands/):
-
-```
-Создание/развитие:
-/botforge-new            создать новый бот
-/botforge-extend         добавить фичу
-/botforge-review         code review
-/botforge-refactor       рефакторинг монолита
-
-Модули:
-/botforge-miniapp        подключить Mini App
-/botforge-auth           auth-слой (roles/miniapp/oauth/api-keys)
-/botforge-payments       платежи (stars/yookassa/cryptobot/stripe/tribute)
-/botforge-broadcast      система рассылок
-/botforge-admin          админ-панель
-/botforge-scheduler      scheduled tasks (apscheduler/arq/cron)
-/botforge-inline         inline-режим (@botname query)
-/botforge-i18n           мультиязычность (gettext + Babel)
-
-Операции:
-/botforge-test           тесты
-/botforge-deploy         деплой (docker/fly/railway/vps)
-/botforge-security       security-аудит
-/botforge-botfather      BotFather setup + тексты
-/botforge-observability  logging + Sentry + Prometheus + audit
-/botforge-help           справка
-```
-
-## Полностью рабочий пример
-
-В [`examples/01-vip-media-bot/`](examples/01-vip-media-bot/) — готовый VIP-бот на Telegram Stars, сгенерированный через skill. ~25 Python-файлов, Docker Compose, Alembic-миграции, webhook-режим, rate-limited throttling.
+[`examples/01-vip-media-bot/`](examples/01-vip-media-bot/) — a VIP bot on Telegram Stars, 25 Python files, everything the skill prescribes.
 
 ```bash
 cd examples/01-vip-media-bot
-cp .env.example .env   # заполни BOT_TOKEN, ADMIN_IDS
+cp .env.example .env   # set BOT_TOKEN, ADMIN_IDS
 make up
-make logs
 ```
 
-Деплой на Fly.io / Railway / VPS — [`DEPLOY.md`](examples/01-vip-media-bot/docs/DEPLOY.md).
+## Four modes
 
-**Пример:** одной цепочкой собрать SaaS-бот с Mini App и платежами:
-```
-/botforge-new SaaS бот-витрина курсов с VIP
-/botforge-payments yookassa подписка 499/мес
-/botforge-miniapp каталог + личный кабинет
-/botforge-admin webapp
-/botforge-deploy fly webhook
-/botforge-security all
-```
+| Mode | When | Differences |
+|---|---|---|
+| **Lite** | MVP in an evening | SQLite, polling, no Docker |
+| **Pro** (default) | Commercial bot | Full production standard |
+| **Media** | Content / channels | + CMS sync, segmented broadcasts, UTM |
+| **SaaS** | Subscriptions / VIP | + billing, multi-provider payments, admin metrics |
 
----
+## What's in the box
 
-## Для кого
+| File | Purpose |
+|---|---|
+| [`SKILL.md`](SKILL.md) | Full skill document — manifest, system prompt, rules, patterns, examples |
+| [`system_prompt.txt`](system_prompt.txt) | Raw system prompt for any LLM |
+| [`.claude/skills/botforge/`](.claude/skills/botforge/) | **Claude Code** Agent Skill with 17 references |
+| [`.claude/commands/`](.claude/commands/) | 18 slash commands |
+| [`.claude-plugin/plugin.json`](.claude-plugin/plugin.json) | Plugin manifest |
+| [`cursor/.cursor/rules/botforge.mdc`](cursor/.cursor/rules/botforge.mdc) | **Cursor** rules (modern MDC) |
+| [`codex/AGENTS.md`](codex/AGENTS.md) | **Codex / Aider / Continue** |
+| [`.vscode/`](.vscode/) | VS Code snippets (`bf-new`, `bf-extend`, …) |
+| [`.zed/`](.zed/) | Zed configuration |
+| [`tests/golden/`](tests/golden/) | Eval harness: structural assertions on AI output |
+| [`examples/`](examples/) | Working bot examples |
 
-- Фрилансеры и агентства, делающие ботов на заказ
-- Владельцы Telegram-каналов и медиа-проектов
-- SaaS-продукты с TG-дистрибуцией
-- Команды, которым нужен единый стандарт
-- Джуны, которым нужна «правильная» архитектура с первого дня
+## Documentation
 
----
+- [QUICKSTART](docs/QUICKSTART.md) — 5 minutes from zero to bot
+- [INSTALL](docs/INSTALL.md) — detailed per-tool setup
+- [USAGE](docs/USAGE.md) — modes, prompt formats, session lifecycle
+- [COMPARISON](docs/COMPARISON.md) — vs plain prompts, cookiecutter, no-code, generic agents
+- [SHOWCASE](docs/SHOWCASE.md) — bots built with BotForge
+- [CHANGELOG](docs/CHANGELOG.md) — version history and roadmap
 
-## Экономика
+## Reference library
 
-- **−15 часов** скаффолдинга на каждом боте
-- **−80%** «давайте перепишем» через 3 месяца
-- **+100%** скорость онбординга новых разработчиков на проект
+17 deep reference documents covering every aspect of Telegram bot engineering: architecture, 12 reusable patterns, Mini Apps, auth (roles / initData / OAuth / API keys), payments (5 providers), official Bot API 9.6 constraints, BotFather setup, i18n, observability, scheduled tasks, recurring subscriptions, inline mode, groups/channels/forums, media handling, FAQ.
 
----
+## License
 
-## Лицензия
+MIT. Use freely in commercial projects.
 
-MIT. Используйте в коммерческих проектах. Атрибуция приветствуется, но не обязательна.
+## Contributing
 
----
-
-## Версия
-
-**v1.0 Pro** — 2026-04-20. См. [CHANGELOG](docs/CHANGELOG.md) и [roadmap](docs/CHANGELOG.md#roadmap).
+See [CONTRIBUTING](CONTRIBUTING.md) and [SECURITY](SECURITY.md). Pull requests welcome.
