@@ -15,7 +15,7 @@ Gotowy pakiet dla Claude Code, Cursora, Codexa i dowolnego LLM. Oparty na oficja
 ## Głębiej
 
 - **[Architektura](Architecture)** — warstwowy projekt i twarde zakazy
-- **[Biblioteka referencji](Reference-Library)** — 21 modułów
+- **[Biblioteka referencji](Reference-Library)** — 23 modułów
 - **[Przykłady](Examples)** — działające boty stworzone przez skill
 - **[Porównanie](Comparison)** — vs zwykłe prompty, cookiecutter, PTB, no-code
 

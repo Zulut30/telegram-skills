@@ -19,7 +19,7 @@ Production-ready skill pack for Claude Code, Cursor, Codex, and any LLM. Grounde
 ## Deep dives
 
 - **[Architecture](Architecture)** — layered design and hard bans
-- **[Reference Library](Reference-Library)** — 21 reference modules
+- **[Reference Library](Reference-Library)** — 23 reference modules
 - **[Examples](Examples)** — working bots built with the skill
 - **[Comparison](Comparison)** — vs plain prompts, cookiecutter, PTB, no-code
 

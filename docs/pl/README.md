@@ -122,7 +122,7 @@ make up
 
 ## Biblioteka referencji
 
-17 szczegółowych dokumentów obejmujących wszystkie aspekty inżynierii botów Telegrama: architekturę, 12 wzorców wielokrotnego użytku, Mini Apps, auth (role / initData / OAuth / API keys), płatności (5 providerów), oficjalne ograniczenia Bot API 9.6, setup BotFather, i18n, obserwowalność, zadania cykliczne, subskrypcje recurring, tryb inline, grupy/kanały/fora, obsługa mediów, FAQ.
+23 szczegółowe dokumenty obejmujące wszystkie aspekty inżynierii botów Telegrama: architekturę, 12 wzorców wielokrotnego użytku, Mini Apps, auth (role / initData / OAuth / API keys), płatności (5 providerów), oficjalne ograniczenia Bot API 9.6, setup BotFather, i18n, obserwowalność, zadania cykliczne, subskrypcje recurring, tryb inline, grupy/kanały/fora, obsługa mediów, anti-spam, zgodność z GDPR, analytics, anty-wzorce, performance, panel admina, FAQ.
 
 ## Licencja
 

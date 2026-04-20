@@ -58,11 +58,11 @@ Ready-to-post content to kickstart community engagement. Copy–paste into GitHu
 
 ## Discussions to seed
 
-### 🎉 v1.5 released — here's what's new
+### 🎉 v1.7 released — here's what's new
 **Category:** Announcements
 
-> Long-form post: recap the four releases that got us here (1.0 → 1.5).
-> Link to CHANGELOG, SHOWCASE, QUICKSTART. Ask for feedback on v1.6 priorities.
+> Long-form post: recap the releases that got us here (1.0 → 1.7).
+> Link to CHANGELOG, SHOWCASE, QUICKSTART. Ask for feedback on v1.8 priorities.
 
 ### What are you building with BotForge?
 **Category:** Show and tell

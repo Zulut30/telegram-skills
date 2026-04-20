@@ -122,7 +122,7 @@ make up
 
 ## Reference-библиотека
 
-17 глубоких ссылочных документов по всем аспектам инженерии Telegram-ботов: архитектура, 12 переиспользуемых паттернов, Mini Apps, auth (роли / initData / OAuth / API keys), платежи (5 провайдеров), официальные ограничения Bot API 9.6, BotFather setup, i18n, observability, scheduled-таски, recurring-подписки, inline-режим, группы/каналы/форумы, работа с медиа, FAQ.
+23 глубоких ссылочных документа по всем аспектам инженерии Telegram-ботов: архитектура, 12 переиспользуемых паттернов, Mini Apps, auth (роли / initData / OAuth / API keys), платежи (5 провайдеров), официальные ограничения Bot API 9.6, BotFather setup, i18n, observability, scheduled-таски, recurring-подписки, inline-режим, группы/каналы/форумы, работа с медиа, anti-spam, GDPR compliance, analytics, anti-patterns, performance, admin panel, FAQ.
 
 ## Лицензия
 

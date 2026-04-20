@@ -13,14 +13,10 @@ BotForge follows SemVer. Breaking-change policy: see [Migration](Migration).
 | [v1.4](https://github.com/Zulut30/telegram-skills/releases/tag/v1.4.0) | 2026-04 | Professional polish |
 | [v1.5](https://github.com/Zulut30/telegram-skills/releases/tag/v1.5.0) | 2026-04 | Proofs of work |
 | [v1.6](https://github.com/Zulut30/telegram-skills/releases/tag/v1.6.0) | 2026-04 | Polish + growth infra |
+| [v1.7](https://github.com/Zulut30/telegram-skills/releases/tag/v1.7.0) | 2026-04 | Stability protocols + anti-patterns |
+| [v1.7.1](https://github.com/Zulut30/telegram-skills/releases/tag/v1.7.1) | 2026-04 | Web admin panel (React + FastAPI + SSE) |
 
 ## Planned
-
-### v1.7 — Community activation
-- GitHub Discussions enabled + seeded
-- 10 good-first-issues landed
-- First public bot in showcase (demo bot)
-- Real golden-test baseline (API key in CI)
 
 ### v1.8 — Additional examples
 - `examples/02-ai-assistant/` — full working code

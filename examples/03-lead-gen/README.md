@@ -1,6 +1,6 @@
 # 03 — Lead-gen Bot (planned)
 
-> Scaffold planned for BotForge v1.5 Media/AI pack.
+> Scaffold planned for BotForge v1.8 (additional examples pack). See [Roadmap](../../wiki/Roadmap.md).
 
 ## Planned features
 
