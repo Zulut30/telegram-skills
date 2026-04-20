@@ -1,5 +1,9 @@
 # BotForge Wiki
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/Zulut30/telegram-skills/main/assets/logo/logo.svg" width="96" alt="BotForge" />
+</p>
+
 **The Telegram Bot Engineering Skill for AI.**
 
 Production-ready skill pack for Claude Code, Cursor, Codex, and any LLM. Grounded in the official [Telegram Bot API 9.6](https://core.telegram.org/bots/api).
