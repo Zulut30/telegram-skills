@@ -135,6 +135,10 @@ For detailed architecture templates, reusable patterns, full examples and checkl
 - `references/miniapp.md` — Telegram Mini App (initData HMAC, JWT, FastAPI + frontend)
 - `references/auth.md` — auth & authorization (roles, Mini App auth, OAuth bridge, API keys)
 - `references/payments.md` — unified payments (Stars / ЮKassa / CryptoBot / Stripe / Tribute)
+- `references/telegram-api-spec.md` — **official Bot API 9.6 constraints**: rate limits, webhook params, error codes, MarkdownV2 escape, deep-link syntax, Mini App events, Stars (XTR) flow, `allowed_updates`, length limits
+- `references/botfather-setup.md` — operational BotFather checklist: descriptions, commands scopes, privacy mode, Mini App registration, token rotation, three-env setup
+- `references/i18n.md` — gettext + Babel multi-language setup, language detection priority, pluralization rules
+- `references/observability.md` — structlog JSON, Sentry PII scrubbing, Prometheus metrics, health/ready probes, audit log, alert rules
 
 ## Slash commands (Claude Code)
 
@@ -152,4 +156,25 @@ Available in `.claude/commands/`:
 - `/botforge-test` — test suite generation
 - `/botforge-deploy` — deployment preparation
 - `/botforge-security` — security audit
+- `/botforge-botfather` — generate BotFather setup instructions and texts
+- `/botforge-i18n` — add multi-language support (gettext + Babel)
+- `/botforge-observability` — wire up logging, Sentry, Prometheus, audit log
 - `/botforge-help` — list all commands
+
+## Telegram Bot API 9.6 — hard constraints enforced by BotForge
+
+These are not conventions — these are **official API limits** the skill encodes:
+
+- **Rate limits**: 1 msg/sec per user, 20 msg/min per group, 30 msg/sec broadcast (→ 25 safe).
+- **On `TelegramRetryAfter`**: sleep exactly `e.retry_after`, retry once, count failure.
+- **On `TelegramForbiddenError`**: user blocked bot — mark `blocked=true`, never retry.
+- **Webhook**: HTTPS only; ports 443/80/88/8443; `secret_token` 1–256 chars; `max_connections` 1–100 (default 40).
+- **Callback data**: hard max **64 bytes** — always use `CallbackData` factories.
+- **Message text**: 4096 UTF-16 code units; caption: 1024.
+- **Deep-link payload**: 64 chars, `[A-Za-z0-9_-]`; use base64url + HMAC signing for arbitrary data.
+- **MarkdownV2 escape**: `_*[]()~`>#+-=|{}.!` — always escape user input (or use HTML parse mode).
+- **Mini App initData**: validate HMAC-SHA256 with `secret = HMAC_SHA256("WebAppData", bot_token)` and reject `auth_date` older than 3600s.
+- **Telegram Stars**: currency `XTR`, `provider_token=""`, refunds via `refundStarPayment`.
+- **`allowed_updates`**: always specified explicitly to minimize traffic.
+
+Full details: `references/telegram-api-spec.md`.

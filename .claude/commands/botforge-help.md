@@ -32,6 +32,9 @@ description: Справка по командам BotForge
 |---|---|
 | `/botforge-deploy [docker\|fly\|railway\|vps] [polling\|webhook]` | Подготовить деплой |
 | `/botforge-security [all\|auth\|payments\|miniapp\|data]` | Security-аудит с приоритизацией |
+| `/botforge-botfather <описание бота>` | BotFather setup + тексты description/about/commands |
+| `/botforge-i18n <ru,en,...>` | Мультиязычность через gettext + Babel |
+| `/botforge-observability [minimal\|standard\|full]` | Logging, Sentry, Prometheus, audit, alerts |
 
 ## Типичные сценарии
 

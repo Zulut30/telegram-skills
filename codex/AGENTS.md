@@ -119,6 +119,31 @@ Tag findings: `[blocker] [major] [minor] [nit]`. Cite `file:line`. Never rewrite
 - [ ] README with 6 sections
 - [ ] ruff + mypy --strict green
 
+## Telegram Bot API 9.6 — official constraints (enforce always)
+
+Rate limits (core.telegram.org/bots/faq):
+- 1 msg/sec per user, 20 msg/min per group, ~30 msg/sec broadcast (BotForge throttles to 25).
+
+Exceptions:
+- `TelegramRetryAfter` → sleep `e.retry_after`, retry once
+- `TelegramForbiddenError` → mark blocked, no retry
+- `TelegramBadRequest`/`Unauthorized` → no retry, fix
+- 5xx → tenacity retry with backoff
+
+Webhook: HTTPS only, ports 443/80/88/8443, `secret_token` 1–256 chars, `max_connections` 1–100, always specify `allowed_updates`.
+
+Hard limits:
+- `callback_data`: 64 bytes — use `CallbackData` factories
+- message text: 4096 UTF-16; caption: 1024
+- deep-link payload: 64 chars, `[A-Za-z0-9_-]`; sign arbitrary data with base64url+HMAC
+- MarkdownV2 escape: `_*[]()~`>#+-=|{}.!` — or use HTML
+
+Mini Apps: validate initData server-side with `secret = HMAC_SHA256("WebAppData", bot_token)`; reject `auth_date > 3600s`; never trust `initDataUnsafe`; JWT TTL ≤ 12h.
+
+Telegram Stars: `currency="XTR"`, `provider_token=""`, refunds via `refundStarPayment`, digital goods only.
+
+Bot commands: 1..32 chars `[a-z0-9_]`, description 1..256, use `BotCommandScope*` for per-audience menus.
+
 ## File references
 
 If this project includes BotForge bundle, also read:
@@ -128,3 +153,10 @@ If this project includes BotForge bundle, also read:
 - `.claude/skills/botforge/references/patterns.md` — 12 reusable code patterns
 - `.claude/skills/botforge/references/examples.md` — 3 full generation examples
 - `.claude/skills/botforge/references/checklists.md` — self-review / deploy / security
+- `.claude/skills/botforge/references/miniapp.md` — Telegram Mini App (initData, JWT, backend)
+- `.claude/skills/botforge/references/auth.md` — auth (roles, OAuth bridge, API keys)
+- `.claude/skills/botforge/references/payments.md` — unified PaymentProvider (5 providers)
+- `.claude/skills/botforge/references/telegram-api-spec.md` — Bot API 9.6 official constraints
+- `.claude/skills/botforge/references/botfather-setup.md` — BotFather operational checklist
+- `.claude/skills/botforge/references/i18n.md` — gettext + Babel setup
+- `.claude/skills/botforge/references/observability.md` — logging, metrics, audit, alerts

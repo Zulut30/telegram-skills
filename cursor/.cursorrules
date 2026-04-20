@@ -108,6 +108,47 @@ Cite file:line. Propose fix. Never rewrite silently.
 - concise; no filler; no apologies
 - respond in user's language; keep code identifiers English
 
+# TELEGRAM BOT API 9.6 — OFFICIAL CONSTRAINTS
+
+Rate limits (bots/faq):
+- 1 msg/sec per user (private chat)
+- 20 msg/min per group
+- ~30 msg/sec broadcast (paid up to 1000)
+- Throttle broadcasts to 25 msg/sec (safety margin)
+
+Exception handling (must be distinct):
+- TelegramRetryAfter → sleep(e.retry_after), retry once
+- TelegramForbiddenError → mark blocked=true, never retry
+- TelegramBadRequest → no retry, fix
+- TelegramUnauthorizedError → rotate token
+- TelegramServerError (5xx) → tenacity retry
+
+Webhook: HTTPS; ports 443/80/88/8443; secret_token 1–256 chars;
+max_connections 1–100; always specify allowed_updates.
+
+Hard limits:
+- callback_data: 64 bytes — use CallbackData factories
+- message text: 4096 UTF-16 cu; caption: 1024
+- deep-link payload: 64 chars [A-Za-z0-9_-]; sign arbitrary data via base64url+HMAC
+- MarkdownV2 must-escape: _*[]()~`>#+-=|{}.! — escape user input or use HTML
+
+Mini Apps:
+- initData: secret = HMAC_SHA256("WebAppData", bot_token);
+  check hash == HMAC_SHA256(sorted "k=v\n...", secret)
+- reject auth_date older than 3600s
+- never trust initDataUnsafe on client
+- JWT TTL ≤ 12h
+
+Telegram Stars:
+- currency = "XTR"
+- provider_token = ""
+- refunds via refundStarPayment(telegram_payment_charge_id)
+- digital goods only
+
+Bot commands:
+- command: 1..32 chars [a-z0-9_]; description: 1..256 chars
+- use BotCommandScope* for per-audience menus (default / admin / chat / user)
+
 # SELF-REVIEW CHECKLIST (run after every generation)
 
 - [ ] No secrets in code

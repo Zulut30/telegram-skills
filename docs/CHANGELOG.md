@@ -1,5 +1,27 @@
 # Changelog
 
+## v1.2 — 2026-04-20 (Official Bot API 9.6 grounding)
+
+**Grounded in official Telegram Bot API documentation.** Skill теперь явно цитирует ограничения из `core.telegram.org` и автоматически применяет их в генерируемом коде.
+
+### Added
+- `references/telegram-api-spec.md` — полная выжимка из Bot API 9.6: rate limits (1/sec, 20/min, 30/sec), webhook params, error codes, MarkdownV2 escape chars, deep-link syntax, Mini App events + CloudStorage constraints, Telegram Stars (XTR) flow, `allowed_updates` list, length limits (callback_data 64b, message 4096, caption 1024), `BotCommandScope` types
+- `references/botfather-setup.md` — operational checklist: `/setdescription`, `/setabouttext`, privacy mode, Mini App registration, token rotation, три env (dev/staging/prod)
+- `references/i18n.md` — gettext + Babel multi-language: language detection priority, extraction workflow, pluralization для ru/pl/cs
+- `references/observability.md` — structlog JSON с request_id, Sentry PII scrubbing, Prometheus metrics (UPDATES, HANDLER_SECONDS, TG_API_ERRORS, PAYMENT_EVENTS), health/ready probes, audit log, alert rules
+- Три новые команды: `/botforge-botfather`, `/botforge-i18n`, `/botforge-observability`
+
+### Changed
+- system_prompt.txt + Cursor rules + Codex AGENTS.md — явно enforce-ят лимиты Bot API 9.6
+- Differentiated exception handling: `TelegramRetryAfter` / `Forbidden` / `BadRequest` / `Unauthorized` / 5xx — каждый с своей политикой
+- SKILL.md — секция «Telegram Bot API 9.6 — hard constraints» с конкретными цифрами и ссылками
+
+### Sources
+- https://core.telegram.org/bots/api (v9.6, 2026-04-03)
+- https://core.telegram.org/bots/faq (rate limits)
+- https://core.telegram.org/bots/webapps (Mini Apps)
+- https://core.telegram.org/bots/payments-stars (XTR)
+
 ## v1.1 — 2026-04-20 (Mini Apps, Auth, Payments, Slash Commands)
 
 **Major expansion.** Core skill дополнен тремя reference-модулями и 13 slash-командами Claude Code.
