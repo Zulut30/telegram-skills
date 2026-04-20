@@ -7,7 +7,7 @@ This repository **is** the BotForge skill itself — meta-context: when you work
 ```
 .claude-plugin/plugin.json          # Claude Code plugin manifest
 .claude/skills/botforge/             # The skill itself (SKILL.md + references/)
-.claude/commands/                    # 18 slash commands
+.claude/commands/                    # 19 slash commands
 cursor/                              # Cursor rules (.cursorrules + .cursor/rules/*.mdc)
 codex/AGENTS.md                      # Codex / Codex CLI / Aider
 docs/                                # INSTALL, USAGE, CHANGELOG, QUICKSTART

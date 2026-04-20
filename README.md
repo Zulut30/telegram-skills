@@ -68,13 +68,13 @@ Hosting: VPS, Docker Compose, webhook
 
 The AI will ask up to 5 clarifying questions, produce an ADR, render the project tree, generate every file, run a self-review checklist, and give you deployment commands.
 
-## 18 slash commands
+## 19 slash commands
 
 ```
 Build & evolve:      /botforge-new /botforge-extend /botforge-review /botforge-refactor
 Modules:             /botforge-miniapp /botforge-auth /botforge-payments
-                     /botforge-broadcast /botforge-admin /botforge-scheduler
-                     /botforge-inline /botforge-i18n
+                     /botforge-broadcast /botforge-admin /botforge-admin-web
+                     /botforge-scheduler /botforge-inline /botforge-i18n
 Operations:          /botforge-test /botforge-deploy /botforge-security
                      /botforge-botfather /botforge-observability /botforge-help
 ```
@@ -104,8 +104,8 @@ make up
 |---|---|
 | [`SKILL.md`](SKILL.md) | Full skill document — manifest, system prompt, rules, patterns, examples |
 | [`system_prompt.txt`](system_prompt.txt) | Raw system prompt for any LLM |
-| [`.claude/skills/botforge/`](.claude/skills/botforge/) | **Claude Code** Agent Skill with 17 references |
-| [`.claude/commands/`](.claude/commands/) | 18 slash commands |
+| [`.claude/skills/botforge/`](.claude/skills/botforge/) | **Claude Code** Agent Skill with 23 references |
+| [`.claude/commands/`](.claude/commands/) | 19 slash commands |
 | [`.claude-plugin/plugin.json`](.claude-plugin/plugin.json) | Plugin manifest |
 | [`cursor/.cursor/rules/botforge.mdc`](cursor/.cursor/rules/botforge.mdc) | **Cursor** rules (modern MDC) |
 | [`codex/AGENTS.md`](codex/AGENTS.md) | **Codex / Aider / Continue** |
@@ -125,7 +125,7 @@ make up
 
 ## Reference library
 
-17 deep reference documents covering every aspect of Telegram bot engineering: architecture, 12 reusable patterns, Mini Apps, auth (roles / initData / OAuth / API keys), payments (5 providers), official Bot API 9.6 constraints, BotFather setup, i18n, observability, scheduled tasks, recurring subscriptions, inline mode, groups/channels/forums, media handling, FAQ.
+23 deep reference documents covering every aspect of Telegram bot engineering: architecture, 12 reusable patterns, Mini Apps, auth (roles / initData / OAuth / API keys), payments (5 providers), official Bot API 9.6 constraints, BotFather setup, i18n, observability, scheduled tasks, recurring subscriptions, inline mode, groups/channels/forums, media handling, anti-spam, GDPR compliance, analytics, anti-patterns, performance, admin panel, FAQ.
 
 ## License
 

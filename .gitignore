@@ -6,7 +6,6 @@ venv/
 .env.local
 .DS_Store
 .idea/
-.vscode/
 *.log
 dist/
 build/

@@ -70,6 +70,19 @@ git clone --depth 1 --branch "$REF" "$REPO_URL" "$TMPDIR" >/dev/null 2>&1 \
 install_claude_global() {
   local dest="${HOME}/.claude"
   mkdir -p "$dest/skills" "$dest/commands"
+
+  # Warn about any existing BotForge / non-BotForge command files we would overwrite.
+  for f in "$TMPDIR"/.claude/commands/*.md; do
+    local name
+    name="$(basename "$f")"
+    if [[ -f "$dest/commands/$name" ]]; then
+      warn "overwriting existing $dest/commands/$name"
+    fi
+  done
+  if [[ -d "$dest/skills/botforge" ]]; then
+    warn "overwriting existing $dest/skills/botforge"
+  fi
+
   cp -r "$TMPDIR/.claude/skills/botforge" "$dest/skills/"
   # shellcheck disable=SC2046
   cp "$TMPDIR"/.claude/commands/*.md "$dest/commands/"

@@ -20,6 +20,14 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
+# Windows consoles default to cp1251/cp866 and choke on ✓/× in our output.
+if hasattr(sys.stdout, "reconfigure"):
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+        sys.stderr.reconfigure(encoding="utf-8")
+    except Exception:
+        pass
+
 ROOT = Path(__file__).resolve().parent.parent
 
 TARGETS = {

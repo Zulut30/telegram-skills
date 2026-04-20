@@ -1,8 +1,14 @@
-# BotForge — Full Skill Document
+# BotForge — Skill Overview
 
-**Version:** 1.0 Pro
+**Version:** 1.7.1
 **Released:** 2026-04-20
 **License:** MIT
+
+> **Note.** This file is a high-level overview of the skill for human readers.
+> The **canonical skill prompt** consumed by Claude Code lives at
+> [`.claude/skills/botforge/SKILL.md`](.claude/skills/botforge/SKILL.md).
+> The raw prompt for other LLMs lives at [`system_prompt.txt`](system_prompt.txt).
+> If this file and the canonical skill disagree, the canonical skill wins.
 
 ---
 
@@ -552,10 +558,16 @@ BotForge: [Lite|Pro|Media|SaaS]
 
 | Версия | Статус | Содержание |
 |---|---|---|
-| **v1.0 Pro** | released | core skill, aiogram 3, Postgres, Redis, Docker, Alembic, admin, broadcast, channel-check, ЮKassa/Stars |
-| v1.1 Payments | planned | Stars/ЮKassa/CryptoBot/Stripe unified, plans/trials/proration |
-| v1.2 Media | planned | CMS-sync (WP/Notion), media pipelines, segmented broadcast, UTM |
-| v1.3 AI | planned | OpenAI/Anthropic memory, pgvector RAG |
-| v1.4 Ops | planned | Sentry/Prometheus/Grafana, horizontal scale, feature flags |
-| v1.5 Factory | planned | CLI `botforge new <name>`, multitenancy |
+| **v1.7.1** | released | web admin panel (React + FastAPI + SSE), `/botforge-admin-web` command, 23 references |
+| v1.7 | released | stability protocols (Bypass / Override / Recovery), anti-patterns, naming contract |
+| v1.6 | released | admin panel reference, analytics, GDPR compliance, anti-spam |
+| v1.5 | released | performance, groups & channels, media, inline mode deep-dives |
+| v1.4 | released | observability (structlog / Sentry / Prometheus), scheduler, i18n, subscriptions |
+| v1.3 | released | Mini Apps, auth (initData HMAC / OAuth / API keys / roles) |
+| v1.2 | released | unified payments (Stars / ЮKassa / CryptoBot / Stripe / Tribute) |
+| v1.1 | released | examples pack, four-format sync, golden tests |
+| v1.0 Pro | released | core skill, aiogram 3, Postgres, Redis, Docker, Alembic, admin, broadcast, channel-check |
+| v1.8 Factory | planned | CLI `botforge new <name>`, multitenancy |
 | v2.0 Studio | vision | UI-конструктор → экспорт проекта |
+
+Подробности релизов — в [`docs/CHANGELOG.md`](docs/CHANGELOG.md).
