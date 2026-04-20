@@ -1,5 +1,50 @@
 # Changelog
 
+## v1.5 — 2026-04-20 (Proofs of work)
+
+**Focus: make the skill provably correct, not just comprehensive.** Audit identified that v1.4 looked polished but lacked proof of quality. v1.5 addresses the core blockers.
+
+### Added — Proof that skill follows its own rules
+- **Example bot now has tests.** `examples/01-vip-media-bot/tests/` — 15+ pytest cases (unit + integration), covering SubscriptionService, PaymentService, ChannelCheckService, UserService, repository lifecycle, idempotent webhooks
+- `examples/01-vip-media-bot/tests/conftest.py` — async session + Redis + Bot fixtures using aiosqlite in-memory
+- CI matrix (Python 3.12 / 3.13) running `ruff` + `pytest` on every PR
+
+### Added — Automated four-format sync
+- `tests/check_sync.py` — verifies 20 canonical concepts appear in all 5 skill-prompt distribution files (SKILL.md, system_prompt.txt, cursor-mdc, cursor-legacy, AGENTS.md)
+- CI job `sync-check` runs on every PR, blocks drift
+- Prevents slow divergence between distribution formats
+
+### Added — New critical reference modules
+- `references/performance.md` — connection pools, N+1 queries, batching, file_id reuse, broadcast throttling, horizontal scaling, profiling
+- `references/anti-spam.md` — captcha on join, URL filters, CAPS/emoji detection, behavioral trust scoring, warn/mute/kick escalation, shadow-ban, ChatGPT-generated spam patterns
+- `references/gdpr-compliance.md` — `/privacy_export`, `/privacy_delete` with grace period, retention policy, sub-processor DPAs, breach notification within 72h, audit log
+- `references/analytics.md` — PostHog / Mixpanel / Amplitude integration, events taxonomy, UTM via signed deep-links, A/B feature flags, privacy-respecting tracking
+
+### Added — Distribution & DX
+- `install.sh` — one-liner installer: `curl … | bash -s -- [claude|cursor|codex|system-prompt]`
+- `Makefile` at repo root — `sync-check`, `golden`, `example-test`, `lint`, `install-*`
+- `.github/dependabot.yml` — weekly deps update for example bot + monthly for CI actions + Docker
+- `docs/MIGRATION.md` — upgrade guides 1.0 → 1.5, SemVer policy
+- `docs/README.md` — documentation index
+
+### Changed
+- `plugin.json` — removed non-standard `$comment` field (now strict-JSON valid); version bumped to 1.5.0; references array expanded
+- `.github/workflows/validate.yml` — added `sync-check` and `example-bot-tests` jobs
+- `SKILL.md` — references section now lists 21 modules (was 17)
+
+### Audit closure
+Blockers closed:
+- ✅ plugin.json is strict-JSON
+- ✅ example bot has tests
+- ✅ four-format sync automated
+- ✅ 4 critical references added
+
+Still pending (v1.6+):
+- Discussions enablement + seeded issues
+- First production bot in Showcase
+- examples/02 and examples/03 full implementations
+- Golden tests baseline metrics (requires API key secret in CI)
+
 ## v1.4 — 2026-04-20 (Professional polish)
 
 Закрыты оставшиеся P2/P3 пробелы из аудита. Репо готов к публичному анонсу.

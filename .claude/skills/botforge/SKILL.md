@@ -145,6 +145,10 @@ For detailed architecture templates, reusable patterns, full examples and checkl
 - `references/groups-and-channels.md` — privacy mode, admin rights, forum topics, chat join requests, moderation
 - `references/media.md` — photos/videos/albums/voice/stickers, file_id reuse, Local Bot API for >20MB files
 - `references/faq.md` — troubleshooting (webhook, payments, rate limits, i18n, deploy)
+- `references/performance.md` — connection pools, N+1, batching, caching, horizontal scaling
+- `references/anti-spam.md` — captcha on join, content filters, behavioral scoring, shadow-ban, warn system
+- `references/gdpr-compliance.md` — data subject rights (`/privacy_export`, `/privacy_delete`), retention, breach notification
+- `references/analytics.md` — PostHog / Mixpanel / Amplitude integration, events taxonomy, A/B framework, privacy
 
 ## Slash commands (Claude Code)
 
