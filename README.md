@@ -15,6 +15,7 @@
 
 <p align="center">
   <a href="https://zulut30.github.io/telegram-skills/"><b>Website</b></a> ·
+  <a href="https://github.com/Zulut30/telegram-skills/wiki"><b>Wiki</b></a> ·
   <a href="docs/QUICKSTART.md">Quickstart</a> ·
   <a href="docs/INSTALL.md">Install</a> ·
   <a href="docs/USAGE.md">Usage</a> ·

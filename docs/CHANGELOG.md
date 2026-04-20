@@ -1,5 +1,22 @@
 # Changelog
 
+## v1.6.2 — 2026-04-20 (Auto-sync Wiki + Pages trigger fix)
+
+### Added
+- **`.github/workflows/wiki.yml`** — auto-syncs `wiki/` → `<repo>.wiki.git` via `Andrew-Chen-Wang/github-wiki-action@v4` on every push to main or manual trigger. No more local script required.
+- **`docs/FIRST_TIME_SETUP.md`** — step-by-step for the 5 human actions needed to go live (Pages, Wiki initialization, Discussions, secrets, branch protection)
+- Wiki link added to root README navigation
+
+### Fixed
+- `.github/workflows/pages.yml` — added itself to `paths` trigger. Previously fixes to the workflow file didn't re-run it.
+
+### What's still manual (and why)
+GitHub API doesn't permit programmatically enabling Pages or creating the initial Wiki page via `GITHUB_TOKEN`. Two ~10-second clicks remain:
+1. Settings → Pages → Source: GitHub Actions
+2. Wiki → "Create the first page" → Save
+
+Full guide: [`docs/FIRST_TIME_SETUP.md`](FIRST_TIME_SETUP.md).
+
 ## v1.6.1 — 2026-04-20 (Wiki + Pages fix)
 
 ### Fixed
