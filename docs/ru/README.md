@@ -65,13 +65,13 @@ cp -r telegram-skills/.claude/commands ~/.claude/
 
 AI задаст до 5 уточняющих вопросов, предложит ADR, построит дерево проекта, сгенерирует все файлы, прогонит self-review и выдаст команды деплоя.
 
-## 18 slash-команд
+## 19 slash-команд
 
 ```
 Создание и развитие:  /botforge-new /botforge-extend /botforge-review /botforge-refactor
 Модули:               /botforge-miniapp /botforge-auth /botforge-payments
-                      /botforge-broadcast /botforge-admin /botforge-scheduler
-                      /botforge-inline /botforge-i18n
+                      /botforge-broadcast /botforge-admin /botforge-admin-web
+                      /botforge-scheduler /botforge-inline /botforge-i18n
 Операции:             /botforge-test /botforge-deploy /botforge-security
                       /botforge-botfather /botforge-observability /botforge-help
 ```
@@ -101,8 +101,8 @@ make up
 |---|---|
 | [`SKILL.md`](../../SKILL.md) | Полный skill-документ — манифест, system prompt, правила, паттерны |
 | [`system_prompt.txt`](../../system_prompt.txt) | Голый system prompt для любого LLM |
-| [`.claude/skills/botforge/`](../../.claude/skills/botforge/) | **Claude Code** Agent Skill с 17 references |
-| [`.claude/commands/`](../../.claude/commands/) | 18 slash-команд |
+| [`.claude/skills/botforge/`](../../.claude/skills/botforge/) | **Claude Code** Agent Skill с 23 references |
+| [`.claude/commands/`](../../.claude/commands/) | 19 slash-команд |
 | [`.claude-plugin/plugin.json`](../../.claude-plugin/plugin.json) | Plugin manifest |
 | [`cursor/.cursor/rules/botforge.mdc`](../../cursor/.cursor/rules/botforge.mdc) | **Cursor** правила (современный MDC) |
 | [`codex/AGENTS.md`](../../codex/AGENTS.md) | **Codex / Aider / Continue** |

@@ -1,7 +1,7 @@
-"""Verify VERSION file matches plugin.json and latest CHANGELOG entry.
+"""Verify VERSION matches plugin.json, CHANGELOG, and SKILL.md headers.
 
 Single source of truth: VERSION.
-Exits non-zero if any of the three places disagree.
+Exits non-zero if any of the tracked places disagree.
 """
 
 from __future__ import annotations
@@ -10,6 +10,27 @@ import json
 import pathlib
 import re
 import sys
+
+if hasattr(sys.stdout, "reconfigure"):
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+        sys.stderr.reconfigure(encoding="utf-8")
+    except Exception:
+        pass
+
+
+_SKILL_HEADER_RE = re.compile(r"^\*\*Version:\*\*\s*(\d+\.\d+\.\d+)", re.MULTILINE)
+_SKILL_HEADER_FILES = (
+    pathlib.Path(".claude/skills/botforge/SKILL.md"),
+    pathlib.Path("SKILL.md"),
+)
+
+
+def _skill_header_version(path: pathlib.Path) -> str | None:
+    if not path.exists():
+        return None
+    m = _SKILL_HEADER_RE.search(path.read_text(encoding="utf-8"))
+    return m.group(1) if m else None
 
 
 def main() -> int:
@@ -34,11 +55,15 @@ def main() -> int:
             parts.append(0)
         return tuple(parts)
 
-    versions = {
+    versions: dict[str, tuple[int, ...]] = {
         "VERSION": normalize(version_file),
         "plugin.json": normalize(manifest_version),
         "CHANGELOG.md": normalize(changelog_version),
     }
+    for path in _SKILL_HEADER_FILES:
+        header = _skill_header_version(path)
+        if header is not None:
+            versions[str(path)] = normalize(header)
 
     if len(set(versions.values())) != 1:
         print("Version mismatch:")
@@ -46,7 +71,7 @@ def main() -> int:
             print(f"  {src}: {'.'.join(map(str, v))}")
         return 1
 
-    print(f"Version sync OK: {version_file}")
+    print(f"Version sync OK: {version_file} ({len(versions)} sources)")
     return 0
 
 

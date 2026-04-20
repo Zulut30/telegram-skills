@@ -12,7 +12,7 @@ Production-ready skill pack for Claude Code, Cursor, Codex, and any LLM. Grounde
 
 - **[Quickstart](Quickstart)** — 5 minutes from zero to bot
 - **[Installation](Installation)** — per-tool setup details
-- **[Commands Reference](Commands-Reference)** — all 18 slash commands
+- **[Commands Reference](Commands-Reference)** — all 19 slash commands
 - **[Modes](Modes)** — Lite vs Pro vs Media vs SaaS
 - **[FAQ](FAQ)** — troubleshooting
 

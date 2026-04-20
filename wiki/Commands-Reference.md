@@ -1,6 +1,6 @@
 # Commands Reference
 
-18 slash commands covering the full lifecycle of a Telegram bot.
+19 slash commands covering the full lifecycle of a Telegram bot.
 
 ## Build & evolve
 
@@ -49,6 +49,11 @@ Broadcast system with admin FSM, rate-limiting (25 msg/s), error-tolerant delive
 
 ### `/botforge-admin [inline|webapp|both]`
 Admin panel: stats, user management, broadcasts, settings, audit log.
+
+### `/botforge-admin-web`
+Full web admin dashboard: React 19 + Vite + Tailwind + shadcn/ui frontend,
+FastAPI backend sharing code with the bot, JWT auth with roles, SSE real-time
+updates for payments and broadcast progress.
 
 ### `/botforge-scheduler [apscheduler|arq|cron] [task]`
 Scheduled tasks: expire subscriptions, reminders, deferred broadcasts, hourly stats.

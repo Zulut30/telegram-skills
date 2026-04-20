@@ -89,12 +89,12 @@ Ready-to-post content to kickstart community engagement. Copy–paste into GitHu
 
 ### Twitter/X launch
 
-> Just shipped BotForge v1.5 🛠️
+> Just shipped BotForge v1.7 🛠️
 >
 > A skill that turns Claude Code / Cursor / Codex into a senior Telegram bot engineer.
 >
-> • 18 slash commands
-> • 21 reference modules
+> • 19 slash commands
+> • 23 reference modules
 > • Grounded in Bot API 9.6
 > • Working example with tests
 > • MIT, no lock-in
@@ -103,12 +103,12 @@ Ready-to-post content to kickstart community engagement. Copy–paste into GitHu
 
 ### Telegram channel announcement
 
-> **BotForge v1.5 — AI делает production-ready Telegram-ботов**
+> **BotForge v1.7 — AI делает production-ready Telegram-ботов**
 >
 > Skill для Claude Code, Cursor и Codex. Вместо одноразового main.py — слоёная архитектура, Postgres, Docker, платежи (Stars/ЮKassa/Stripe), Mini Apps.
 >
-> • 18 slash-команд
-> • 21 reference-модулей
+> • 19 slash-команд
+> • 23 reference-модулей
 > • Опирается на официальный Bot API 9.6
 > • Tested example bot
 >

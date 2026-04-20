@@ -57,6 +57,16 @@ jobs:
       - name: Verify four-format sync
         run: python tests/check_sync.py
 
+  version-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify VERSION / plugin.json / CHANGELOG / SKILL.md version sync
+        run: python tests/check_version_sync.py
+
   install-sh:
     runs-on: ubuntu-latest
     steps:

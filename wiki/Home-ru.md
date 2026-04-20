@@ -8,7 +8,7 @@
 
 - **[Быстрый старт](Quickstart)** — 5 минут от нуля до бота
 - **[Установка](Installation)** — настройка под каждый инструмент
-- **[Команды](Commands-Reference)** — все 18 slash-команд
+- **[Команды](Commands-Reference)** — все 19 slash-команд
 - **[Режимы](Modes)** — Lite, Pro, Media, SaaS
 - **[FAQ](FAQ)** — решение типовых проблем
 

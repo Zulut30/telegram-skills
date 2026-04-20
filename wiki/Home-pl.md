@@ -8,7 +8,7 @@ Gotowy pakiet dla Claude Code, Cursora, Codexa i dowolnego LLM. Oparty na oficja
 
 - **[Szybki start](Quickstart)** — 5 minut od zera do bota
 - **[Instalacja](Installation)** — konfiguracja dla każdego narzędzia
-- **[Komendy](Commands-Reference)** — wszystkie 18 komend slash
+- **[Komendy](Commands-Reference)** — wszystkie 19 komend slash
 - **[Tryby](Modes)** — Lite, Pro, Media, SaaS
 - **[FAQ](FAQ)** — rozwiązywanie typowych problemów
 

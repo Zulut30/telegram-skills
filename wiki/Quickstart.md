@@ -68,6 +68,6 @@ The skill enforces the 6-stage workflow:
 
 ## Next
 
-- [Commands Reference](Commands-Reference) — all 18 slash commands
+- [Commands Reference](Commands-Reference) — all 19 slash commands
 - [Architecture](Architecture) — why layered design, what's banned
 - [Examples](Examples) — working bots

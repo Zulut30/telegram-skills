@@ -51,6 +51,35 @@ def update_plugin_manifest(v: tuple[int, int, int]) -> None:
     path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
 
 
+#: Human-readable version strings shaped as `**Version:** X.Y.Z` that should
+#: track VERSION. Files using a shorter `v{major}.{minor}` label (system_prompt,
+#: cursor rules, codex/AGENTS.md) stay on the minor line by convention.
+_VERSION_HEADER_RE = re.compile(
+    r"^(\*\*Version:\*\*\s*)\d+\.\d+\.\d+", re.MULTILINE
+)
+_VERSION_HEADER_TARGETS: tuple[pathlib.Path, ...] = (
+    pathlib.Path(".claude/skills/botforge/SKILL.md"),
+    pathlib.Path("SKILL.md"),
+)
+
+
+def update_skill_md_version(v: tuple[int, int, int]) -> list[pathlib.Path]:
+    """Patch `**Version:** X.Y.Z` lines in SKILL.md files to the new version."""
+    new_str = ".".join(map(str, v))
+    patched: list[pathlib.Path] = []
+    for path in _VERSION_HEADER_TARGETS:
+        if not path.exists():
+            continue
+        text = path.read_text(encoding="utf-8")
+        new_text, n = _VERSION_HEADER_RE.subn(
+            rf"\g<1>{new_str}", text, count=1
+        )
+        if n and new_text != text:
+            path.write_text(new_text, encoding="utf-8")
+            patched.append(path)
+    return patched
+
+
 def main() -> int:
     if len(sys.argv) != 2:
         print(__doc__)
@@ -62,8 +91,11 @@ def main() -> int:
 
     write_version_file(new)
     update_plugin_manifest(new)
+    patched = update_skill_md_version(new)
 
     print(f"Bumped to {new_str}")
+    for p in patched:
+        print(f"  patched header in {p}")
     print("Remember to:")
     print(f"  1. Prepend a new section to docs/CHANGELOG.md: ## v{new_str} — YYYY-MM-DD")
     print("  2. Commit: git commit -am 'chore: bump version to " f"{new_str}'")

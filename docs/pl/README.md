@@ -65,13 +65,13 @@ Hosting: VPS, Docker Compose, webhook
 
 AI zada do 5 pytań doprecyzowujących, przygotuje ADR, wygeneruje drzewo projektu, stworzy wszystkie pliki, przejdzie self-review i poda komendy deploymentu.
 
-## 18 komend slash
+## 19 komend slash
 
 ```
 Budowa i rozwój:     /botforge-new /botforge-extend /botforge-review /botforge-refactor
 Moduły:              /botforge-miniapp /botforge-auth /botforge-payments
-                     /botforge-broadcast /botforge-admin /botforge-scheduler
-                     /botforge-inline /botforge-i18n
+                     /botforge-broadcast /botforge-admin /botforge-admin-web
+                     /botforge-scheduler /botforge-inline /botforge-i18n
 Operacje:            /botforge-test /botforge-deploy /botforge-security
                      /botforge-botfather /botforge-observability /botforge-help
 ```
@@ -101,8 +101,8 @@ make up
 |---|---|
 | [`SKILL.md`](../../SKILL.md) | Pełny dokument skilla — manifest, system prompt, reguły, wzorce |
 | [`system_prompt.txt`](../../system_prompt.txt) | Surowy system prompt dla dowolnego LLM |
-| [`.claude/skills/botforge/`](../../.claude/skills/botforge/) | **Claude Code** Agent Skill z 17 referencjami |
-| [`.claude/commands/`](../../.claude/commands/) | 18 komend slash |
+| [`.claude/skills/botforge/`](../../.claude/skills/botforge/) | **Claude Code** Agent Skill z 23 referencjami |
+| [`.claude/commands/`](../../.claude/commands/) | 19 komend slash |
 | [`.claude-plugin/plugin.json`](../../.claude-plugin/plugin.json) | Manifest pluginu |
 | [`cursor/.cursor/rules/botforge.mdc`](../../cursor/.cursor/rules/botforge.mdc) | Reguły **Cursora** (nowoczesne MDC) |
 | [`codex/AGENTS.md`](../../codex/AGENTS.md) | **Codex / Aider / Continue** |

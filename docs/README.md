@@ -30,11 +30,12 @@
 
 ## Reference library (inside skill bundle)
 
-17 reference modules live in [`.claude/skills/botforge/references/`](../.claude/skills/botforge/references/):
+23 reference modules live in [`.claude/skills/botforge/references/`](../.claude/skills/botforge/references/):
 
-- architecture.md · patterns.md · examples.md · checklists.md
-- miniapp.md · auth.md · payments.md
+- architecture.md · patterns.md · examples.md · checklists.md · anti-patterns.md
+- miniapp.md · auth.md · payments.md · admin-panel.md
 - telegram-api-spec.md · botfather-setup.md
-- i18n.md · observability.md
+- i18n.md · observability.md · analytics.md · performance.md
 - scheduler.md · subscriptions.md · inline-mode.md
-- groups-and-channels.md · media.md · faq.md
+- groups-and-channels.md · media.md · anti-spam.md
+- gdpr-compliance.md · faq.md
