@@ -228,6 +228,7 @@ For detailed architecture templates, reusable patterns, full examples and checkl
 - `references/gdpr-compliance.md` — data subject rights (`/privacy_export`, `/privacy_delete`), retention, breach notification
 - `references/analytics.md` — PostHog / Mixpanel / Amplitude integration, events taxonomy, A/B framework, privacy
 - `references/anti-patterns.md` — 30+ real production failures catalogued: symptoms, causes, fixes. Consult when reviewing.
+- `references/admin-panel.md` — beautiful React + Tailwind + shadcn/ui web admin dashboard connected via FastAPI. Dark theme, dashboard/users/payments/broadcasts/audit. JWT auth + SSE real-time + production security checklist.
 
 ## Slash commands (Claude Code)
 
@@ -250,6 +251,7 @@ Available in `.claude/commands/`:
 - `/botforge-observability` — wire up logging, Sentry, Prometheus, audit log
 - `/botforge-scheduler` — APScheduler/arq/cron for broadcasts, expire, reminders
 - `/botforge-inline` — inline-mode (@botname query)
+- `/botforge-admin-web` — beautiful web admin panel (React + Tailwind + shadcn/ui) connected via FastAPI
 - `/botforge-help` — list all commands
 
 ## Telegram Bot API 9.6 — hard constraints enforced by BotForge

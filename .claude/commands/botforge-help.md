@@ -37,6 +37,7 @@ description: Справка по командам BotForge
 | `/botforge-observability [minimal\|standard\|full]` | Logging, Sentry, Prometheus, audit, alerts |
 | `/botforge-scheduler [apscheduler\|arq\|cron] [task]` | Scheduled tasks: рассылки, expire, напоминания |
 | `/botforge-inline <описание>` | Inline-режим (@botname query) |
+| `/botforge-admin-web <описание>` | Beautiful web admin panel (React + Tailwind + shadcn/ui) |
 
 ## Типичные сценарии
 

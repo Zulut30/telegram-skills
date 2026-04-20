@@ -1,5 +1,42 @@
 # Changelog
 
+## v1.7.1 — 2026-04-20 (Web admin panel)
+
+Skill can now generate a beautiful web admin dashboard for any bot — React + Tailwind + shadcn/ui frontend, FastAPI backend that shares code with the bot, real-time updates via SSE.
+
+### Added
+
+- **`references/admin-panel.md`** — comprehensive generation guide:
+  - React 19 + Vite + TypeScript + Tailwind CSS + shadcn/ui design system
+  - TanStack Query + Table, React Hook Form + zod, Recharts, Sonner, Lucide
+  - Dark theme by default with BotForge palette (`#2aabee` accent, Inter typography, JetBrains Mono for IDs)
+  - Full page specs: Dashboard (stat cards + revenue chart + live events), Users (search/filter/bulk), UserDetail (tabs), Broadcasts (multi-step composer drawer), Payments (refund + CSV export), Audit log
+  - FastAPI backend sharing code with bot (`app/services/`, `app/repositories/`) — no duplication
+  - JWT auth with role claim + `require_role(Role.admin)` dependency
+  - Server-Sent Events for real-time updates (payment arrivals, broadcast progress)
+  - Security checklist: 12h JWT TTL, CORS whitelist, login rate limit, 2FA (TOTP), audit-every-action
+  - Performance: cursor pagination, query cache (Redis 30s), lazy routes, bundle ≤ 250 KB
+  - Deploy: docker-compose additions, Dockerfile.api, nginx config for SPA fallback
+
+- **`/botforge-admin-web`** — slash command to generate full panel in one go:
+  - Backend: `api/routers/admin/*.py` (stats, users, payments, subscriptions, broadcasts, content, settings, audit), `api/security.py`, `api/events.py`, `api/pagination.py`, `api/rate_limit.py`
+  - Frontend: `webapp/` with pages, layout, UI components, auth, real-time hook
+  - Infrastructure: Dockerfile.api, webapp Dockerfile + nginx.conf, docker-compose additions
+
+### Changed
+
+- `SKILL.md` — admin-panel added to references; `/botforge-admin-web` added to commands
+- `codex/AGENTS.md` — admin-panel in File references block
+- `plugin.json` — v1.7.1, admin-panel reference (23 total), botforge-admin-web command (19 total)
+- `botforge-help.md` — new row for the command
+
+### Design system highlights
+
+Palette: deep navy `#050a14` background → cyan `#2aabee` accent → gradient hero text `#7dd3fc → #f472b6 → #a78bfa`.
+Typography: Inter (800/900 headings, tight letter-spacing), JetBrains Mono (code/IDs), tabular-nums on numbers.
+Layout: 260px sidebar, 64px topbar, `max-w-7xl` content, `rounded-xl` cards with subtle border.
+Interactions: 150ms ease-out hover, animated stat counters (rAF-driven, cubic ease-out), skeleton pulse loading.
+
 ## v1.7 — 2026-04-20 (Stability & quality: protocols + anti-patterns + naming contract)
 
 **Skill-level release.** Audit #4 identified three P0 issues: rigid workflow for trivial tasks, no recovery when AI makes mistakes, no discipline enforcement. This release closes all three plus adds 30+ production anti-patterns the skill can consult.

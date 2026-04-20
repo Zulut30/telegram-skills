@@ -167,4 +167,5 @@ If this project includes BotForge bundle:
 - `.claude/skills/botforge/references/gdpr-compliance.md` — privacy_export, retention
 - `.claude/skills/botforge/references/analytics.md` — PostHog/Mixpanel, UTM, A/B
 - `.claude/skills/botforge/references/anti-patterns.md` — 30+ production failures
+- `.claude/skills/botforge/references/admin-panel.md` — web admin panel (React + Tailwind + shadcn/ui + FastAPI)
 - `.claude/skills/botforge/references/faq.md` — troubleshooting
