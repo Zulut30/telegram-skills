@@ -2401,43 +2401,39 @@ document.querySelectorAll("section:not(.hero) > .container > *").forEach(el=>{
 applyI18n();
 </script>
 
-<!-- SEO: semantic footer with keyword-rich internal links, visible to users and crawlers -->
-<footer class="container" style="padding:48px 24px 64px;border-top:1px solid var(--border);margin-top:40px;color:var(--text-dim);font-size:14px;line-height:1.7;">
-  <h2 style="font-size:15px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;">Telegram Bot Development with AI</h2>
-  <p style="max-width:900px;margin-bottom:16px;">
-    <strong>BotForge</strong> is an open-source skill pack for
-    <a href="https://claude.com/claude-code" rel="noopener">Claude Code</a>,
-    <a href="https://cursor.com" rel="noopener">Cursor</a>,
-    <a href="https://github.com/openai/codex" rel="noopener">Codex</a>,
-    Aider and any LLM. It turns an AI assistant into a senior
-    <strong>Telegram bot engineer</strong> that builds production-ready bots with
-    <strong>aiogram 3</strong>, <strong>PostgreSQL</strong>, <strong>SQLAlchemy</strong>,
-    <strong>Alembic</strong> migrations and <strong>Docker</strong>, grounded in the official
-    <a href="https://core.telegram.org/bots/api" rel="noopener">Telegram Bot API 9.6</a>.
+<!-- SEO: semantic block with keyword-rich copy, rendered as hidden-for-layout but fully crawlable.
+     We use visually-hidden positioning rather than display:none so Google/Bing still index it
+     (Google docs: content hidden via display:none is weighted lower). Main visible footer
+     already communicates the brand — this block exists purely for search-engine discovery. -->
+<section aria-label="Telegram bot development — SEO keywords" class="seo-text" style="position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden;">
+  <h2>Telegram Bot Development with AI</h2>
+  <p>
+    BotForge is an open-source skill pack for Claude Code, Cursor, Codex, Aider and any LLM.
+    It turns an AI assistant into a senior Telegram bot engineer that builds production-ready bots
+    with aiogram 3, PostgreSQL, SQLAlchemy, Alembic migrations and Docker, grounded in the official
+    Telegram Bot API 9.6.
   </p>
-  <p style="max-width:900px;margin-bottom:16px;">
-    Use BotForge to create a <strong>Telegram VIP subscription bot</strong>, a
-    <strong>channel bot</strong>, an <strong>admin bot</strong>, a <strong>shop bot</strong>,
-    a <strong>Telegram Mini App</strong> with <strong>WebApp payments</strong>,
-    <strong>Telegram Stars</strong> checkout, broadcast mailings, moderation tools
-    and more — architecture before code, every time.
+  <p>
+    Use BotForge to create a Telegram VIP subscription bot, a channel bot, an admin bot, a shop bot,
+    a Telegram Mini App with WebApp payments, Telegram Stars checkout, broadcast mailings and
+    moderation tools — architecture before code, every time.
   </p>
-  <nav aria-label="Related topics" style="display:flex;flex-wrap:wrap;gap:8px 14px;max-width:900px;">
-    <a href="https://github.com/Zulut30/telegram-skills" rel="noopener">Telegram bot skill on GitHub</a> ·
-    <a href="https://github.com/Zulut30/telegram-skills/tree/main/examples" rel="noopener">Telegram bot examples</a> ·
-    <a href="https://github.com/Zulut30/telegram-skills/blob/main/docs/QUICKSTART.md" rel="noopener">Quickstart</a> ·
-    <a href="https://github.com/Zulut30/telegram-skills/blob/main/docs/INSTALL.md" rel="noopener">Install guide</a> ·
-    <a href="https://github.com/Zulut30/telegram-skills/blob/main/docs/USAGE.md" rel="noopener">Usage</a> ·
-    <a href="https://github.com/Zulut30/telegram-skills/blob/main/docs/ru/README.md" rel="noopener" hreflang="ru">Документация на русском</a> ·
-    <a href="https://github.com/Zulut30/telegram-skills/blob/main/docs/pl/README.md" rel="noopener" hreflang="pl">Dokumentacja po polsku</a>
-  </nav>
-  <p style="margin-top:20px;font-size:13px;color:var(--muted);">
+  <ul>
+    <li><a href="https://github.com/Zulut30/telegram-skills">Telegram bot skill on GitHub</a></li>
+    <li><a href="https://github.com/Zulut30/telegram-skills/tree/main/examples">Telegram bot examples</a></li>
+    <li><a href="https://github.com/Zulut30/telegram-skills/blob/main/docs/QUICKSTART.md">Quickstart</a></li>
+    <li><a href="https://github.com/Zulut30/telegram-skills/blob/main/docs/INSTALL.md">Install guide</a></li>
+    <li><a href="https://github.com/Zulut30/telegram-skills/blob/main/docs/USAGE.md">Usage</a></li>
+    <li><a href="https://github.com/Zulut30/telegram-skills/blob/main/docs/ru/README.md" hreflang="ru">Документация на русском</a></li>
+    <li><a href="https://github.com/Zulut30/telegram-skills/blob/main/docs/pl/README.md" hreflang="pl">Dokumentacja po polsku</a></li>
+  </ul>
+  <p>
     Keywords: telegram bot development, create telegram bot with AI, aiogram 3 bot, python telegram bot,
     telegram bot api 9.6, telegram mini app, telegram stars payments, VIP subscription bot,
     admin bot telegram, claude code skill, cursor rules, codex agents, LLM skill,
     разработка телеграм ботов, создание телеграм бота, бот под ключ, aiogram бот.
   </p>
-</footer>
+</section>
 
 </body>
 </html>
