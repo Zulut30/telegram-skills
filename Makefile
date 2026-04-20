@@ -27,9 +27,23 @@ install-codex:
 sync-check:
 	python tests/check_sync.py
 
+version-check:
+	python tests/check_version_sync.py
+
+bump-patch:
+	python tests/bump_version.py patch
+
+bump-minor:
+	python tests/bump_version.py minor
+
+bump-major:
+	python tests/bump_version.py major
+
 validate:
-	@python -c "import json, pathlib, sys; m = json.loads(pathlib.Path('.claude-plugin/plugin.json').read_text()); missing = [p for p in (e['path'] for e in m['commands']+m['skills']) if not pathlib.Path(p).exists()]; sys.exit('\n'.join(missing) if missing else 0)"
-	@echo "plugin.json OK"
+	python tests/validate_plugin_manifest.py
+	python tests/validate_frontmatter.py
+	python tests/check_sync.py
+	python tests/check_version_sync.py
 
 golden:
 	python tests/run_golden.py

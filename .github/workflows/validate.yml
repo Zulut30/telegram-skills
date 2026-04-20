@@ -26,28 +26,7 @@ jobs:
           python-version: "3.12"
       - run: pip install pyyaml
       - name: Validate command frontmatter
-        run: |
-          python - <<'PY'
-          import pathlib, re, sys, yaml
-          errors = []
-          for p in pathlib.Path(".claude/commands").glob("*.md"):
-              text = p.read_text(encoding="utf-8")
-              m = re.match(r"^---\n(.*?)\n---\n", text, re.DOTALL)
-              if not m:
-                  errors.append(f"{p}: no frontmatter")
-                  continue
-              try:
-                  fm = yaml.safe_load(m.group(1))
-              except yaml.YAMLError as e:
-                  errors.append(f"{p}: invalid YAML — {e}")
-                  continue
-              if not isinstance(fm, dict) or "description" not in fm:
-                  errors.append(f"{p}: missing 'description' field")
-          if errors:
-              print("\n".join(errors))
-              sys.exit(1)
-          print("All command frontmatter valid.")
-          PY
+        run: python tests/validate_frontmatter.py
 
   plugin-manifest:
     runs-on: ubuntu-latest
@@ -57,26 +36,7 @@ jobs:
         with:
           python-version: "3.12"
       - name: Validate plugin.json
-        run: |
-          python - <<'PY'
-          import json, pathlib, sys
-          manifest = json.loads(pathlib.Path(".claude-plugin/plugin.json").read_text(encoding="utf-8"))
-          required = {"name", "version", "description", "skills", "commands"}
-          missing = required - manifest.keys()
-          if missing:
-              print(f"Missing fields: {missing}"); sys.exit(1)
-
-          errors = []
-          for entry in manifest["commands"]:
-              if not pathlib.Path(entry["path"]).exists():
-                  errors.append(f"command not found: {entry['path']}")
-          for entry in manifest["skills"]:
-              if not pathlib.Path(entry["path"]).exists():
-                  errors.append(f"skill not found: {entry['path']}")
-          if errors:
-              print("\n".join(errors)); sys.exit(1)
-          print(f"plugin.json OK ({len(manifest['commands'])} commands, {len(manifest['skills'])} skills)")
-          PY
+        run: python tests/validate_plugin_manifest.py
 
   links:
     runs-on: ubuntu-latest
@@ -97,11 +57,28 @@ jobs:
       - name: Verify four-format sync
         run: python tests/check_sync.py
 
+  install-sh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: shellcheck install.sh
+        run: |
+          sudo apt-get install -y shellcheck
+          shellcheck install.sh
+      - name: Dry-run install.sh --check
+        run: bash install.sh --check
+
   example-bot-tests:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        python-version: ["3.12", "3.13"]
+        include:
+          - python-version: "3.12"
+            experimental: false
+          - python-version: "3.13"
+            experimental: true
+    continue-on-error: ${{ matrix.experimental }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

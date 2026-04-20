@@ -27,14 +27,21 @@ repos:
     hooks:
       - id: validate-plugin-manifest
         name: validate plugin.json
-        entry: python -c "import json, pathlib; m = json.loads(pathlib.Path('.claude-plugin/plugin.json').read_text()); [exit(f'missing: {p}') for p in (e['path'] for e in m['commands']+m['skills']) if not pathlib.Path(p).exists()]; print('plugin.json OK')"
+        entry: python tests/validate_plugin_manifest.py
         language: system
         pass_filenames: false
         files: '^\.claude-plugin/plugin\.json$|^\.claude/(commands|skills)/.*\.md$'
 
       - id: validate-command-frontmatter
         name: validate command frontmatter
-        entry: python -c "import pathlib, re, sys, yaml; errors=[]; [errors.append(f'{p}: bad frontmatter') for p in pathlib.Path('.claude/commands').glob('*.md') if not re.match(r'^---\n.*?\n---\n', p.read_text(encoding='utf-8'), re.DOTALL)]; sys.exit('\n'.join(errors) if errors else 0)"
+        entry: python tests/validate_frontmatter.py
         language: system
         pass_filenames: false
         files: '^\.claude/commands/.*\.md$'
+
+      - id: four-format-sync
+        name: four-format skill prompt sync
+        entry: python tests/check_sync.py
+        language: system
+        pass_filenames: false
+        files: '^(\.claude/skills/botforge/SKILL\.md|system_prompt\.txt|cursor/.*|codex/AGENTS\.md)$'

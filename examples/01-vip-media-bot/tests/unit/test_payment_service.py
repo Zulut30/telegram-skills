@@ -8,6 +8,7 @@ from app.repositories.subscription_repo import SubscriptionRepo
 from app.repositories.user_repo import UserRepo
 from app.services.payment_service import PaymentService
 from app.services.subscription_service import SubscriptionService
+from tests.conftest import get_only_payment
 
 
 @pytest.mark.asyncio
@@ -33,13 +34,7 @@ async def test_on_successful_payment_activates_subscription(session, bot_mock):
     service = PaymentService(StarsProvider(bot_mock), payments, subs)
 
     await service.start_vip_purchase(user.id)
-    pending = (
-        await session.execute(
-            __import__("sqlalchemy").select(
-                __import__("app.models.payment", fromlist=["Payment"]).Payment
-            )
-        )
-    ).scalar_one()
+    pending = await get_only_payment(session)
 
     await service.on_successful_payment(
         order_id=pending.order_id,
@@ -59,13 +54,7 @@ async def test_duplicate_webhook_is_idempotent(session, bot_mock):
     service = PaymentService(StarsProvider(bot_mock), payments, subs)
 
     await service.start_vip_purchase(user.id)
-    pending = (
-        await session.execute(
-            __import__("sqlalchemy").select(
-                __import__("app.models.payment", fromlist=["Payment"]).Payment
-            )
-        )
-    ).scalar_one()
+    pending = await get_only_payment(session)
 
     await service.on_successful_payment(pending.order_id, "charge-1", 100)
     first_sub = await SubscriptionRepo(session).active_for(user.id)
@@ -74,7 +63,7 @@ async def test_duplicate_webhook_is_idempotent(session, bot_mock):
     second_sub = await SubscriptionRepo(session).active_for(user.id)
 
     assert first_sub is not None and second_sub is not None
-    assert first_sub.id == second_sub.id  # same subscription, no duplicate
+    assert first_sub.id == second_sub.id
 
 
 @pytest.mark.asyncio
@@ -87,12 +76,6 @@ async def test_amount_stored_as_decimal(session, bot_mock):
     )
     await service.start_vip_purchase(user.id)
 
-    payment = (
-        await session.execute(
-            __import__("sqlalchemy").select(
-                __import__("app.models.payment", fromlist=["Payment"]).Payment
-            )
-        )
-    ).scalar_one()
+    payment = await get_only_payment(session)
     assert isinstance(payment.amount, Decimal)
     assert payment.currency == "XTR"

@@ -1,5 +1,58 @@
 # Changelog
 
+## v1.6 — 2026-04-20 (Polish + growth infrastructure)
+
+Third audit closure. Focus: fix lingering v1.5 bugs, set up growth infrastructure, stop hacks in test code.
+
+### Fixed (P0 from v1.5 audit)
+- **Tests no longer use `__import__` hack.** `tests/conftest.py` exposes a clean `get_only_payment(session)` helper. `test_payment_service.py` uses normal imports.
+- **CI no longer fails on Python 3.13.** Matrix marks 3.13 as `experimental: true` with `continue-on-error`. Only 3.12 is required-to-pass.
+- **`install.sh --check`** mode for self-test (git/curl/bash presence, HOME writable, repo reachable). Shellcheck-clean and covered by CI.
+- **Pre-commit hooks no longer use inline Python.** Extracted to `tests/validate_frontmatter.py`, `tests/validate_plugin_manifest.py`, `tests/check_sync.py`. Works on Windows Git Bash.
+
+### Added — Distribution
+- **GitHub Pages landing** at [zulut30.github.io/telegram-skills](https://zulut30.github.io/telegram-skills/) — single-file HTML, no build step, OpenGraph metadata for social sharing
+- `.github/workflows/pages.yml` — auto-deploy on landing/assets changes
+- `.well-known/security.txt` (RFC 9116) — security researcher contact
+- `docs/SECURITY_THANKS.md` — acknowledgments placeholder
+
+### Added — Version hygiene
+- `VERSION` file — single source of truth
+- `tests/check_version_sync.py` — asserts VERSION = plugin.json version = latest CHANGELOG header
+- `tests/bump_version.py` — `python tests/bump_version.py minor` updates all places
+
+### Added — Growth kit
+- `.github/GROWTH_KIT.md` — 10 seeded issues + 5 discussion starters + social-media copy templates
+- `.github/DISCUSSION_TEMPLATE/` — announcements, show-and-tell, Q&A
+- Template for submitting your bot to the public showcase
+
+### Added — Content
+- Comparison vs **python-telegram-bot** in `docs/COMPARISON.md` — the #1 gap from the audit
+
+### Improved
+- `README.md` — added Website badge pointing to the landing page
+- `validate.yml` — new `install-sh` job (shellcheck + `--check` dry-run)
+- Plugin manifest validator now checks `references[]` paths exist, not only commands/skills
+
+### Audit v3 closures
+- ✅ `plugin.json` strict-JSON (from v1.5)
+- ✅ Tests have no `__import__` hacks
+- ✅ Python 3.13 doesn't block CI
+- ✅ `install.sh` testable
+- ✅ Pre-commit cross-platform
+- ✅ Landing page live
+- ✅ GitHub Discussions templates ready
+- ✅ Seeded growth kit ready
+- ✅ Comparison vs PTB
+- ✅ Single source of truth for version
+
+### Still pending (v1.7+)
+- Real production bot deployed and listed in SHOWCASE (requires human action)
+- GitHub Discussions enabled (requires repo admin action)
+- examples/02-ai-assistant and examples/03-lead-gen full implementations
+- Logo redesign (needs designer)
+- Golden tests with real API key baseline
+
 ## v1.5 — 2026-04-20 (Proofs of work)
 
 **Focus: make the skill provably correct, not just comprehensive.** Audit identified that v1.4 looked polished but lacked proof of quality. v1.5 addresses the core blockers.

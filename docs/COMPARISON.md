@@ -53,6 +53,33 @@
 | Provider-agnostic payments | No | Yes |
 | Self-review | Freeform | Structured checklist |
 
+## vs python-telegram-bot (PTB)
+
+The most popular Python framework worldwide. BotForge defaults to aiogram 3, but the choice is orthogonal: you can pick PTB if you need to, BotForge will still enforce layered architecture.
+
+| | python-telegram-bot | aiogram 3 (BotForge default) |
+|---|---|---|
+| Async model | Async since v20 | Async-first from day one |
+| Router/Blueprint | `Application` + handlers | First-class `Router` with includes |
+| FSM | External persistence | Built-in (Redis/Mongo/Memory) |
+| Middleware | `TypeHandler`, JobQueue | Dedicated pipeline (FastAPI-like) |
+| Type hints | Improving, historically lax | Strict, every method typed |
+| CallbackData | Manual string parsing | Pydantic-like factories |
+| Community size | Largest | Second, fast-growing, RU-heavy |
+| Breaking-change cadence | Conservative | Faster (3.x had major jumps) |
+
+**When to stay on PTB:**
+- Existing PTB codebase; don't rewrite just for aiogram.
+- You need rich `JobQueue` out-of-box (PTB ships more here).
+- Team expertise is deeply PTB.
+
+**When BotForge + aiogram is better:**
+- New project, no legacy.
+- You want modern async patterns mirroring FastAPI mental model.
+- Strong typing matters to your team.
+
+**Can BotForge generate PTB code?** Yes, non-default. The ADR stage must justify PTB choice; layer structure (handlers / services / repositories) is identical — only framework-specific bits change.
+
 ## When NOT to use BotForge
 
 - One-off toy bot, never deployed — `/botforge-new Lite` is still overkill; write a 50-line script.

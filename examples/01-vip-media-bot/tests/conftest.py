@@ -4,6 +4,7 @@ from collections.abc import AsyncGenerator, AsyncIterator
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest_asyncio
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import (
     AsyncSession,
     async_sessionmaker,
@@ -11,13 +12,14 @@ from sqlalchemy.ext.asyncio import (
 )
 
 from app.models.base import Base
-from app.models.payment import Payment  # noqa: F401
+from app.models.payment import Payment
 from app.models.subscription import Subscription  # noqa: F401
 from app.models.user import User  # noqa: F401
 
 
 @pytest_asyncio.fixture
 async def session() -> AsyncGenerator[AsyncSession, None]:
+    """Async SQLAlchemy session on in-memory SQLite with full schema."""
     engine = create_async_engine("sqlite+aiosqlite:///:memory:")
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
@@ -41,3 +43,9 @@ async def bot_mock() -> AsyncIterator[MagicMock]:
     bot.get_chat_member = AsyncMock()
     bot.create_invoice_link = AsyncMock(return_value="https://t.me/invoice/abc123")
     yield bot
+
+
+async def get_only_payment(session: AsyncSession) -> Payment:
+    """Helper: fetch the single Payment row (used by payment tests)."""
+    result = await session.execute(select(Payment))
+    return result.scalar_one()
