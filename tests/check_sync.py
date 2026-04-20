@@ -52,6 +52,10 @@ REQUIRED_CONCEPTS: list[tuple[str, list[str]]] = [
     ("mode keyword Lite", ["Lite"]),
     ("mode keyword SaaS", ["SaaS"]),
     ("mode keyword Media", ["Media"]),
+    ("bypass protocol", ["bypass"]),
+    ("override protocol", ["override"]),
+    ("recovery protocol", ["recovery"]),
+    ("version header v1.7", ["v1.7", "1.7.0"]),
 ]
 
 

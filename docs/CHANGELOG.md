@@ -1,5 +1,83 @@
 # Changelog
 
+## v1.7 — 2026-04-20 (Stability & quality: protocols + anti-patterns + naming contract)
+
+**Skill-level release.** Audit #4 identified three P0 issues: rigid workflow for trivial tasks, no recovery when AI makes mistakes, no discipline enforcement. This release closes all three plus adds 30+ production anti-patterns the skill can consult.
+
+### Added — Protocols (new top-level sections in all 5 skill-prompt formats)
+
+- **Bypass Protocol.** Skip the 6-stage workflow for trivial tasks (single-file fix, code question, one-liner). Hard bans still apply. Full workflow remains required for `/botforge-new`, `/botforge-refactor`, major feature commands, deployment.
+- **Override Protocol.** When user insists on breaking a hard ban: cite the failure mode the ban prevents → offer 2–3 alternatives → if user insists, comply but mark the violation in code (`# BotForge-override`) and self-review. Never silently comply; never refuse after warning given.
+- **Recovery Protocol.** When AI output breaks: diagnose which rule was violated → fix ONLY the broken piece → never regenerate whole files (preserves user edits) → self-review the fix.
+
+### Added — Hard bans now include WHY
+
+Every hard ban now explains the concrete production failure it prevents. Examples:
+- "blocking `requests` → blocks event loop → 100 concurrent users cause full lockup"
+- "single-file bots → git conflicts in any 2+ team → O(n²) refactor cost"
+- "invented Telegram/aiogram API → user debugs calls that don't exist"
+
+When a user pushes back on a rule, skill can defend it with the concrete damage it prevents, not just "it's banned."
+
+### Added — Naming Contract (determinism)
+
+Fixed file/class naming rules eliminate output variance:
+- `services/<domain>_service.py` / `repositories/<domain>_repo.py` / `integrations/<vendor>_client.py`
+- `<Domain>Service`, `<Vendor>Provider`, `<Flow>States`
+- Same request → same structure. No creative naming.
+
+### Added — New reference: 30+ production anti-patterns
+
+`references/anti-patterns.md` catalogues real production failures across 7 categories:
+- I/O & concurrency (forgotten await, blocking I/O, commit in loop, N+1, broadcast-no-throttle)
+- Database (SQL injection via f-strings, SQLite-in-prod, pool too small)
+- Payments (non-idempotent webhooks, float amounts, grant-before-paid, logging card data)
+- Telegram API (callback-data >64 bytes, message >4096 chars, MarkdownV2 with user input, missing secret_token, unanswered pre_checkout_query)
+- State & lifecycle (MemoryStorage in prod, missing shutdown, orphaned asyncio tasks)
+- Mini Apps (trusting initDataUnsafe, CORS `*`, JWT without TTL)
+- Observability & security (print() vs logger, root Docker, token in git history, no rate limit on auth)
+- Testing (over-mocked tests, no idempotency test)
+
+Each pattern: **Symptom → Cause → Fix**. Skill consults during generation and review.
+
+### Added — Version header in skill prompt
+
+All 5 distribution formats now declare:
+```
+BotForge v1.7 · Bot API 9.6 · aiogram 3.x · Python 3.12+
+```
+
+AI announces version at the top of ADR stage. Users always know which skill version produced the output.
+
+### Changed
+
+- `system_prompt.txt` — major expansion, protocols added, hard bans expanded with WHY
+- `SKILL.md` — mirrors prompt changes, adds Bypass/Override/Recovery protocols + Naming Contract + anti-patterns reference
+- `cursor/.cursorrules` + `cursor/.cursor/rules/botforge.mdc` — full rewrite to match new structure
+- `codex/AGENTS.md` — rewritten, references list expanded
+- `plugin.json` — version bumped to 1.7.0, anti-patterns added to references
+
+### Audit #4 closure
+
+| Issue from audit | Status |
+|---|---|
+| No escape hatch for trivial tasks | ✅ Bypass Protocol |
+| No protocol for rule override | ✅ Override Protocol |
+| No recovery when AI output breaks | ✅ Recovery Protocol |
+| Hard bans rigid, not explained | ✅ WHY added to each ban |
+| Output not deterministic | ✅ Naming Contract |
+| No anti-pattern catalogue | ✅ anti-patterns.md (30+) |
+| No version in skill | ✅ Version header |
+
+### Still pending (v1.8 roadmap)
+
+- Business API / Stars Gifts / Stories references (new Bot API 9.x surfaces)
+- Incident response reference + `/botforge-incident`
+- Cost model reference + `/botforge-cost`
+- LLM integration deep reference
+- Golden tests baseline run with real API key
+- Migration-from-X guides (python-telegram-bot → aiogram)
+
 ## v1.6.2 — 2026-04-20 (Auto-sync Wiki + Pages trigger fix)
 
 ### Added
