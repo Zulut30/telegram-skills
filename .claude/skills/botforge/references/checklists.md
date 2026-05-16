@@ -16,6 +16,7 @@
 - [ ] Alembic baseline migration generated
 - [ ] `README.md` has: what / stack / run / env / deploy / architecture
 - [ ] `ruff` and `mypy --strict` would pass
+- [ ] UX navigation checked: no dead buttons, back/home/cancel paths exist, callbacks are acknowledged, keyboards are scannable
 
 ## Deploy Checklist
 

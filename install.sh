@@ -13,6 +13,8 @@
 #   claude-project    Per-project → <project>/.claude/
 #   cursor            Cursor MDC rule → <project>/.cursor/rules/
 #   codex             AGENTS.md → <project>/AGENTS.md
+#   agent-adapters    Cross-agent adapters → <project>/
+#   all-agents        Claude project + Cursor + cross-agent adapters + raw prompt
 #   system-prompt     Raw system prompt → <project>/botforge_system_prompt.txt
 
 set -euo pipefail
@@ -116,9 +118,42 @@ install_codex() {
   if [[ -f "$PROJECT_DIR/AGENTS.md" ]]; then
     warn "$PROJECT_DIR/AGENTS.md exists — not overwriting"
   else
-    cp "$TMPDIR/codex/AGENTS.md" "$PROJECT_DIR/AGENTS.md"
+    cp "$TMPDIR/AGENTS.md" "$PROJECT_DIR/AGENTS.md"
     ok "installed $PROJECT_DIR/AGENTS.md"
   fi
+}
+
+copy_if_absent() {
+  local src="$1"
+  local dest="$2"
+  mkdir -p "$(dirname "$dest")"
+  if [[ -f "$dest" ]]; then
+    warn "$dest exists — not overwriting"
+  else
+    cp "$src" "$dest"
+    ok "installed $dest"
+  fi
+}
+
+install_agent_adapters() {
+  [[ -d "$PROJECT_DIR" ]] || die "project dir not found: $PROJECT_DIR"
+
+  copy_if_absent "$TMPDIR/AGENTS.md" "$PROJECT_DIR/AGENTS.md"
+  copy_if_absent "$TMPDIR/GEMINI.md" "$PROJECT_DIR/GEMINI.md"
+  copy_if_absent "$TMPDIR/CONVENTIONS.md" "$PROJECT_DIR/CONVENTIONS.md"
+  copy_if_absent "$TMPDIR/.rules" "$PROJECT_DIR/.rules"
+  copy_if_absent "$TMPDIR/.aider.conf.yml" "$PROJECT_DIR/.aider.conf.yml"
+
+  copy_if_absent "$TMPDIR/.github/copilot-instructions.md" "$PROJECT_DIR/.github/copilot-instructions.md"
+  copy_if_absent "$TMPDIR/.github/instructions/botforge.instructions.md" "$PROJECT_DIR/.github/instructions/botforge.instructions.md"
+  copy_if_absent "$TMPDIR/.windsurf/rules/botforge.md" "$PROJECT_DIR/.windsurf/rules/botforge.md"
+  copy_if_absent "$TMPDIR/.clinerules/botforge.md" "$PROJECT_DIR/.clinerules/botforge.md"
+  copy_if_absent "$TMPDIR/.continue/rules/botforge.md" "$PROJECT_DIR/.continue/rules/botforge.md"
+  copy_if_absent "$TMPDIR/.junie/AGENTS.md" "$PROJECT_DIR/.junie/AGENTS.md"
+  copy_if_absent "$TMPDIR/.gemini/skills/botforge/SKILL.md" "$PROJECT_DIR/.gemini/skills/botforge/SKILL.md"
+  copy_if_absent "$TMPDIR/.cline/skills/botforge/SKILL.md" "$PROJECT_DIR/.cline/skills/botforge/SKILL.md"
+
+  ok "cross-agent adapters installed"
 }
 
 install_system_prompt() {
@@ -132,6 +167,13 @@ case "$TARGET" in
   claude-project) install_claude_project ;;
   cursor)         install_cursor ;;
   codex)          install_codex ;;
+  agent-adapters) install_agent_adapters ;;
+  all-agents)
+    install_claude_project
+    install_cursor
+    install_agent_adapters
+    install_system_prompt
+    ;;
   system-prompt)  install_system_prompt ;;
   *)
     die "unknown target: $TARGET (see --help)"

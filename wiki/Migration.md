@@ -47,7 +47,7 @@ Action required: if using `.cursorrules`, optionally switch to `.cursor/rules/bo
 
 ## 1.1 → 1.2
 
-- Grounded in Bot API 9.6 — stricter rate limit enforcement, Mini App HMAC spec, Telegram Stars XTR currency
+- Grounded in Bot API 10.0 — stricter rate limit enforcement, Mini App HMAC spec, Telegram Stars XTR currency
 
 Existing bots keep working. New generations enforce official constraints.
 

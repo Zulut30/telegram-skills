@@ -1,7 +1,7 @@
 """Validate that every slash-command file has valid YAML frontmatter.
 
 Exits non-zero on any error. Run from repo root:
-    python tests/validate_frontmatter.py
+    python3 tests/validate_frontmatter.py
 """
 
 from __future__ import annotations

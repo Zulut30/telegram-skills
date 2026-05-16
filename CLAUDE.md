@@ -9,7 +9,11 @@ This repository **is** the BotForge skill itself — meta-context: when you work
 .claude/skills/botforge/             # The skill itself (SKILL.md + references/)
 .claude/commands/                    # 19 slash commands
 cursor/                              # Cursor rules (.cursorrules + .cursor/rules/*.mdc)
-codex/AGENTS.md                      # Codex / Codex CLI / Aider
+AGENTS.md                            # Universal agent entrypoint
+codex/AGENTS.md                      # Legacy Codex install copy
+.github/copilot-instructions.md      # GitHub Copilot / VS Code
+.gemini/ .cline/ .windsurf/ .continue/ # Tool-specific adapters
+.junie/ .clinerules/ .rules          # Additional agent entrypoints
 docs/                                # INSTALL, USAGE, CHANGELOG, QUICKSTART
 examples/                            # Working bot examples
 system_prompt.txt                    # Raw prompt for any LLM
@@ -18,14 +22,15 @@ SKILL.md                             # Full skill document (mirror)
 
 ## Editing rules
 
-When modifying skill content, keep the **four formats synchronized**:
+When modifying skill content, keep the **core formats synchronized**:
 
 1. `.claude/skills/botforge/SKILL.md` — canonical
 2. `system_prompt.txt` — raw prompt (Cursor/OpenAI/Anthropic-ready)
 3. `cursor/.cursorrules` + `cursor/.cursor/rules/botforge.mdc` — Cursor-specific
-4. `codex/AGENTS.md` — Codex / Aider
+4. `codex/AGENTS.md` — legacy Codex install copy
+5. `AGENTS.md` — universal agent entrypoint
 
-A change in the system prompt MUST appear in all four. Use `docs/SYNC-CHECKLIST.md` before committing.
+A change in the system prompt MUST appear in the core formats. Tool-specific adapters should keep version markers and canonical routes current. Use `docs/SYNC-CHECKLIST.md` and run `make validate` before committing.
 
 ## Reference modules
 
@@ -49,7 +54,7 @@ Golden tests live in `tests/golden/`. Each test has:
 - `prompt.txt` — the user request
 - `assertions.yml` — structural expectations (sections present, forbidden patterns absent)
 
-Run: `python tests/run_golden.py` (after implementing harness).
+Run: `python3 tests/run_golden.py` (after implementing harness).
 
 ## Publishing
 

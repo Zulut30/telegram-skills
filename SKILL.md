@@ -1,7 +1,7 @@
 # BotForge — Skill Overview
 
-**Version:** 1.7.1
-**Released:** 2026-04-20
+**Version:** 1.8.0
+**Released:** 2026-05-16
 **License:** MIT
 
 > **Note.** This file is a high-level overview of the skill for human readers.
@@ -37,6 +37,7 @@
 - Выдаёт дерево проекта до генерации файлов
 - Запрещает монолит, хардкод, `requests`, секреты в коде
 - Автоматически добавляет Docker, Alembic, логи, retry, self-review
+- Делает навигацию обязательной частью продукта: карта экранов, понятные кнопки, back/home/cancel пути
 - Поддерживает инкрементальное расширение без слома архитектуры
 
 **Ценность:**
@@ -65,7 +66,7 @@
 2. ORM/SQL — исключительно в `repositories/`.
 3. DB session инжектится `DbSessionMiddleware`, не импортом.
 4. FSM-группы — в `states/`, не inline.
-5. Клавиатуры — фабрики `build_*_kb()` в `keyboards/`.
+5. Клавиатуры — фабрики `build_*_kb()` в `keyboards/`; каждая кнопка имеет handler/URL/web_app target.
 6. Внешние API — `integrations/<vendor>_client.py` с `httpx.AsyncClient`, timeout ≤ 10s, `tenacity` retry (3 попытки, exp. backoff).
 7. Конфиг — `pydantic_settings.BaseSettings`, source of truth — `.env`.
 
@@ -99,7 +100,15 @@
 - Логи в stdout (JSON)
 - `Makefile`: `run`, `test`, `lint`, `migrate`, `up`, `down`, `logs`, `deploy`
 
-### 3.6 Documentation
+### 3.6 UX Navigation
+- Перед генерацией клавиатур AI описывает карту навигации: `/start`, bot menu, deep links, главное меню, вложенные экраны, платежи, админка, back/home/cancel пути.
+- Каждый экран глубже главного меню даёт «Назад» или «Главное меню»; каждый FSM-сценарий даёт «Отмена».
+- Inline-клавиатуры — основной выбор для сценариев внутри чата; reply-клавиатуры — только для постоянных частых действий или ввода, с удалением/сжатием после сценария.
+- Клавиатуры должны быть сканируемыми: один главный CTA, без плотных сеток, стабильный порядок, не emoji-only, destructive-действия через подтверждение.
+- Callback handlers быстро вызывают `call.answer()` и по возможности редактируют текущее сообщение, а не спамят новыми меню.
+- Мёртвые кнопки, отсутствующий back/cancel и неотвеченные callback-и считаются UX-дефектами на review.
+
+### 3.7 Documentation
 - `README.md`: что это / stack / local run / env / deploy / архитектура
 - `docs/ADR/NNNN-title.md` для крупных решений
 - `docs/RUNBOOK.md` для инцидентов
@@ -114,7 +123,7 @@
 (5 вопросов или пропуск)
 
 ### 2. ADR
-Стек, модель данных, зависимости, деплой, риски, точки расширения.
+Стек, модель данных, карта навигации, зависимости, деплой, риски, точки расширения.
 
 ### 3. Дерево проекта
 <tree>
@@ -148,6 +157,7 @@
 ```
 [blocker] app/handlers/payment.py:42 — прямой SQL; вынести в PaymentRepo.create()
 [major]   app/services/broadcast.py:88 — нет retry на bot.send_message
+[major]   app/keyboards/main.py:18 — кнопка «Каталог» ведёт в callback без handler-а
 [minor]   app/keyboards/main.py:12 — inline-клавиатура собирается в handler
 [nit]     app/config/settings.py:5 — отсутствует docstring
 ```
@@ -430,16 +440,29 @@ class Onboarding(StatesGroup):
     confirm = State()
 ```
 
-### 6.11 Inline Keyboard Factory
+### 6.11 Navigation-focused Inline Keyboard Factory
+
+Каждая кнопка должна вести в handler, URL или Mini App. Вложенные экраны держат `Назад`/`Главное меню`, callback-и собираются через компактные `CallbackData`, а подписи читаются без опоры на emoji.
+
 ```python
 # app/keyboards/inline/main_menu.py
+from aiogram.filters.callback_data import CallbackData
 from aiogram.types import InlineKeyboardButton as B, InlineKeyboardMarkup as K
+
+class MenuCb(CallbackData, prefix="menu"):
+    screen: str
 
 def main_menu_kb() -> K:
     return K(inline_keyboard=[
-        [B(text="Каталог", callback_data="menu:catalog")],
-        [B(text="VIP", callback_data="menu:vip"),
-         B(text="Профиль", callback_data="menu:profile")],
+        [B(text="Каталог", callback_data=MenuCb(screen="catalog").pack())],
+        [B(text="VIP", callback_data=MenuCb(screen="vip").pack()),
+         B(text="Профиль", callback_data=MenuCb(screen="profile").pack())],
+    ])
+
+def back_home_kb(back_to: str = "main") -> K:
+    return K(inline_keyboard=[
+        [B(text="Назад", callback_data=MenuCb(screen=back_to).pack())],
+        [B(text="Главное меню", callback_data=MenuCb(screen="main").pack())],
     ])
 ```
 
@@ -531,6 +554,7 @@ BotForge: [Lite|Pro|Media|SaaS]
 - [ ] Alembic baseline создан
 - [ ] README с 6 разделами
 - [ ] `ruff` и `mypy --strict` зелёные
+- [ ] UX-навигация проверена: нет мёртвых кнопок, есть back/home/cancel, callback-и отвечают, клавиатуры не перегружены
 
 ### 9.2 Deploy Checklist
 - [ ] `.env` на сервере, не в репо
@@ -558,6 +582,8 @@ BotForge: [Lite|Pro|Media|SaaS]
 
 | Версия | Статус | Содержание |
 |---|---|---|
+| **v1.8.0** | released | universal agent compatibility pack: root `AGENTS.md`, Copilot, Gemini, Windsurf, Cline, Continue, Aider, Junie, Zed adapters and validation |
+| **v1.7.2** | released | Bot API 10.0 baseline, non-overridable safety bans, stronger sync/version/golden validation |
 | **v1.7.1** | released | web admin panel (React + FastAPI + SSE), `/botforge-admin-web` command, 23 references |
 | v1.7 | released | stability protocols (Bypass / Override / Recovery), anti-patterns, naming contract |
 | v1.6 | released | admin panel reference, analytics, GDPR compliance, anti-spam |
@@ -567,7 +593,7 @@ BotForge: [Lite|Pro|Media|SaaS]
 | v1.2 | released | unified payments (Stars / ЮKassa / CryptoBot / Stripe / Tribute) |
 | v1.1 | released | examples pack, four-format sync, golden tests |
 | v1.0 Pro | released | core skill, aiogram 3, Postgres, Redis, Docker, Alembic, admin, broadcast, channel-check |
-| v1.8 Factory | planned | CLI `botforge new <name>`, multitenancy |
+| v1.9 Factory | planned | CLI `botforge new <name>`, multitenancy |
 | v2.0 Studio | vision | UI-конструктор → экспорт проекта |
 
 Подробности релизов — в [`docs/CHANGELOG.md`](docs/CHANGELOG.md).

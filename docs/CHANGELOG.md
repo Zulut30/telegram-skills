@@ -1,5 +1,39 @@
 # Changelog
 
+## v1.8.0 — 2026-05-16 (Universal agent compatibility)
+
+### Added
+
+- Root `AGENTS.md` as the universal agent entrypoint for Codex, GitHub Copilot, VS Code, Cursor, Windsurf, Junie, Zed, OpenCode, Aider, and compatible tools.
+- Native adapters for GitHub Copilot / VS Code, Gemini CLI, Cline, Windsurf Cascade, Continue, Aider, JetBrains Junie, and Zed.
+- `.gemini/skills/botforge/SKILL.md` and `.cline/skills/botforge/SKILL.md` bridge skills that route back to the canonical Claude skill.
+- `docs/AGENT-COMPATIBILITY.md` with audit findings, compatibility matrix, improvement plan, and quality bar.
+- `tests/validate_agent_adapters.py` to verify adapter files, frontmatter, canonical routing, and version markers.
+
+### Changed
+
+- `make validate` now checks cross-agent adapters in addition to plugin, command, sync, and version checks.
+- `install.sh` now supports `agent-adapters` and `all-agents` targets for project-wide multi-agent setup.
+- `codex` install now copies the root `AGENTS.md` entrypoint.
+- README now documents the expanded compatibility surface and one-command all-agent install.
+
+## v1.7.2 — 2026-05-16 (Bot API 10.0 + stronger guardrails)
+
+### Changed
+
+- Bot API baseline updated to **10.0** (May 8, 2026), including Guest Mode, `guest_message`, media polls, live photos, bot-to-bot messages, and managed-bot access settings.
+- Override Protocol now separates never-overridable safety/integrity bans from overridable architecture norms.
+- UX navigation is now a mandatory generation/review standard: navigation maps, scannable keyboards, back/home/cancel paths, acknowledged callbacks, and no dead buttons.
+- Distribution formats synchronized to `1.7.2`: Claude skill, system prompt, Cursor rules, Codex `AGENTS.md`, plugin manifest, README, and landing metadata.
+
+### Fixed
+
+- `Makefile` now uses configurable `PYTHON ?= python3` instead of assuming `python` exists.
+- Version sync check now covers Codex, Cursor, and system prompt headers, not only the Claude skill files.
+- Four-format sync now checks the exact package version and Bot API 10.0/Guest Mode concepts.
+- Golden tests no longer silently skip in CI when API keys are missing.
+- `tests/bump_version.py` is compatible with Python 3.9+ and preserves non-ASCII manifest text.
+
 ## v1.7.1 — 2026-04-20 (Web admin panel)
 
 Skill can now generate a beautiful web admin dashboard for any bot — React + Tailwind + shadcn/ui frontend, FastAPI backend that shares code with the bot, real-time updates via SSE.

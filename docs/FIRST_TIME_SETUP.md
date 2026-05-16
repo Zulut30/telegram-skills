@@ -71,7 +71,7 @@ To enable **golden tests** on PRs:
 2. Add repository secret: `ANTHROPIC_API_KEY` (or `OPENAI_API_KEY`)
 3. The `golden` workflow will run on every PR
 
-Without the secret, the workflow gracefully skips.
+Without a model API secret, the workflow fails fast in CI instead of silently skipping eval coverage.
 
 ## 5. Dependabot (already configured)
 

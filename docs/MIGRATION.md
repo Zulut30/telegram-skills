@@ -47,7 +47,7 @@ make example-test      # run example bot tests
 ## 1.1 → 1.2 (non-breaking, guarantees tightened)
 
 **What's new:**
-- Skill grounded in official Bot API 9.6 (rate limits, Mini App initData HMAC, error-code handling).
+- Skill grounded in official Bot API 10.0 (rate limits, Mini App initData HMAC, error-code handling).
 - New references: telegram-api-spec, botfather-setup, i18n, observability.
 - 3 new commands: `/botforge-botfather`, `/botforge-i18n`, `/botforge-observability`.
 

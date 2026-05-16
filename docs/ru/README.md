@@ -6,7 +6,7 @@
 
 <p align="center">
   <b>Инженерный skill для AI, создающий production-ready Telegram-боты</b><br/>
-  Готовый пакет для Claude Code, Codex, Cursor и любого LLM.
+  Готовый пакет для Claude Code, Codex, Cursor, Copilot, Gemini, Windsurf, Cline, Continue, Aider, Junie, Zed и любого LLM.
 </p>
 
 <p align="center">
@@ -28,7 +28,7 @@
   <a href="https://openai.com"><img src="https://img.shields.io/badge/Codex-AGENTS.md-10A37F" alt="Codex"/></a>
   <a href="https://docs.aiogram.dev/"><img src="https://img.shields.io/badge/aiogram-3.x-2CA5E0" alt="aiogram"/></a>
   <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3.12%2B-3776AB" alt="Python"/></a>
-  <a href="https://core.telegram.org/bots/api"><img src="https://img.shields.io/badge/Bot%20API-9.6-0088CC" alt="Bot API"/></a>
+  <a href="https://core.telegram.org/bots/api"><img src="https://img.shields.io/badge/Bot%20API-10.0-0088CC" alt="Bot API"/></a>
 </p>
 
 ---
@@ -39,12 +39,13 @@ BotForge превращает AI-ассистента в senior-инженера
 
 1. **Не монолит.** Слоёная архитектура (handlers / services / repositories / integrations) из коробки.
 2. **Не черновик.** Docker + Postgres + Alembic + `.env` + инструкции деплоя в первой же генерации.
-3. **Не разваливается.** Пятую фичу добавляете так же легко, как первую.
+3. **Не теряет пользователя.** Карта навигации, понятные клавиатуры, back/home/cancel пути и отсутствие мёртвых кнопок.
 
 ## Почему это работает
 
-- **Опирается на официальную документацию Telegram Bot API 9.6.** Rate limits (1/сек, 20/мин, 30/сек broadcast), правила экранирования MarkdownV2, Mini App initData HMAC-валидация, 64-байтный лимит `CallbackData` — каждое ограничение цитируется из `core.telegram.org`.
+- **Опирается на официальную документацию Telegram Bot API 10.0.** Rate limits (1/сек, 20/мин, 30/сек broadcast), Guest Mode, правила экранирования MarkdownV2, Mini App initData HMAC-валидация, 64-байтный лимит `CallbackData` — каждое ограничение цитируется из `core.telegram.org`.
 - **Обязательный 6-stage workflow.** Brief → ADR → Tree → Files → Self-review → Deploy. AI не может «срезать» сразу к коду.
+- **UX-навигация входит в стандарт.** Каждая клавиатура должна быть доступной, понятной и обработанной; callback-и отвечают пользователю, а вложенные сценарии всегда дают путь назад.
 - **Hard bans на уровне правил skill.** Секреты в коде, `requests`, SQL в handlers, монолит — блокируются самим skill, а не стилем.
 - **Платежи — provider-agnostic.** Смена ЮKassa → Stripe = замена одной строки DI.
 
@@ -100,12 +101,20 @@ make up
 | Файл | Назначение |
 |---|---|
 | [`SKILL.md`](../../SKILL.md) | Полный skill-документ — манифест, system prompt, правила, паттерны |
+| [`AGENTS.md`](../../AGENTS.md) | Универсальная точка входа для Codex, Copilot, VS Code, Windsurf, Junie, Zed, OpenCode и совместимых агентов |
 | [`system_prompt.txt`](../../system_prompt.txt) | Голый system prompt для любого LLM |
 | [`.claude/skills/botforge/`](../../.claude/skills/botforge/) | **Claude Code** Agent Skill с 23 references |
 | [`.claude/commands/`](../../.claude/commands/) | 19 slash-команд |
 | [`.claude-plugin/plugin.json`](../../.claude-plugin/plugin.json) | Plugin manifest |
 | [`cursor/.cursor/rules/botforge.mdc`](../../cursor/.cursor/rules/botforge.mdc) | **Cursor** правила (современный MDC) |
-| [`codex/AGENTS.md`](../../codex/AGENTS.md) | **Codex / Aider / Continue** |
+| [`.github/copilot-instructions.md`](../../.github/copilot-instructions.md) | **GitHub Copilot / VS Code** инструкции |
+| [`GEMINI.md`](../../GEMINI.md) + [`.gemini/skills/botforge/`](../../.gemini/skills/botforge/) | **Gemini CLI** memory + skill bridge |
+| [`.windsurf/rules/botforge.md`](../../.windsurf/rules/botforge.md) | **Windsurf Cascade** rule |
+| [`.cline/skills/botforge/`](../../.cline/skills/botforge/) + [`.clinerules/botforge.md`](../../.clinerules/botforge.md) | **Cline** skill + rule bridge |
+| [`.continue/rules/botforge.md`](../../.continue/rules/botforge.md) | **Continue** local rule |
+| [`CONVENTIONS.md`](../../CONVENTIONS.md) + [`.aider.conf.yml`](../../.aider.conf.yml) | **Aider** conventions |
+| [`.junie/AGENTS.md`](../../.junie/AGENTS.md) | **JetBrains Junie** guidelines |
+| [`.rules`](../../.rules) | **Zed** project rule |
 | [`.vscode/`](../../.vscode/) | VS Code snippets (`bf-new`, `bf-extend`, …) |
 | [`.zed/`](../../.zed/) | Конфигурация Zed |
 | [`tests/golden/`](../../tests/golden/) | Eval harness: структурные assert-ы на output AI |
@@ -118,11 +127,12 @@ make up
 - [USAGE](../USAGE.md) — режимы, форматы промптов, сессии
 - [COMPARISON](../COMPARISON.md) — vs plain prompts, cookiecutter, no-code, generic agents
 - [SHOWCASE](../SHOWCASE.md) — боты, сделанные через BotForge
+- [AGENT-COMPATIBILITY](../AGENT-COMPATIBILITY.md) — аудит совместимости, matrix и план адаптеров
 - [CHANGELOG](../CHANGELOG.md) — история версий и roadmap
 
 ## Reference-библиотека
 
-23 глубоких ссылочных документа по всем аспектам инженерии Telegram-ботов: архитектура, 12 переиспользуемых паттернов, Mini Apps, auth (роли / initData / OAuth / API keys), платежи (5 провайдеров), официальные ограничения Bot API 9.6, BotFather setup, i18n, observability, scheduled-таски, recurring-подписки, inline-режим, группы/каналы/форумы, работа с медиа, anti-spam, GDPR compliance, analytics, anti-patterns, performance, admin panel, FAQ.
+23 глубоких ссылочных документа по всем аспектам инженерии Telegram-ботов: архитектура, 12 переиспользуемых паттернов, Mini Apps, auth (роли / initData / OAuth / API keys), платежи (5 провайдеров), официальные ограничения Bot API 10.0, BotFather setup, i18n, observability, scheduled-таски, recurring-подписки, inline-режим, группы/каналы/форумы, работа с медиа, anti-spam, GDPR compliance, analytics, anti-patterns, performance, admin panel, FAQ.
 
 ## Лицензия
 

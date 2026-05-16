@@ -17,7 +17,7 @@ Location: [`.claude/skills/botforge/references/`](https://github.com/Zulut30/tel
 
 | Module | Topic |
 |---|---|
-| [telegram-api-spec.md](https://github.com/Zulut30/telegram-skills/blob/main/.claude/skills/botforge/references/telegram-api-spec.md) | Bot API 9.6: rate limits, webhook params, error codes, MarkdownV2, lengths, Mini App HMAC |
+| [telegram-api-spec.md](https://github.com/Zulut30/telegram-skills/blob/main/.claude/skills/botforge/references/telegram-api-spec.md) | Bot API 10.0: rate limits, Guest Mode, webhook params, error codes, MarkdownV2, lengths, Mini App HMAC |
 | [botfather-setup.md](https://github.com/Zulut30/telegram-skills/blob/main/.claude/skills/botforge/references/botfather-setup.md) | Operational checklist: descriptions, scopes, privacy, Mini App registration, token rotation |
 
 ## Modules

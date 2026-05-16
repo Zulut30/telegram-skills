@@ -18,7 +18,7 @@ Assertions are **structural**, not exact-match — the LLM can vary wording but 
 ```bash
 pip install anthropic pyyaml
 export ANTHROPIC_API_KEY=sk-...
-python tests/run_golden.py
+python3 tests/run_golden.py
 ```
 
 Exit code 0 if all cases pass, 1 otherwise.
@@ -42,4 +42,4 @@ Keep prompts self-contained (no prior-session context needed).
 
 ## CI
 
-Runs on PRs to `main` via `.github/workflows/golden.yml` (opt-in: requires `ANTHROPIC_API_KEY` repo secret). Skips gracefully if secret absent.
+Runs on PRs to `main` via `.github/workflows/golden.yml`. CI fails if neither `ANTHROPIC_API_KEY` nor `OPENAI_API_KEY` is configured, so golden regressions cannot merge as a silent skip.

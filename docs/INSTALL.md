@@ -60,6 +60,24 @@ alwaysApply: true
 ---
 ```
 
+## Universal agent adapters
+
+For a project that should work across the popular agent apps, install all adapters:
+
+```bash
+bash install.sh all-agents <your-project>
+```
+
+This copies:
+
+- Claude project skill and slash commands
+- Cursor MDC and legacy rules
+- root `AGENTS.md`
+- GitHub Copilot / VS Code instructions
+- Gemini CLI memory + skill bridge
+- Windsurf, Cline, Continue, Aider, Junie, and Zed adapters
+- raw prompt fallback as `botforge_system_prompt.txt`
+
 ## Zed
 
 See [`.zed/README.md`](../.zed/README.md) — two paths: via Claude Code integration inside Zed, or as a custom Assistant role.
@@ -73,13 +91,24 @@ cp telegram-skills/.vscode/botforge-snippets.code-snippets <your-project>/.vscod
 
 Type `bf-new`, `bf-extend`, `bf-review`, `bf-miniapp`, `bf-pay` in any markdown/plaintext buffer for structured BotForge prompts.
 
-## OpenAI Codex / Codex CLI / Aider / Continue
+## OpenAI Codex / Codex CLI / AGENTS-compatible tools
 
 Any tool that respects `AGENTS.md`:
 
 ```bash
-cp telegram-skills/codex/AGENTS.md <your-project>/AGENTS.md
+cp telegram-skills/AGENTS.md <your-project>/AGENTS.md
 ```
+
+Tool-specific adapters are available for:
+
+- GitHub Copilot / VS Code: `.github/copilot-instructions.md` and `.github/instructions/botforge.instructions.md`
+- Gemini CLI: `GEMINI.md` and `.gemini/skills/botforge/SKILL.md`
+- Windsurf: `.windsurf/rules/botforge.md`
+- Cline: `.cline/skills/botforge/SKILL.md` and `.clinerules/botforge.md`
+- Continue: `.continue/rules/botforge.md`
+- Aider: `CONVENTIONS.md` and `.aider.conf.yml`
+- Junie: `.junie/AGENTS.md`
+- Zed: `.rules`
 
 For ChatGPT Custom GPT:
 1. Create GPT → Configure → Instructions

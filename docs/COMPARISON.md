@@ -46,7 +46,7 @@
 
 | | Generic agents | BotForge |
 |---|---|---|
-| Domain knowledge | General coding | Telegram Bot API 9.6 specific |
+| Domain knowledge | General coding | Telegram Bot API 10.0 specific |
 | Rate limit awareness | No | Yes (1/sec, 20/min, 30/sec) |
 | MarkdownV2 escape | Maybe | Enforced |
 | Mini App HMAC | Usually missing / insecure | Official spec from `core.telegram.org` |

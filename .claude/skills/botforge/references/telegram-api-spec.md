@@ -1,10 +1,23 @@
 # Telegram Bot API — Official Specification
 
-Based on Bot API **9.6** (April 3, 2026) and aiogram 3.x (Python 3.10+, recommended 3.12+).
+Based on Bot API **10.0** (May 8, 2026) and aiogram 3.x (Python 3.10+, recommended 3.12+).
 
-Sources: https://core.telegram.org/bots/api | https://core.telegram.org/bots/faq | https://core.telegram.org/bots/webapps | https://core.telegram.org/bots/payments-stars
+Sources: https://core.telegram.org/bots/api | https://core.telegram.org/bots/api-changelog | https://core.telegram.org/bots/faq | https://core.telegram.org/bots/webapps | https://core.telegram.org/bots/payments-stars
 
 ---
+
+## 0. Bot API 10.0 delta (must not be missed)
+
+BotForge treats new Bot API surfaces as opt-in until aiogram exposes typed wrappers. If a requested feature uses a fresh API, verify local library support first; otherwise isolate raw HTTP calls in `integrations/telegram_client.py` with tests.
+
+New in **10.0**:
+- **Guest mode**: `Update.guest_message`, `Message.guest_query_id`, `SentGuestMessage`, and `answerGuestQuery`. Use this only for bots that support guest queries; guest replies are not normal chat messages.
+- **Chat management**: `can_react_to_messages`, `getChatAdministrators(return_bots=...)`, `deleteAllMessageReactions`, `deleteMessageReaction`, and limited visibility into messages from other bots in groups.
+- **Poll media**: media on polls, poll explanations, and poll options; `sendPoll` can now take `media`, `explanation_media`, `members_only`, and `country_codes`; poll options are **1..12**.
+- **Live photos**: `LivePhoto`, `InputMediaLivePhoto`, `sendLivePhoto`, paid live photos, and live photos in media groups.
+- **Managed bot access**: `BotAccessSettings`, `getManagedBotAccessSettings`, `setManagedBotAccessSettings`.
+
+Generation rule: when using these features, add them to `allowed_updates`, include fallback behavior for older aiogram versions, and cite the exact Bot API method/type in ADR.
 
 ## 1. Rate limits (the single most important operational constraint)
 
@@ -31,7 +44,7 @@ await bot.set_webhook(
     secret_token="A-Za-z0-9_-{1,256}",        # max 256 chars, ascii-letters/digits/_/-
     max_connections=40,                        # 1..100, default 40
     allowed_updates=["message", "callback_query", "pre_checkout_query",
-                     "successful_payment"],
+                     "successful_payment"],     # add guest_message/managed_bot only if used
     drop_pending_updates=True,                 # true on fresh deploy
     ip_address=None,                           # optional DNS bypass
 )
@@ -184,7 +197,7 @@ def md2_escape(text: str) -> str:
 | Inline keyboard buttons | до 100 (разумный практический лимит ~8×8) |
 | Reply keyboard buttons | до 300 (практика — ≤12) |
 | Poll question | 300 chars |
-| Poll option | 100 chars, до 10 options |
+| Poll option | 100 chars, 1..12 options |
 | `setMyDescription` | 512 chars |
 | `setMyShortDescription` | 120 chars |
 | Invoice `title` | 1..32 chars |
@@ -204,7 +217,7 @@ def md2_escape(text: str) -> str:
 - Handlers: `pre_checkout_query` → `answer(ok=True)` → `successful_payment`
 - `telegram_payment_charge_id` используется для рефандов через `refundStarPayment`
 
-**Subscription-like recurring для Stars:** официальная Telegram Stars Subscription API (bot может создавать периодические инвойсы через `createInvoiceLink` с параметром `subscription_period` — см. Bot API 9.x). Для SaaS-бота храним `subscription_expires_at` и шлём инвойс-ссылку за N дней до истечения.
+**Subscription-like recurring для Stars:** официальная Telegram Stars Subscription API (bot может создавать периодические инвойсы через `createInvoiceLink` с параметром `subscription_period` — см. Bot API 10.x). Для SaaS-бота храним `subscription_expires_at` и шлём инвойс-ссылку за N дней до истечения.
 
 ---
 
@@ -268,6 +281,8 @@ allowed_updates = [
     "chat_member",             # события вступления/выхода (требует privacy off)
     "chat_join_request",       # для invite link approvals
     "inline_query",            # только если используете inline-режим
+    "guest_message",           # только для Guest Mode / answerGuestQuery
+    "managed_bot",             # только если управляете managed bots
 ]
 ```
 

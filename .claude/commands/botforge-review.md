@@ -31,6 +31,7 @@ argument-hint: "[путь к файлу/директории или описан
 11. `CallbackData`-фабрики вместо сырых строк
 12. Throttling middleware активен
 13. Нет логирования чувствительных данных
+14. UX-навигация: нет мёртвых кнопок, у вложенных экранов есть back/home, у FSM есть cancel, callback-и вызывают `call.answer()`
 
 **В конце:**
 - Сводка: X blocker, Y major, Z minor, W nit

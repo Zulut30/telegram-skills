@@ -6,7 +6,7 @@
 
 <p align="center">
   <b>Inżynierski skill dla AI, tworzący production-ready boty Telegrama</b><br/>
-  Gotowy pakiet dla Claude Code, Codex, Cursora i dowolnego LLM.
+  Gotowy pakiet dla Claude Code, Codex, Cursor, Copilot, Gemini, Windsurf, Cline, Continue, Aider, Junie, Zed i dowolnego LLM.
 </p>
 
 <p align="center">
@@ -28,7 +28,7 @@
   <a href="https://openai.com"><img src="https://img.shields.io/badge/Codex-AGENTS.md-10A37F" alt="Codex"/></a>
   <a href="https://docs.aiogram.dev/"><img src="https://img.shields.io/badge/aiogram-3.x-2CA5E0" alt="aiogram"/></a>
   <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3.12%2B-3776AB" alt="Python"/></a>
-  <a href="https://core.telegram.org/bots/api"><img src="https://img.shields.io/badge/Bot%20API-9.6-0088CC" alt="Bot API"/></a>
+  <a href="https://core.telegram.org/bots/api"><img src="https://img.shields.io/badge/Bot%20API-10.0-0088CC" alt="Bot API"/></a>
 </p>
 
 ---
@@ -43,7 +43,7 @@ BotForge zamienia asystenta AI w doświadczonego inżyniera botów Telegrama. Za
 
 ## Dlaczego to działa
 
-- **Oparty na oficjalnej dokumentacji Telegram Bot API 9.6.** Limity rate (1/s, 20/min, 30/s broadcast), zasady escape MarkdownV2, walidacja HMAC initData dla Mini Apps, limit 64 bajtów `CallbackData` — każde ograniczenie cytuje `core.telegram.org`.
+- **Oparty na oficjalnej dokumentacji Telegram Bot API 10.0.** Limity rate (1/s, 20/min, 30/s broadcast), Guest Mode, zasady escape MarkdownV2, walidacja HMAC initData dla Mini Apps, limit 64 bajtów `CallbackData` — każde ograniczenie cytuje `core.telegram.org`.
 - **Obowiązkowy 6-etapowy workflow.** Brief → ADR → Tree → Files → Self-review → Deploy. AI nie może przejść od razu do kodu.
 - **Twarde zakazy wymuszane przez reguły skilla.** Sekrety w kodzie, `requests`, SQL w handlerach, monolity — blokowane na poziomie skilla, nie stylu.
 - **Płatności niezależne od providera.** Zmiana ЮKassa → Stripe to jedna linia DI.
@@ -122,7 +122,7 @@ make up
 
 ## Biblioteka referencji
 
-23 szczegółowe dokumenty obejmujące wszystkie aspekty inżynierii botów Telegrama: architekturę, 12 wzorców wielokrotnego użytku, Mini Apps, auth (role / initData / OAuth / API keys), płatności (5 providerów), oficjalne ograniczenia Bot API 9.6, setup BotFather, i18n, obserwowalność, zadania cykliczne, subskrypcje recurring, tryb inline, grupy/kanały/fora, obsługa mediów, anti-spam, zgodność z GDPR, analytics, anty-wzorce, performance, panel admina, FAQ.
+23 szczegółowe dokumenty obejmujące wszystkie aspekty inżynierii botów Telegrama: architekturę, 12 wzorców wielokrotnego użytku, Mini Apps, auth (role / initData / OAuth / API keys), płatności (5 providerów), oficjalne ograniczenia Bot API 10.0, setup BotFather, i18n, obserwowalność, zadania cykliczne, subskrypcje recurring, tryb inline, grupy/kanały/fora, obsługa mediów, anti-spam, zgodność z GDPR, analytics, anty-wzorce, performance, panel admina, FAQ.
 
 ## Licencja
 

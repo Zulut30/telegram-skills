@@ -104,6 +104,7 @@ my_bot/
 | `integrations/` | HTTP/gRPC clients to external services, retry logic | SQL, Telegram API |
 | `models/` | ORM declarations, Mapped typed fields | behavior beyond __repr__ |
 | `middlewares/` | cross-cutting concerns: DI, auth, throttling, i18n, logging | business logic |
+| `keyboards/` | inline/reply builders, callback factories, back/home/cancel navigation | business logic, dead buttons, long state in callback_data |
 
 ## Dependency flow
 

@@ -1,6 +1,15 @@
-# Bot API 9.6 — Spec summary
+# Bot API 10.0 — Spec summary
 
-BotForge enforces the official Telegram Bot API 9.6 (April 2026). This page is a fast-lookup; full: [`references/telegram-api-spec.md`](https://github.com/Zulut30/telegram-skills/blob/main/.claude/skills/botforge/references/telegram-api-spec.md).
+BotForge enforces the official Telegram Bot API 10.0 (May 2026). This page is a fast-lookup; full: [`references/telegram-api-spec.md`](https://github.com/Zulut30/telegram-skills/blob/main/.claude/skills/botforge/references/telegram-api-spec.md).
+
+## Bot API 10.0 delta
+
+- Guest Mode: `guest_message`, `guest_query_id`, `SentGuestMessage`, `answerGuestQuery`
+- Media polls: poll media, explanation media, poll option media, `members_only`, `country_codes`
+- Live photos: `LivePhoto`, `InputMediaLivePhoto`, paid live photos, media-group support
+- Managed bot access: `BotAccessSettings`, `getManagedBotAccessSettings`, `setManagedBotAccessSettings`
+
+BotForge rule: verify aiogram support before generating typed code for fresh API surfaces; otherwise isolate raw Bot API calls behind tested integration helpers.
 
 ## Rate limits
 
@@ -37,6 +46,8 @@ await bot.set_webhook(
         "pre_checkout_query", "successful_payment",
         "my_chat_member", "chat_member",
         "chat_join_request",
+        "guest_message",  # only if Guest Mode is used
+        "managed_bot",    # only if managed bots are used
     ],
     drop_pending_updates=True,
 )

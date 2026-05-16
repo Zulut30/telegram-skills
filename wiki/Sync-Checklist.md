@@ -52,7 +52,7 @@ make sync-check
 
 - Adding a constraint to `SKILL.md` but forgetting `system_prompt.txt`
 - Renaming a mode in one file but not others
-- Updating Bot API version (9.6 → 9.7) in only `telegram-api-spec.md` without propagating
+- Updating Bot API version (10.0 → next) in only `telegram-api-spec.md` without propagating
 - Adding a hard ban in prose in one file but not the enforced list in others
 
 ## Fast sync technique

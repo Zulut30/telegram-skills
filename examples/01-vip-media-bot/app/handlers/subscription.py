@@ -2,7 +2,7 @@ from aiogram import F, Router
 from aiogram.types import CallbackQuery
 
 from app.config.settings import settings
-from app.keyboards.inline.main_menu import vip_buy_kb
+from app.keyboards.inline.main_menu import back_to_menu_kb, vip_buy_kb
 from app.models.user import User
 from app.repositories.subscription_repo import SubscriptionRepo
 from app.services.subscription_service import SubscriptionService
@@ -36,5 +36,9 @@ async def show_profile(call: CallbackQuery, user: User, session) -> None:  # typ
     service = SubscriptionService(SubscriptionRepo(session))
     is_vip = await service.is_vip(user.id)
     status = "💎 VIP активен" if is_vip else "Обычный пользователь"
-    await call.message.edit_text(f"Ваш статус: <b>{status}</b>", parse_mode="HTML")
+    await call.message.edit_text(
+        f"Ваш статус: <b>{status}</b>",
+        reply_markup=back_to_menu_kb(),
+        parse_mode="HTML",
+    )
     await call.answer()

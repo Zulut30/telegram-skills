@@ -15,7 +15,7 @@
 **Architecture**
 - [Architecture](Architecture)
 - [Reference Library](Reference-Library)
-- [Bot API 9.6 spec](Bot-API-Spec)
+- [Bot API 10.0 spec](Bot-API-Spec)
 
 **Compare**
 - [vs other skills](Comparison)

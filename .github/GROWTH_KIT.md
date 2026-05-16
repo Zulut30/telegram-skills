@@ -95,7 +95,7 @@ Ready-to-post content to kickstart community engagement. Copy–paste into GitHu
 >
 > • 19 slash commands
 > • 23 reference modules
-> • Grounded in Bot API 9.6
+> • Grounded in Bot API 10.0
 > • Working example with tests
 > • MIT, no lock-in
 >
@@ -109,7 +109,7 @@ Ready-to-post content to kickstart community engagement. Copy–paste into GitHu
 >
 > • 19 slash-команд
 > • 23 reference-модулей
-> • Опирается на официальный Bot API 9.6
+> • Опирается на официальный Bot API 10.0
 > • Tested example bot
 >
 > **Документация:** github.com/Zulut30/telegram-skills
@@ -121,7 +121,7 @@ Ready-to-post content to kickstart community engagement. Copy–paste into GitHu
 >
 > After my third handmade Telegram bot turned into an 800-line main.py, I built a skill that forces an AI assistant to produce layered architecture, Docker, Alembic, payments, and deployment — in one generation.
 >
-> Grounded in Bot API 9.6. Supports Telegram Stars, ЮKassa, Stripe, CryptoBot. MIT.
+> Grounded in Bot API 10.0. Supports Telegram Stars, ЮKassa, Stripe, CryptoBot. MIT.
 >
 > Would love feedback on the architecture choices in the reference modules.
 >

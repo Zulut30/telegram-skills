@@ -1,17 +1,16 @@
 """Bump version across VERSION, plugin.json, and CHANGELOG scaffolding.
 
 Usage:
-    python tests/bump_version.py patch      # 1.5.0 → 1.5.1
-    python tests/bump_version.py minor      # 1.5.0 → 1.6.0
-    python tests/bump_version.py major      # 1.5.0 → 2.0.0
-    python tests/bump_version.py 1.7.2      # explicit
+    python3 tests/bump_version.py patch      # 1.5.0 → 1.5.1
+    python3 tests/bump_version.py minor      # 1.5.0 → 1.6.0
+    python3 tests/bump_version.py major      # 1.5.0 → 2.0.0
+    python3 tests/bump_version.py 1.7.2      # explicit
 
 Prints new version. Does NOT commit or tag — intentional, so you can review.
 """
 
 from __future__ import annotations
 
-import json
 import pathlib
 import re
 import sys
@@ -27,17 +26,15 @@ def current() -> tuple[int, int, int]:
 
 def bump(level: str) -> tuple[int, int, int]:
     major, minor, patch = current()
-    match level:
-        case "major":
-            return (major + 1, 0, 0)
-        case "minor":
-            return (major, minor + 1, 0)
-        case "patch":
-            return (major, minor, patch + 1)
-        case _:
-            if re.fullmatch(r"\d+\.\d+\.\d+", level):
-                return tuple(int(p) for p in level.split("."))  # type: ignore[return-value]
-            raise SystemExit(f"unknown level: {level!r} (use major|minor|patch|X.Y.Z)")
+    if level == "major":
+        return (major + 1, 0, 0)
+    if level == "minor":
+        return (major, minor + 1, 0)
+    if level == "patch":
+        return (major, minor, patch + 1)
+    if re.fullmatch(r"\d+\.\d+\.\d+", level):
+        return tuple(int(p) for p in level.split("."))  # type: ignore[return-value]
+    raise SystemExit(f"unknown level: {level!r} (use major|minor|patch|X.Y.Z)")
 
 
 def write_version_file(v: tuple[int, int, int]) -> None:
@@ -46,35 +43,74 @@ def write_version_file(v: tuple[int, int, int]) -> None:
 
 def update_plugin_manifest(v: tuple[int, int, int]) -> None:
     path = pathlib.Path(".claude-plugin/plugin.json")
-    manifest = json.loads(path.read_text(encoding="utf-8"))
-    manifest["version"] = ".".join(map(str, v))
-    path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+    new_str = ".".join(map(str, v))
+    text = path.read_text(encoding="utf-8")
+    new_text, n = re.subn(
+        r'("version":\s*")\d+\.\d+\.\d+(")',
+        rf"\g<1>{new_str}\2",
+        text,
+        count=1,
+    )
+    if n != 1:
+        raise SystemExit(f"could not update version in {path}")
+    path.write_text(new_text, encoding="utf-8")
 
 
-#: Human-readable version strings shaped as `**Version:** X.Y.Z` that should
-#: track VERSION. Files using a shorter `v{major}.{minor}` label (system_prompt,
-#: cursor rules, codex/AGENTS.md) stay on the minor line by convention.
-_VERSION_HEADER_RE = re.compile(
-    r"^(\*\*Version:\*\*\s*)\d+\.\d+\.\d+", re.MULTILINE
-)
-_VERSION_HEADER_TARGETS: tuple[pathlib.Path, ...] = (
+#: Human-readable version markers that should track VERSION. Changelog history
+#: is intentionally excluded; release notes are edited manually.
+_VERSION_TEXT_TARGETS: tuple[pathlib.Path, ...] = (
+    pathlib.Path("AGENTS.md"),
     pathlib.Path(".claude/skills/botforge/SKILL.md"),
     pathlib.Path("SKILL.md"),
+    pathlib.Path("system_prompt.txt"),
+    pathlib.Path("codex/AGENTS.md"),
+    pathlib.Path("cursor/.cursor/rules/botforge.mdc"),
+    pathlib.Path("cursor/.cursorrules"),
+    pathlib.Path(".github/copilot-instructions.md"),
+    pathlib.Path(".github/instructions/botforge.instructions.md"),
+    pathlib.Path("GEMINI.md"),
+    pathlib.Path(".gemini/skills/botforge/SKILL.md"),
+    pathlib.Path(".cline/skills/botforge/SKILL.md"),
+    pathlib.Path(".clinerules/botforge.md"),
+    pathlib.Path(".windsurf/rules/botforge.md"),
+    pathlib.Path(".continue/rules/botforge.md"),
+    pathlib.Path(".junie/AGENTS.md"),
+    pathlib.Path(".rules"),
+    pathlib.Path("CONVENTIONS.md"),
+    pathlib.Path("docs/AGENT-COMPATIBILITY.md"),
 )
 
 
-def update_skill_md_version(v: tuple[int, int, int]) -> list[pathlib.Path]:
-    """Patch `**Version:** X.Y.Z` lines in SKILL.md files to the new version."""
+def update_version_markers(v: tuple[int, int, int]) -> list[pathlib.Path]:
+    """Patch BotForge version markers in active prompt and adapter files."""
     new_str = ".".join(map(str, v))
+    new_minor = ".".join(map(str, v[:2]))
     patched: list[pathlib.Path] = []
-    for path in _VERSION_HEADER_TARGETS:
+    for path in _VERSION_TEXT_TARGETS:
         if not path.exists():
             continue
         text = path.read_text(encoding="utf-8")
-        new_text, n = _VERSION_HEADER_RE.subn(
-            rf"\g<1>{new_str}", text, count=1
+        new_text = re.sub(
+            r"(BotForge v)\d+\.\d+\.\d+",
+            rf"\g<1>{new_str}",
+            text,
         )
-        if n and new_text != text:
+        new_text = re.sub(
+            r"(BotForge v)\d+\.\d+(?=\s+—)",
+            rf"\g<1>{new_minor}",
+            new_text,
+        )
+        new_text = re.sub(
+            r"(\*\*Version:\*\*\s*)\d+\.\d+\.\d+",
+            rf"\g<1>{new_str}",
+            new_text,
+        )
+        new_text = re.sub(
+            r"(Version:\s*)\d+\.\d+\.\d+",
+            rf"\g<1>{new_str}",
+            new_text,
+        )
+        if new_text != text:
             path.write_text(new_text, encoding="utf-8")
             patched.append(path)
     return patched
@@ -91,7 +127,7 @@ def main() -> int:
 
     write_version_file(new)
     update_plugin_manifest(new)
-    patched = update_skill_md_version(new)
+    patched = update_version_markers(new)
 
     print(f"Bumped to {new_str}")
     for p in patched:

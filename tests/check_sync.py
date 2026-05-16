@@ -1,4 +1,4 @@
-"""Verify that the skill prompt stays in sync across its four distribution formats.
+"""Verify that the skill prompt stays in sync across its core distribution formats.
 
 Files that must express the same core rules:
   1. .claude/skills/botforge/SKILL.md
@@ -6,6 +6,7 @@ Files that must express the same core rules:
   3. cursor/.cursor/rules/botforge.mdc
   4. cursor/.cursorrules
   5. codex/AGENTS.md
+  6. AGENTS.md
 
 The check looks for key canonical phrases (hard bans, rate limits, critical
 constraints). If one file drops a phrase the others still carry, drift is
@@ -29,6 +30,7 @@ if hasattr(sys.stdout, "reconfigure"):
         pass
 
 ROOT = Path(__file__).resolve().parent.parent
+VERSION = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
 
 TARGETS = {
     "SKILL": ROOT / ".claude" / "skills" / "botforge" / "SKILL.md",
@@ -36,6 +38,7 @@ TARGETS = {
     "cursor_mdc": ROOT / "cursor" / ".cursor" / "rules" / "botforge.mdc",
     "cursor_legacy": ROOT / "cursor" / ".cursorrules",
     "codex": ROOT / "codex" / "AGENTS.md",
+    "root_agents": ROOT / "AGENTS.md",
 }
 
 # Canonical concepts every file MUST mention (case-insensitive substring match).
@@ -50,7 +53,8 @@ REQUIRED_CONCEPTS: list[tuple[str, list[str]]] = [
     ("rate limit 25/s broadcast", ["25"]),
     ("rate limit 1/sec per user", ["1 msg/sec", "1/sec", "1 msg/s"]),
     ("callback_data 64 bytes", ["64"]),
-    ("Telegram Bot API version reference", ["9.6", "Bot API"]),
+    ("Telegram Bot API version reference", ["10.0", "Bot API"]),
+    ("Bot API 10.0 guest mode", ["guest_message", "Guest Mode"]),
     ("Mini App initData HMAC", ["initData", "WebAppData"]),
     ("Telegram Stars XTR currency", ["XTR"]),
     ("TelegramRetryAfter handling", ["RetryAfter", "retry_after"]),
@@ -63,7 +67,9 @@ REQUIRED_CONCEPTS: list[tuple[str, list[str]]] = [
     ("bypass protocol", ["bypass"]),
     ("override protocol", ["override"]),
     ("recovery protocol", ["recovery"]),
-    ("version header v1.7", ["v1.7", "1.7.0"]),
+    ("UX navigation standard", ["UX navigation", "navigation"]),
+    ("no dead buttons", ["dead buttons"]),
+    ("exact package version header", [VERSION]),
 ]
 
 
@@ -94,7 +100,7 @@ def main() -> int:
         print(f"\n{len(errors)} drift(s). Fix files listed in docs/SYNC-CHECKLIST.md")
         return 1
 
-    print(f"✓ Four-format sync OK ({len(REQUIRED_CONCEPTS)} concepts × {len(TARGETS)} files)")
+    print(f"✓ Core prompt sync OK ({len(REQUIRED_CONCEPTS)} concepts × {len(TARGETS)} files)")
     return 0
 
 

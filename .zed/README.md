@@ -22,6 +22,10 @@ Add a custom assistant role:
 3. Paste contents of [`system_prompt.txt`](../system_prompt.txt) as the system prompt
 4. Select this role when you want to build Telegram bots
 
+## Option 3: native Zed project rule
+
+BotForge also ships a root [`.rules`](../.rules) file. Zed auto-includes it in the Agent Panel, and it routes the agent to [`AGENTS.md`](../AGENTS.md) plus the canonical skill when the task involves Telegram bots.
+
 ## Workspace settings
 
 The `.zed/settings.json` in this repo sets Anthropic Opus as default,

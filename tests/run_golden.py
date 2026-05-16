@@ -104,7 +104,10 @@ def check_assertions(output: str, spec: dict[str, Any]) -> list[str]:
 
 def run() -> int:
     if not (os.environ.get("ANTHROPIC_API_KEY") or os.environ.get("OPENAI_API_KEY")):
-        print("⏭  No API key in env — skipping golden tests.")
+        if os.environ.get("CI") or os.environ.get("BOTFORGE_FAIL_ON_GOLDEN_SKIP"):
+            print("✗ No ANTHROPIC_API_KEY or OPENAI_API_KEY in env — refusing to skip golden tests in CI.")
+            return 1
+        print("⏭  No API key in env — skipping golden tests locally.")
         return 0
 
     system = load_system_prompt()

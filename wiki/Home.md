@@ -6,7 +6,7 @@
 
 **The Telegram Bot Engineering Skill for AI.**
 
-Production-ready skill pack for Claude Code, Cursor, Codex, and any LLM. Grounded in the official [Telegram Bot API 9.6](https://core.telegram.org/bots/api).
+Production-ready skill pack for Claude Code, Cursor, Codex, and any LLM. Grounded in the official [Telegram Bot API 10.0](https://core.telegram.org/bots/api).
 
 ## Start here
 

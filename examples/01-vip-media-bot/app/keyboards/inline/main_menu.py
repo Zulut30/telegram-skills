@@ -14,10 +14,18 @@ def main_menu_kb() -> K:
     )
 
 
+def _back_to_menu_button() -> B:
+    return B(text="← Назад", callback_data="menu:main")
+
+
+def back_to_menu_kb() -> K:
+    return K(inline_keyboard=[[_back_to_menu_button()]])
+
+
 def vip_buy_kb(stars: int) -> K:
     return K(
         inline_keyboard=[
             [B(text=f"Купить VIP за {stars} ⭐", callback_data="vip:buy")],
-            [B(text="← Назад", callback_data="menu:main")],
+            [_back_to_menu_button()],
         ]
     )

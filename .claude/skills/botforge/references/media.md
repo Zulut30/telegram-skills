@@ -15,6 +15,7 @@
 | Document | `send_document` | 50 MB / 2 GB local | `F.document` |
 | Sticker | `send_sticker` | — | `F.sticker` |
 | Media group (album) | `send_media_group` | до 10 items | `F.media_group_id` |
+| Live Photo (Bot API 10.0) | `sendLivePhoto` / aiogram wrapper if available | verify current Bot API limits | `F.live_photo` if available |
 
 Лимиты Cloud Bot API: upload 50 MB, download 20 MB. Для больших — Local Bot API server (2 GB).
 
@@ -51,6 +52,7 @@ Constraints:
 - 2..10 items
 - Все photo+video в одной группе ИЛИ все audio ИЛИ все document — не миксуются
 - Caption — только на первом элементе (или на каждом, но видится только один)
+- Bot API 10.0 adds live photos in media groups. Before generating aiogram typed code, verify the installed aiogram version exposes `LivePhoto`/`InputMediaLivePhoto`; otherwise isolate raw Bot API calls in an integration helper with tests.
 
 ## 4. Handling incoming media groups
 

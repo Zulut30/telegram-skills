@@ -18,4 +18,5 @@ jobs:
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           BOTFORGE_MODEL: claude-opus-4-5
+          BOTFORGE_FAIL_ON_GOLDEN_SKIP: "1"
         run: python tests/run_golden.py

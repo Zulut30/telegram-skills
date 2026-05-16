@@ -19,17 +19,37 @@ if hasattr(sys.stdout, "reconfigure"):
         pass
 
 
-_SKILL_HEADER_RE = re.compile(r"^\*\*Version:\*\*\s*(\d+\.\d+\.\d+)", re.MULTILINE)
+_VERSION_RE = re.compile(
+    r"(?:\*\*Version:\*\*|Version:|BotForge v)\s*(\d+\.\d+\.\d+)",
+    re.MULTILINE,
+)
 _SKILL_HEADER_FILES = (
+    pathlib.Path("AGENTS.md"),
     pathlib.Path(".claude/skills/botforge/SKILL.md"),
     pathlib.Path("SKILL.md"),
+    pathlib.Path("system_prompt.txt"),
+    pathlib.Path("codex/AGENTS.md"),
+    pathlib.Path("cursor/.cursor/rules/botforge.mdc"),
+    pathlib.Path("cursor/.cursorrules"),
+    pathlib.Path(".github/copilot-instructions.md"),
+    pathlib.Path(".github/instructions/botforge.instructions.md"),
+    pathlib.Path("GEMINI.md"),
+    pathlib.Path(".gemini/skills/botforge/SKILL.md"),
+    pathlib.Path(".cline/skills/botforge/SKILL.md"),
+    pathlib.Path(".clinerules/botforge.md"),
+    pathlib.Path(".windsurf/rules/botforge.md"),
+    pathlib.Path(".continue/rules/botforge.md"),
+    pathlib.Path(".junie/AGENTS.md"),
+    pathlib.Path(".rules"),
+    pathlib.Path("CONVENTIONS.md"),
+    pathlib.Path("docs/AGENT-COMPATIBILITY.md"),
 )
 
 
 def _skill_header_version(path: pathlib.Path) -> str | None:
     if not path.exists():
         return None
-    m = _SKILL_HEADER_RE.search(path.read_text(encoding="utf-8"))
+    m = _VERSION_RE.search(path.read_text(encoding="utf-8"))
     return m.group(1) if m else None
 
 

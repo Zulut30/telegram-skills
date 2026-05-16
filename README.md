@@ -6,7 +6,7 @@
 
 <p align="center">
   <b>The Telegram Bot Engineering Skill for AI</b><br/>
-  Production-ready skill pack for Claude Code, Codex, Cursor, and any LLM.
+  Production-ready skill pack for Claude Code, Codex, Cursor, Copilot, Gemini, Windsurf, Cline, Continue, Aider, Junie, Zed, and any LLM.
 </p>
 
 <p align="center">
@@ -28,9 +28,11 @@
   <a href="https://claude.com/claude-code"><img src="https://img.shields.io/badge/Claude%20Code-compatible-8A2BE2" alt="Claude Code"/></a>
   <a href="https://cursor.com"><img src="https://img.shields.io/badge/Cursor-rules-000000" alt="Cursor"/></a>
   <a href="https://openai.com"><img src="https://img.shields.io/badge/Codex-AGENTS.md-10A37F" alt="Codex"/></a>
+  <a href="https://docs.github.com/copilot"><img src="https://img.shields.io/badge/Copilot-instructions-0969DA" alt="GitHub Copilot"/></a>
+  <a href="https://docs.windsurf.com"><img src="https://img.shields.io/badge/Windsurf-rules-00A3A3" alt="Windsurf"/></a>
   <a href="https://docs.aiogram.dev/"><img src="https://img.shields.io/badge/aiogram-3.x-2CA5E0" alt="aiogram"/></a>
   <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3.12%2B-3776AB" alt="Python"/></a>
-  <a href="https://core.telegram.org/bots/api"><img src="https://img.shields.io/badge/Bot%20API-9.6-0088CC" alt="Bot API"/></a>
+  <a href="https://core.telegram.org/bots/api"><img src="https://img.shields.io/badge/Bot%20API-10.0-0088CC" alt="Bot API"/></a>
   <a href="CONTRIBUTING.md"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome"/></a>
 </p>
 
@@ -38,16 +40,19 @@
 
 BotForge turns an AI assistant into a senior Telegram bot engineer. Instead of a one-shot `main.py` with 800 lines of tangled code, the AI designs and builds a **modular, scalable, production-ready Telegram bot** — with architecture, database, migrations, admin panel, payments, broadcasts, Docker, and deployment.
 
+![BotForge production architecture visual](assets/visuals/botforge-hero-command-center.jpg)
+
 ## Three promises
 
 1. **No monoliths.** Layered architecture (handlers / services / repositories / integrations) by default.
 2. **No drafts.** Docker + Postgres + Alembic + `.env` + deployment instructions in the very first generation.
-3. **No breakage.** The fifth feature is as easy to add as the first.
+3. **No lost users.** Navigation maps, scannable keyboards, back/home/cancel paths, and no dead buttons.
 
 ## Why it works
 
-- **Grounded in the official Telegram Bot API 9.6.** Rate limits (1/sec, 20/min, 30/sec broadcast), MarkdownV2 escape rules, Mini App initData HMAC validation, 64-byte `CallbackData` limit — every constraint cites `core.telegram.org`.
+- **Grounded in the official Telegram Bot API 10.0.** Rate limits (1/sec, 20/min, 30/sec broadcast), Guest Mode, MarkdownV2 escape rules, Mini App initData HMAC validation, 64-byte `CallbackData` limit — every constraint cites `core.telegram.org`.
 - **Mandatory 6-stage workflow.** Brief → ADR → Tree → Files → Self-review → Deploy. The AI cannot skip straight to code.
+- **UX navigation is part of the standard.** Every keyboard must be reachable, understandable, and handled; callbacks are acknowledged and nested flows always have a way back.
 - **Hard bans enforced by skill rules.** Secrets in code, `requests`, SQL in handlers, monoliths — blocked at the skill level, not by style.
 - **Provider-agnostic payments.** Switching ЮKassa → Stripe is a one-line DI change.
 
@@ -55,6 +60,7 @@ BotForge turns an AI assistant into a senior Telegram bot engineer. Instead of a
 
 ```bash
 git clone https://github.com/Zulut30/telegram-skills.git
+mkdir -p ~/.claude/skills ~/.claude/commands
 cp -r telegram-skills/.claude/skills/botforge ~/.claude/skills/
 cp -r telegram-skills/.claude/commands ~/.claude/
 ```
@@ -67,6 +73,14 @@ Hosting: VPS, Docker Compose, webhook
 ```
 
 The AI will ask up to 5 clarifying questions, produce an ADR, render the project tree, generate every file, run a self-review checklist, and give you deployment commands.
+
+For a project that should work across agent apps:
+
+```bash
+bash install.sh all-agents /path/to/your-bot-project
+```
+
+This installs Claude project skills, Cursor rules, root `AGENTS.md`, Copilot/VS Code instructions, Gemini, Windsurf, Cline, Continue, Aider, Junie, and Zed adapters.
 
 ## 19 slash commands
 
@@ -103,12 +117,21 @@ make up
 | File | Purpose |
 |---|---|
 | [`SKILL.md`](SKILL.md) | Full skill document — manifest, system prompt, rules, patterns, examples |
+| [`AGENTS.md`](AGENTS.md) | Universal agent entrypoint for Codex, Copilot, VS Code, Windsurf, Junie, Zed, OpenCode, and compatible agents |
 | [`system_prompt.txt`](system_prompt.txt) | Raw system prompt for any LLM |
 | [`.claude/skills/botforge/`](.claude/skills/botforge/) | **Claude Code** Agent Skill with 23 references |
 | [`.claude/commands/`](.claude/commands/) | 19 slash commands |
 | [`.claude-plugin/plugin.json`](.claude-plugin/plugin.json) | Plugin manifest |
 | [`cursor/.cursor/rules/botforge.mdc`](cursor/.cursor/rules/botforge.mdc) | **Cursor** rules (modern MDC) |
-| [`codex/AGENTS.md`](codex/AGENTS.md) | **Codex / Aider / Continue** |
+| [`codex/AGENTS.md`](codex/AGENTS.md) | Legacy copy/install source for **Codex** |
+| [`.github/copilot-instructions.md`](.github/copilot-instructions.md) | **GitHub Copilot / VS Code** repository instructions |
+| [`GEMINI.md`](GEMINI.md) + [`.gemini/skills/botforge/`](.gemini/skills/botforge/) | **Gemini CLI** memory + skill bridge |
+| [`.windsurf/rules/botforge.md`](.windsurf/rules/botforge.md) | **Windsurf Cascade** model-decision rule |
+| [`.cline/skills/botforge/`](.cline/skills/botforge/) + [`.clinerules/botforge.md`](.clinerules/botforge.md) | **Cline** skill + rule bridge |
+| [`.continue/rules/botforge.md`](.continue/rules/botforge.md) | **Continue** local rule |
+| [`CONVENTIONS.md`](CONVENTIONS.md) + [`.aider.conf.yml`](.aider.conf.yml) | **Aider** conventions |
+| [`.junie/AGENTS.md`](.junie/AGENTS.md) | **JetBrains Junie** guidelines |
+| [`.rules`](.rules) | **Zed** project rule |
 | [`.vscode/`](.vscode/) | VS Code snippets (`bf-new`, `bf-extend`, …) |
 | [`.zed/`](.zed/) | Zed configuration |
 | [`tests/golden/`](tests/golden/) | Eval harness: structural assertions on AI output |
@@ -121,11 +144,19 @@ make up
 - [USAGE](docs/USAGE.md) — modes, prompt formats, session lifecycle
 - [COMPARISON](docs/COMPARISON.md) — vs plain prompts, cookiecutter, no-code, generic agents
 - [SHOWCASE](docs/SHOWCASE.md) — bots built with BotForge
+- [AGENT-COMPATIBILITY](docs/AGENT-COMPATIBILITY.md) — audit, matrix, and adapter plan
 - [CHANGELOG](docs/CHANGELOG.md) — version history and roadmap
 
 ## Reference library
 
-23 deep reference documents covering every aspect of Telegram bot engineering: architecture, 12 reusable patterns, Mini Apps, auth (roles / initData / OAuth / API keys), payments (5 providers), official Bot API 9.6 constraints, BotFather setup, i18n, observability, scheduled tasks, recurring subscriptions, inline mode, groups/channels/forums, media handling, anti-spam, GDPR compliance, analytics, anti-patterns, performance, admin panel, FAQ.
+23 deep reference documents covering every aspect of Telegram bot engineering: architecture, 12 reusable patterns, Mini Apps, auth (roles / initData / OAuth / API keys), payments (5 providers), official Bot API 10.0 constraints, BotFather setup, i18n, observability, scheduled tasks, recurring subscriptions, inline mode, groups/channels/forums, media handling, anti-spam, GDPR compliance, analytics, anti-patterns, performance, admin panel, FAQ.
+
+## Visual assets
+
+<p align="center">
+  <img src="assets/visuals/botforge-workflow-infographic.jpg" width="49%" alt="BotForge six-stage workflow infographic" />
+  <img src="assets/visuals/botforge-quality-dashboard.jpg" width="49%" alt="BotForge quality telemetry dashboard visual" />
+</p>
 
 ## License
 

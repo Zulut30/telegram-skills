@@ -1,4 +1,6 @@
-.PHONY: help install-claude install-cursor install-codex sync-check validate golden example-test lint clean
+PYTHON ?= python3
+
+.PHONY: help install-claude install-cursor install-codex install-agent-adapters install-all-agents sync-check validate golden example-test lint clean
 
 help:
 	@echo "BotForge — repository maintenance targets"
@@ -6,6 +8,8 @@ help:
 	@echo "  make install-claude       Install skill globally into ~/.claude/"
 	@echo "  make install-cursor       Copy Cursor MDC rule to ./.cursor/rules/"
 	@echo "  make install-codex        Copy AGENTS.md to current dir"
+	@echo "  make install-agent-adapters Copy cross-agent adapters to current dir"
+	@echo "  make install-all-agents   Install Claude project + Cursor + adapters"
 	@echo ""
 	@echo "  make sync-check           Verify four-format skill prompt sync"
 	@echo "  make validate             Validate plugin.json + command frontmatter"
@@ -24,29 +28,36 @@ install-cursor:
 install-codex:
 	bash install.sh codex .
 
+install-agent-adapters:
+	bash install.sh agent-adapters .
+
+install-all-agents:
+	bash install.sh all-agents .
+
 sync-check:
-	python tests/check_sync.py
+	$(PYTHON) tests/check_sync.py
 
 version-check:
-	python tests/check_version_sync.py
+	$(PYTHON) tests/check_version_sync.py
 
 bump-patch:
-	python tests/bump_version.py patch
+	$(PYTHON) tests/bump_version.py patch
 
 bump-minor:
-	python tests/bump_version.py minor
+	$(PYTHON) tests/bump_version.py minor
 
 bump-major:
-	python tests/bump_version.py major
+	$(PYTHON) tests/bump_version.py major
 
 validate:
-	python tests/validate_plugin_manifest.py
-	python tests/validate_frontmatter.py
-	python tests/check_sync.py
-	python tests/check_version_sync.py
+	$(PYTHON) tests/validate_plugin_manifest.py
+	$(PYTHON) tests/validate_frontmatter.py
+	$(PYTHON) tests/validate_agent_adapters.py
+	$(PYTHON) tests/check_sync.py
+	$(PYTHON) tests/check_version_sync.py
 
 golden:
-	python tests/run_golden.py
+	$(PYTHON) tests/run_golden.py
 
 example-test:
 	cd examples/01-vip-media-bot && pytest tests/ -v

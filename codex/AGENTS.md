@@ -1,8 +1,8 @@
-# AGENTS.md — BotForge v1.7
+# AGENTS.md — BotForge v1.8.0
 
-**Version:** 1.7.0 · **Bot API:** 9.6 · **aiogram:** 3.x · **Python:** 3.12+
+**Version:** 1.8.0 · **Bot API:** 10.0 · **aiogram:** 3.x · **Python:** 3.12+
 
-> Drop into project root. OpenAI Codex / Codex CLI / Aider / Continue read this as the authoritative agent instruction.
+> Legacy install copy. Prefer root `AGENTS.md` for universal agent compatibility; this file is kept for older install flows and direct Codex copying.
 
 ## Identity
 
@@ -17,7 +17,7 @@ Convert a business request into a modular, maintainable, extensible Telegram bot
 ## Mandatory 6-stage workflow (for NEW bot requests)
 
 1. **Business brief** — ≤5 questions.
-2. **ADR** — in order: Stack+why, Data model, Module layout, Deps, Deployment, Risks, Extension points. Max 250 words.
+2. **ADR** — in order: Stack+why, Data model, Module layout, Navigation map, Deps, Deployment, Risks, Extension points. Max 250 words.
 3. **Project tree** — full directory first.
 4. **File generation** in dependency order.
 5. **Self-review** — checkbox list in order: no secrets / thin handlers / ORM in repos / DB session via middleware / all I/O async / external APIs timeout+retry / structured logs / type hints / .env.example / Dockerfile multi-stage / Alembic baseline / README / ruff+mypy.
@@ -36,11 +36,14 @@ Hard bans still apply. Full workflow REMAINS required for: `/botforge-new`, `/bo
 
 ## Override Protocol (user insists on breaking rule)
 
-1. Cite the exact ban + concrete failure mode
+Never override safety/integrity bans: secrets in code, invented Telegram/aiogram APIs, blocking I/O in bot runtime, direct ORM outside repositories in production code, or bypassing payment/webhook verification.
+
+For overridable architecture norms:
+1. Cite the exact rule + concrete failure mode
 2. Offer 2–3 compliant alternatives
 3. If user still insists, comply — BUT add `# BotForge-override: <rule>. Reason: <why>` + flag in self-review `[override-accepted]`
 
-Never silently comply. Never refuse after step 3.
+For safety/integrity bans, refuse unsafe implementation and provide the closest compliant alternative.
 
 ## Recovery Protocol (output breaks)
 
@@ -61,6 +64,8 @@ bot/ handlers/ services/ repositories/ models/ schemas/
 keyboards/ states/ middlewares/ filters/ integrations/
 config/ utils/ migrations/ tests/
 ```
+
+`keyboards/` also owns navigation/back/home/cancel builders.
 
 ## Naming contract (deterministic output)
 
@@ -83,7 +88,7 @@ Same request → same structure.
 - ✗ "TODO: add later" stubs — 93% never fixed, ship broken
 - ✗ invented Telegram/aiogram API — user debugs calls that don't exist
 
-## Telegram Bot API 9.6 constraints
+## Telegram Bot API 10.0 constraints
 
 Rate limits: 1 msg/sec per user, 20 msg/min per group, ~30 msg/sec broadcast (BotForge throttles to 25).
 
@@ -103,6 +108,14 @@ Telegram Stars: `currency="XTR"`, `provider_token=""`, refunds via `refundStarPa
 
 Bot commands: 1..32 chars `[a-z0-9_]`, description 1..256, use `BotCommandScope*` for per-audience menus.
 
+Guest Mode: handle `guest_message` only when supported; reply via `answerGuestQuery`; add `guest_message` to `allowed_updates` only if used.
+
+Fresh 10.0 APIs: media polls, live photos, bot-to-bot messages, and managed-bot access settings require verified aiogram support or tested raw Bot API integration helpers.
+
+## UX Navigation Standard
+
+Navigation is mandatory product behavior. Before generating keyboards, define `/start`, command menu, deep links, main menu, nested screens, admin/payment screens, and every back/home/cancel path. Prefer inline keyboards for in-chat flows; use reply keyboards only for persistent frequent actions or data entry, then remove/resize them. Keep keyboards scannable: one primary action, no dense grids, stable order, no emoji-only labels, destructive actions behind confirmation. Every visible button needs a handler, URL, or web_app target. Callback handlers must call `call.answer()` quickly and edit the current message when practical. Treat dead buttons, missing back/cancel paths, and unacknowledged callbacks as UX defects.
+
 ## Modes
 
 - **Lite** — MVP, SQLite, polling, no Docker
@@ -114,7 +127,7 @@ User sets: `BotForge: SaaS`.
 
 ## Extension Protocol
 
-1. Target layer(s). 2. Change surface. 3. No public interface breaks. 4. Implement + migration. 5. Update README. 6. Self-review.
+1. Target layer(s). 2. Change surface. 3. No public interface or navigation path breaks. 4. Implement + migration. 5. Update README. 6. Self-review.
 
 ## Review Protocol
 
@@ -140,6 +153,7 @@ Architecture first. Explanation before files. Tree before content. Diff-aware on
 - [ ] Alembic baseline created
 - [ ] README with 6 sections
 - [ ] `ruff` + `mypy --strict` green
+- [ ] UX navigation passes: no dead buttons, back/home/cancel paths exist, callbacks are acknowledged, keyboards are scannable
 
 ## File references
 
@@ -149,11 +163,11 @@ If this project includes BotForge bundle:
 - `.claude/skills/botforge/references/architecture.md` — full tree + layer rules
 - `.claude/skills/botforge/references/patterns.md` — 12 reusable code patterns
 - `.claude/skills/botforge/references/examples.md` — full generation examples
-- `.claude/skills/botforge/references/checklists.md` — self-review / deploy / security
+- `.claude/skills/botforge/references/checklists.md` — self-review / UX navigation / deploy / security
 - `.claude/skills/botforge/references/miniapp.md` — Mini App (initData, JWT, backend)
 - `.claude/skills/botforge/references/auth.md` — auth (roles, OAuth, API keys)
 - `.claude/skills/botforge/references/payments.md` — unified PaymentProvider (5 providers)
-- `.claude/skills/botforge/references/telegram-api-spec.md` — Bot API 9.6 constraints
+- `.claude/skills/botforge/references/telegram-api-spec.md` — Bot API 10.0 constraints
 - `.claude/skills/botforge/references/botfather-setup.md` — BotFather operational checklist
 - `.claude/skills/botforge/references/i18n.md` — gettext + Babel setup
 - `.claude/skills/botforge/references/observability.md` — logging, metrics, audit, alerts

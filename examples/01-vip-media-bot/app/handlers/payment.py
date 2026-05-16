@@ -2,6 +2,7 @@ from aiogram import F, Router
 from aiogram.types import CallbackQuery, Message, PreCheckoutQuery
 
 from app.integrations.payments.stars import StarsProvider
+from app.keyboards.inline.main_menu import main_menu_kb
 from app.repositories.payment_repo import PaymentRepo
 from app.repositories.subscription_repo import SubscriptionRepo
 from app.services.payment_service import PaymentService
@@ -45,4 +46,4 @@ async def on_successful_payment(message: Message, session) -> None:  # type: ign
         external_id=sp.telegram_payment_charge_id,
         amount_units=sp.total_amount,
     )
-    await message.answer("✅ VIP активирован. Спасибо!")
+    await message.answer("✅ VIP активирован. Спасибо!", reply_markup=main_menu_kb())

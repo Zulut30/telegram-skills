@@ -41,7 +41,7 @@
     </g>
     <g transform="translate(788, 290)">
       <rect width="200" height="56" rx="28" fill="#1C3D5E" stroke="#2AABEE" stroke-width="1"/>
-      <text x="100" y="36" fill="white" text-anchor="middle">Bot API 9.6</text>
+      <text x="100" y="36" fill="white" text-anchor="middle">Bot API 10.0</text>
     </g>
   </g>
 

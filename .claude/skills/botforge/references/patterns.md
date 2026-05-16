@@ -177,16 +177,31 @@ class Onboarding(StatesGroup):
     confirm = State()
 ```
 
-## 11. Inline Keyboard Factory
+## 11. Navigation-focused Inline Keyboard Factory
+
+Every button must lead somewhere: handler, URL, or Mini App. Nested screens keep
+`Back`/`Main menu`, callbacks use compact `CallbackData`, and labels are readable
+without relying on emoji.
+
 ```python
 # app/keyboards/inline/main_menu.py
+from aiogram.filters.callback_data import CallbackData
 from aiogram.types import InlineKeyboardButton as B, InlineKeyboardMarkup as K
+
+class MenuCb(CallbackData, prefix="menu"):
+    screen: str
 
 def main_menu_kb() -> K:
     return K(inline_keyboard=[
-        [B(text="Каталог", callback_data="menu:catalog")],
-        [B(text="VIP", callback_data="menu:vip"),
-         B(text="Профиль", callback_data="menu:profile")],
+        [B(text="Каталог", callback_data=MenuCb(screen="catalog").pack())],
+        [B(text="VIP", callback_data=MenuCb(screen="vip").pack()),
+         B(text="Профиль", callback_data=MenuCb(screen="profile").pack())],
+    ])
+
+def back_home_kb(back_to: str = "main") -> K:
+    return K(inline_keyboard=[
+        [B(text="Назад", callback_data=MenuCb(screen=back_to).pack())],
+        [B(text="Главное меню", callback_data=MenuCb(screen="main").pack())],
     ])
 ```
 

@@ -1,0 +1,7 @@
+# BotForge v1.8.0 — Zed Rule
+
+Zed should use BotForge for Telegram bot engineering tasks.
+
+Read `AGENTS.md` for universal instructions. For full workflow details, read `.claude/skills/botforge/SKILL.md`. Load only the specific reference file needed from `.claude/skills/botforge/references/`.
+
+Core behavior: new bot requests use Business brief, ADR, Project tree, Files, Self-review, and Deployment. Keep code layered for aiogram 3: handlers parse and reply, services own business logic, repositories own ORM/SQL. Use Bot API 10.0 constraints, async httpx, retries, Docker, Alembic, tests, structured logs, and explicit UX navigation. Never generate secrets, blocking `requests`, invented Telegram/aiogram APIs, or dead buttons.

@@ -1,7 +1,7 @@
 """Validate plugin.json: required fields + every referenced file exists.
 
 Exits non-zero on any error. Run from repo root:
-    python tests/validate_plugin_manifest.py
+    python3 tests/validate_plugin_manifest.py
 """
 
 from __future__ import annotations

@@ -2,7 +2,7 @@
 
 **Инженерный skill для AI, создающий production-ready Telegram-боты.**
 
-Готовый пакет для Claude Code, Cursor, Codex и любого LLM. Опирается на официальный [Telegram Bot API 9.6](https://core.telegram.org/bots/api).
+Готовый пакет для Claude Code, Cursor, Codex и любого LLM. Опирается на официальный [Telegram Bot API 10.0](https://core.telegram.org/bots/api).
 
 ## Начало
 

@@ -262,6 +262,20 @@ USER app
 
 ---
 
+## UX Navigation
+
+### 33. Dead inline button
+**Symptom.** User taps a visible button and nothing useful happens; Telegram spinner hangs or an error is logged.
+**Cause.** Keyboard exposes `callback_data`, but no handler is registered; handler forgot `call.answer()`; or feature was left as a hidden TODO.
+**Fix.** Every button must map to a handler, URL, or web_app target. Add a route test that enumerates keyboard callbacks and verifies handler coverage.
+
+### 34. No way back from nested flow
+**Symptom.** User lands on a payment/profile/admin/FSM screen and must type `/start` to recover.
+**Cause.** Screen has only a primary action; FSM has no cancel transition; reply keyboard remains after the flow.
+**Fix.** Add `Back`, `Main menu`, or `Cancel` to every non-root screen. Clear FSM state and remove/resize reply keyboards when leaving the flow.
+
+---
+
 ## How to use this list
 
 When generating code: mentally check the list against each file you write.

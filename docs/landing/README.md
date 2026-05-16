@@ -8,11 +8,11 @@ Static HTML landing deployed automatically to GitHub Pages on pushes to `main`.
 
 ## Editing
 
-Single file, self-contained (inline CSS). Keep it that way — no build step, no JS dependencies. Load time must stay under 100 KB.
+Single HTML file with inline CSS/JS and local optimized visual assets. Keep it build-free and dependency-free.
 
 ## Assets
 
-Logo and OG image pulled from `assets/logo/` via raw GitHub URLs to avoid duplication.
+Generated visuals live in `assets/visuals/` for the site bundle and are mirrored in the repository root under `assets/visuals/` for README/social reuse.
 
 ## Preview locally
 
