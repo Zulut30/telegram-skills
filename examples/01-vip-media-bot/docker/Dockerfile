@@ -1,10 +1,10 @@
-FROM python:3.12-slim AS builder
+FROM python:3.14-slim AS builder
 WORKDIR /app
 RUN pip install --no-cache-dir uv==0.4.*
 COPY pyproject.toml ./
 RUN uv pip install --system --no-cache .
 
-FROM python:3.12-slim
+FROM python:3.14-slim
 WORKDIR /app
 RUN groupadd -r app && useradd -r -g app app
 COPY --from=builder /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
